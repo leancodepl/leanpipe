@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{401E8BD4-C7D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanCode.LeanPipe", "src\LeanCode.LeanPipe\LeanCode.LeanPipe.csproj", "{75B2B837-B392-4DC1-8CF7-C1B2C4E03312}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanCode.Contracts", "src\LeanCode.Contracts\LeanCode.Contracts.csproj", "{6F705F15-126B-4787-8C93-7CBAF3E53EA0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,8 +22,13 @@ Global
 		{75B2B837-B392-4DC1-8CF7-C1B2C4E03312}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75B2B837-B392-4DC1-8CF7-C1B2C4E03312}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75B2B837-B392-4DC1-8CF7-C1B2C4E03312}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F705F15-126B-4787-8C93-7CBAF3E53EA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F705F15-126B-4787-8C93-7CBAF3E53EA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F705F15-126B-4787-8C93-7CBAF3E53EA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F705F15-126B-4787-8C93-7CBAF3E53EA0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{75B2B837-B392-4DC1-8CF7-C1B2C4E03312} = {401E8BD4-C7D7-48F2-8899-EA9859247BD7}
+		{6F705F15-126B-4787-8C93-7CBAF3E53EA0} = {401E8BD4-C7D7-48F2-8899-EA9859247BD7}
 	EndGlobalSection
 EndGlobal

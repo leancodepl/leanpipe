@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="../LeanCode.Contracts/LeanCode.Contracts.csproj" />
-  </ItemGroup>
-
 </Project>
