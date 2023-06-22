@@ -10,4 +10,8 @@
     <ProjectReference Include="../LeanCode.Contracts/LeanCode.Contracts.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+  </ItemGroup>
+
 </Project>
