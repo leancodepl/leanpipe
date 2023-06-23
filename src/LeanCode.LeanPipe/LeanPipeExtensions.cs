@@ -8,20 +8,46 @@ namespace LeanCode.LeanPipe.Extensions;
 
 public static class LeanPipeExtensions
 {
-    public static IServiceCollection AddLeanPipe(this IServiceCollection services)
+    public static IServiceCollection AddLeanPipe(this IServiceCollection services) =>
+        services.AddLeanPipe(typeof(DefaultEnvelopeDeserializer));
+
+    public static IServiceCollection AddLeanPipe(
+        this IServiceCollection services,
+        Type envelopeDeserializer
+    )
     {
         services.AddSignalR();
-        services.TryAdd(ServiceDescriptor.Transient(typeof(IKeysFactory<>), typeof(DefaultKeysFactory<>)));
-        services.TryAdd(ServiceDescriptor.Transient(typeof(ISubscriptionHandler<>), typeof(KeyedSubscriptionHandler<>)));
-        services.TryAdd(ServiceDescriptor.Transient(typeof(ILeanPipeContext<,>), typeof(LeanPipeContext<,>)));
+        services.TryAdd(
+            ServiceDescriptor.Transient(typeof(IEnvelopeDeserializer), envelopeDeserializer)
+        );
+        services.TryAdd(
+            ServiceDescriptor.Transient(typeof(IKeysFactory<>), typeof(DefaultKeysFactory<>))
+        );
+        services.TryAdd(
+            ServiceDescriptor.Transient(
+                typeof(ISubscriptionHandler<>),
+                typeof(KeyedSubscriptionHandler<>)
+            )
+        );
+        services.TryAdd(
+            ServiceDescriptor.Transient(typeof(ILeanPipeContext<,>), typeof(LeanPipeContext<,>))
+        );
         return services;
     }
 
-    public static IHubEndpointConventionBuilder MapLeanPipe(this IEndpointRouteBuilder endpoints, string pattern)
+    public static IHubEndpointConventionBuilder MapLeanPipe(
+        this IEndpointRouteBuilder endpoints,
+        string pattern
+    )
     {
         return endpoints.MapHub<LeanPipe>(pattern);
     }
-    public static IHubEndpointConventionBuilder MapLeanPipe(this IEndpointRouteBuilder endpoints, string pattern, Action<HttpConnectionDispatcherOptions>? configureOptions)
+
+    public static IHubEndpointConventionBuilder MapLeanPipe(
+        this IEndpointRouteBuilder endpoints,
+        string pattern,
+        Action<HttpConnectionDispatcherOptions>? configureOptions
+    )
     {
         return endpoints.MapHub<LeanPipe>(pattern, configureOptions);
     }

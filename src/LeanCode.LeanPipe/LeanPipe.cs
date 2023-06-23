@@ -6,23 +6,20 @@ namespace LeanCode.LeanPipe;
 public class LeanPipe : Hub
 {
     private readonly IServiceProvider services;
+    private readonly IEnvelopeDeserializer deserializer;
 
-    public LeanPipe(IServiceProvider services)
+    public LeanPipe(IServiceProvider services, IEnvelopeDeserializer deserializer)
     {
         this.services = services;
+        this.deserializer = deserializer;
     }
 
-    // very much improvised, no idea if this will work as I think it would (probably not)
-    // TODO: test if this works
     private (ITopic, ISubscriptionHandler<ITopic>) DeserializeEnvelope(
         SubscriptionEnvelope envelope
     )
     {
-        var topicType =
-            Type.GetType(envelope.TopicType)
-            ?? throw new NullReferenceException($"Topic type '{envelope.TopicType}' unknown.");
-        dynamic topic = Convert.ChangeType(envelope.Topic, topicType);
-        var handler = GetSubscriptionHandler(topicType);
+        var topic = deserializer.Deserialize(envelope);
+        var handler = GetSubscriptionHandler(topic.GetType());
         return (topic, handler);
     }
 
