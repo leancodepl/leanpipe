@@ -2,7 +2,7 @@ using LeanCode.Contracts;
 
 namespace LeanCode.LeanPipe;
 
-public interface IKeysFactory<TTopic>
+public interface IKeysFactory<in TTopic>
     where TTopic : ITopic
 {
     // possibly different subscribe-, unsubscribe-, and send-specific methods

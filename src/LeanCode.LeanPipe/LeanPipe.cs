@@ -3,28 +3,37 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace LeanCode.LeanPipe;
 
-public class LeanPipe(IKeysFactory<ITopic> keysFactory) : Hub
+public class LeanPipe : Hub
 {
-    private readonly IKeysFactory<ITopic> keysFactory = keysFactory;
+    private readonly IServiceProvider services;
 
-    public async Task SubscribeAsync(ITopic topic)
+    public LeanPipe(IServiceProvider services)
     {
-        var keys = keysFactory.ToKeys(topic);
-        foreach (var key in keys)
-        {
-            await Groups.AddToGroupAsync(Context.ConnectionId, key);
-        }
+        this.services = services;
     }
 
-    public async Task UnSubscribeAsync(ITopic topic)
+    private ISubscriptionHandler<ITopic> GetSubscriptionHandler(Type topicType)
     {
-        // with this implementation there is a problem of "higher level" groups:
-        // if we subscribe to topic.something and topic.something.specific,
-        // then we do not know when to unsubscribe from topic.something
-        var keys = keysFactory.ToKeys(topic);
-        foreach (var key in keys)
-        {
-            await Groups.RemoveFromGroupAsync(Context.ConnectionId, key);
-        }
+        var handlerType = typeof(ISubscriptionHandler<>).MakeGenericType(new[] { topicType });
+        dynamic handler =
+            services.GetService(handlerType)
+            ?? throw new NullReferenceException(
+                $"Could not retrieve 'ISubscriptionHandler<{topicType.Name}>' service."
+            );
+        return handler;
+    }
+
+    public Task SubscribeAsync(ITopic topic)
+    {
+        var topicType = topic.GetType();
+        var handler = GetSubscriptionHandler(topicType);
+        return handler.OnSubscribed(topic, this);
+    }
+
+    public Task UnsubscribeAsync(ITopic topic)
+    {
+        var topicType = topic.GetType();
+        var handler = GetSubscriptionHandler(topicType);
+        return handler.OnUnsubscribed(topic, this);
     }
 }
