@@ -5,8 +5,7 @@ namespace LeanCode.LeanPipe;
 public interface IKeysFactory<in TTopic>
     where TTopic : ITopic
 {
-    // possibly different subscribe-, unsubscribe-, and send-specific methods
-    HashSet<string> ToKeys(TTopic topic);
+    IEnumerable<string> ToKeys(TTopic topic);
 }
 
 public class DefaultKeysFactory<TTopic>
