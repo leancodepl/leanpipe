@@ -3,14 +3,11 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace LeanCode.LeanPipe;
 
-// with  this generic model we'd need to have LeanPipe<TTopic1, TTopic2, ...> overloads
-// which is ranter not very nice, maybe we could come up with a better model
-public abstract class LeanPipe<TTopic>(IKeysFactory<TTopic> keysFactory) : Hub
-    where TTopic : ITopic
+public class LeanPipe(IKeysFactory<ITopic> keysFactory) : Hub
 {
-    private readonly IKeysFactory<TTopic> keysFactory = keysFactory;
+    private readonly IKeysFactory<ITopic> keysFactory = keysFactory;
 
-    public async Task SubscribeAsync(TTopic topic)
+    public async Task SubscribeAsync(ITopic topic)
     {
         var keys = keysFactory.ToKeys(topic);
         foreach (var key in keys)
@@ -19,7 +16,7 @@ public abstract class LeanPipe<TTopic>(IKeysFactory<TTopic> keysFactory) : Hub
         }
     }
 
-    public async Task UnSubscribeAsync(TTopic topic)
+    public async Task UnSubscribeAsync(ITopic topic)
     {
         // with this implementation there is a problem of "higher level" groups:
         // if we subscribe to topic.something and topic.something.specific,
