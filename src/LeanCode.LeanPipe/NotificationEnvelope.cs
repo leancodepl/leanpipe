@@ -2,10 +2,12 @@ using LeanCode.Contracts;
 
 namespace LeanCode.LeanPipe;
 
-public class NotificationEnvelope(ITopic topic, object notification)
+public class NotificationEnvelope<TTopic, TNotification>(TTopic topic, TNotification notification)
+	where TTopic: IProduceNotification<TNotification>
+    where TNotification : notnull
 {
-    public string TopicType { get; } = topic.GetType().FullName!;
-    public string NotificationType { get; } = notification.GetType().FullName!;
-    public ITopic Topic { get; } = topic;
-    public object Notification { get; } = notification;
+    public string Topic { get; } = topic.GetType().FullName!;
+    public string Notification { get; } = notification.GetType().FullName!;
+    public TTopic Subscription { get; } = topic;
+    public TNotification Payload { get; } = notification;
 }
