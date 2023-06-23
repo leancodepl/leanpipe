@@ -6,9 +6,8 @@ namespace LeanCode.LeanPipe;
 // a bit redundant, but we need to pass a specific type Hub type to the IHubContext
 // I had problems with making it work with a more generic solution previously
 public interface ITopicHandler<TPipe, TTopic, TNotification>
-    where TPipe: LeanPipe<TTopic>
+    where TPipe : LeanPipe<TTopic>
     where TTopic : ITopic, IProduceNotification<TNotification>
-    where TNotification : INotification
 {
     IKeysFactory<TTopic> KeysFactory { get; }
     // honestly I think we should rather have hub context hidden in the executor
@@ -20,9 +19,8 @@ public interface ITopicHandler<TPipe, TTopic, TNotification>
 }
 
 public abstract class TopicHandler<TPipe, TTopic, TNotification>(IHubContext<TPipe> hubContext, IKeysFactory<TTopic> keysFactory) : ITopicHandler<TPipe, TTopic, TNotification>
-    where TPipe: LeanPipe<TTopic>
+    where TPipe : LeanPipe<TTopic>
     where TTopic : ITopic, IProduceNotification<TNotification>
-    where TNotification : INotification
 {
     public IHubContext<TPipe> HubContext { get; } = hubContext;
     public IKeysFactory<TTopic> KeysFactory { get; } = keysFactory;
