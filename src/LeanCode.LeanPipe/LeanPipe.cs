@@ -1,5 +1,6 @@
 ﻿using LeanCode.Contracts;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LeanCode.LeanPipe;
 
@@ -26,12 +27,8 @@ public class LeanPipe : Hub
     private ISubscriptionHandler<ITopic> GetSubscriptionHandler(Type topicType)
     {
         var handlerType = typeof(ISubscriptionHandler<>).MakeGenericType(new[] { topicType });
-        dynamic handler =
-            services.GetService(handlerType)
-            ?? throw new NullReferenceException(
-                $"Could not retrieve 'ISubscriptionHandler<{topicType.Name}>' service."
-            );
-        return handler;
+        var handler = services.GetRequiredService(handlerType);
+        return (ISubscriptionHandler<ITopic>)handler;
     }
 
     public Task SubscribeAsync(SubscriptionEnvelope envelope)
