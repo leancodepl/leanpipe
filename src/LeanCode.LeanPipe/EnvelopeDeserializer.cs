@@ -12,6 +12,8 @@ public class DefaultEnvelopeDeserializer : IEnvelopeDeserializer
 {
     public ITopic Deserialize(SubscriptionEnvelope envelope)
     {
+        // Type.GetType only works easily for current assembly
+        // so we'll need to change this
         var topicType =
             Type.GetType(envelope.TopicType)
             ?? throw new NullReferenceException($"Topic type '{envelope.TopicType}' unknown.");
