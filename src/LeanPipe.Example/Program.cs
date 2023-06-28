@@ -1,10 +1,14 @@
 using System.Reflection;
 using LeanCode.Components;
 using LeanCode.CQRS.AspNetCore;
+using LeanCode.CQRS.AspNetCore.Middleware;
+using LeanCode.LeanPipe;
 using LeanCode.LeanPipe.Extensions;
+using LeanPipe.Example.Contracts;
+using LeanPipe.Example.Handlers;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace BasicExample;
+namespace LeanPipe.Example;
 
 public class Program
 {
@@ -20,6 +24,7 @@ public class Program
         // work-around for bug in current CoreLib version
         builder.Services.RemoveAll(typeof(CQRSSecurityMiddleware));
         builder.Services.AddLeanPipe();
+        builder.Services.AddTransient<IKeysFactory<Auction>, AuctionKeysFactory>();
 
         var app = builder.Build();
 
