@@ -18,7 +18,7 @@ public class PlaceBidCH : ICommandHandler<PlaceBid>
         Console.WriteLine("Bid placed");
         return pipe.SendAsync(
             new() { AuctionId = command.AuctionId },
-            new() { Amount = command.Amount, User = "Anonim" }
+            new() { Amount = command.Amount, User = command.UserId }
         );
     }
 }

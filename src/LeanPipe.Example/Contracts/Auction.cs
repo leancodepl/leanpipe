@@ -22,6 +22,9 @@ public class PlaceBid : ICommand
 {
     public string AuctionId { get; set; } = default!;
     public int Amount { get; set; }
+
+    // just because we don't have auth yet here
+    public string UserId { get; set; } = default!;
 }
 
 public class Buy : ICommand
