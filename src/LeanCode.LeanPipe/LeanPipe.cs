@@ -15,31 +15,27 @@ public class LeanPipe : Hub
         this.deserializer = deserializer;
     }
 
-    private (ITopic, ISubscriptionHandler<ITopic>) DeserializeEnvelope(
-        SubscriptionEnvelope envelope
-    )
+    private Task ExecuteAsync(SubscriptionEnvelope envelope, string methodName)
     {
         var topic = deserializer.Deserialize(envelope);
-        var handler = GetSubscriptionHandler(topic.GetType());
-        return (topic, handler);
-    }
-
-    private ISubscriptionHandler<ITopic> GetSubscriptionHandler(Type topicType)
-    {
-        var handlerType = typeof(ISubscriptionHandler<>).MakeGenericType(new[] { topicType });
+        var handlerType = typeof(ISubscriptionHandler<>).MakeGenericType(new[] { topic.GetType() });
+        var method =
+            handlerType.GetMethod(methodName)
+            ?? throw new NullReferenceException(
+                $"No method named {methodName} declared on type {handlerType}."
+            );
         var handler = services.GetRequiredService(handlerType);
-        return (ISubscriptionHandler<ITopic>)handler;
+        var result =
+            method.Invoke(handler, new object[] { topic, this })
+            ?? throw new InvalidOperationException(
+                $"Cannot invoke method '{handlerType}.{method.Name}'."
+            );
+        return (Task)result;
     }
 
-    public Task SubscribeAsync(SubscriptionEnvelope envelope)
-    {
-        var (topic, handler) = DeserializeEnvelope(envelope);
-        return handler.OnSubscribed(topic, this);
-    }
+    public Task SubscribeAsync(SubscriptionEnvelope envelope) =>
+        ExecuteAsync(envelope, nameof(ISubscriptionHandler<ITopic>.OnSubscribed));
 
-    public Task UnsubscribeAsync(SubscriptionEnvelope envelope)
-    {
-        var (topic, handler) = DeserializeEnvelope(envelope);
-        return handler.OnUnsubscribed(topic, this);
-    }
+    public Task UnsubscribeAsync(SubscriptionEnvelope envelope) =>
+        ExecuteAsync(envelope, nameof(ISubscriptionHandler<ITopic>.OnUnsubscribed));
 }
