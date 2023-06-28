@@ -23,8 +23,9 @@ public class Program
         );
         // work-around for bug in current CoreLib version
         builder.Services.RemoveAll(typeof(CQRSSecurityMiddleware));
-        builder.Services.AddLeanPipe();
+        builder.Services.AddTransient<IEnvelopeDeserializer, EnvelopeDeserializer>();
         builder.Services.AddTransient<IKeysFactory<Auction>, AuctionKeysFactory>();
+        builder.Services.AddLeanPipe();
 
         var app = builder.Build();
 
