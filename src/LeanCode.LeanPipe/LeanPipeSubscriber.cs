@@ -18,34 +18,36 @@ public class LeanPipeSubscriber : Hub
     private Task NotifyResult(SubscriptionResult result) =>
         Clients.Caller.SendAsync("subscriptionResult", result);
 
-    private async Task ExecuteAsync(SubscriptionEnvelope envelope, string methodName)
+    private ISubscriptionHandlerWrapper GetSubscriptionHandler(Type topic)
+    {
+        var resolverType = typeof(ISubscriptionHandlerResolver<>).MakeGenericType(new[] { topic });
+        var resolver =
+            (ISubscriptionHandlerResolver<ITopic>)services.GetRequiredService(resolverType);
+        var handler = resolver.FindSubscriptionHandler();
+        return handler;
+    }
+
+    private async Task ExecuteAsync(
+        SubscriptionEnvelope envelope,
+        Func<ISubscriptionHandlerWrapper, ITopic, Task> action
+    )
     {
         var topic = deserializer.Deserialize(envelope);
         if (topic is null)
         {
             await NotifyResult(SubscriptionResult.Malformed(envelope.Id));
-            return;
         }
-
-        var handlerType = typeof(ISubscriptionHandler<>).MakeGenericType(new[] { topic.GetType() });
-        var method =
-            handlerType.GetMethod(methodName)
-            ?? throw new NullReferenceException(
-                $"No method named {methodName} declared on type {handlerType}."
-            );
-        var handler = services.GetRequiredService(handlerType);
-        var result =
-            method.Invoke(handler, new object[] { topic, this })
-            ?? throw new InvalidOperationException(
-                $"Cannot invoke method '{handlerType}.{method.Name}'."
-            );
-        await (Task)result;
-        await NotifyResult(SubscriptionResult.Success(envelope.Id));
+        else
+        {
+            var handler = GetSubscriptionHandler(topic.GetType());
+            await action(handler, topic);
+            await NotifyResult(SubscriptionResult.Success(envelope.Id));
+        }
     }
 
     public Task SubscribeAsync(SubscriptionEnvelope envelope) =>
-        ExecuteAsync(envelope, nameof(ISubscriptionHandler<ITopic>.OnSubscribed));
+        ExecuteAsync(envelope, (handler, topic) => handler.OnSubscribed(topic, this));
 
     public Task UnsubscribeAsync(SubscriptionEnvelope envelope) =>
-        ExecuteAsync(envelope, nameof(ISubscriptionHandler<ITopic>.OnUnsubscribed));
+        ExecuteAsync(envelope, (handler, topic) => handler.OnUnsubscribed(topic, this));
 }

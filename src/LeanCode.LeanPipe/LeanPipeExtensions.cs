@@ -20,6 +20,10 @@ public static class LeanPipeExtensions
         services.TryAddTransient(typeof(IEnvelopeDeserializer), envelopeDeserializer);
         services.AddTransient(typeof(ISubscriptionHandler<>), typeof(KeyedSubscriptionHandler<>));
         services.AddTransient(typeof(ILeanPipePublisher<,>), typeof(LeanPipePublisher<,>));
+        services.AddTransient(
+            typeof(ISubscriptionHandlerResolver<>),
+            typeof(SubscriptionHandlerResolver<>)
+        );
         return services;
     }
 
