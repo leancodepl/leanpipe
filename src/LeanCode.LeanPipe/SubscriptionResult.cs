@@ -4,15 +4,14 @@ public class SubscriptionResult
 {
     public Guid SubscriptionId { get; private init; }
     public SubscriptionStatus Status { get; private init; }
+    public OperationType Type { get; private init; }
 
-    public static SubscriptionResult Success(Guid subscriptionId) =>
-        new() { SubscriptionId = subscriptionId, Status = SubscriptionStatus.Success };
-
-    public static SubscriptionResult Unauthorized(Guid subscriptionId) =>
-        new() { SubscriptionId = subscriptionId, Status = SubscriptionStatus.Unauthorized };
-
-    public static SubscriptionResult Malformed(Guid subscriptionId) =>
-        new() { SubscriptionId = subscriptionId, Status = SubscriptionStatus.Malformed };
+    public SubscriptionResult(Guid subscriptionId, SubscriptionStatus status, OperationType type)
+    {
+        SubscriptionId = subscriptionId;
+        Status = status;
+        Type = type;
+    }
 }
 
 public enum SubscriptionStatus
@@ -20,4 +19,12 @@ public enum SubscriptionStatus
     Success = 0,
     Unauthorized = 1,
     Malformed = 2,
+    Invalid = 3,
+    InternalServerError = 4,
+}
+
+public enum OperationType
+{
+    Subscribe = 0,
+    Unsubscribe = 1,
 }

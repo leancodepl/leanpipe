@@ -15,8 +15,11 @@ public class LeanPipeSubscriber : Hub
         this.deserializer = deserializer;
     }
 
-    private Task NotifyResult(SubscriptionResult result) =>
-        Clients.Caller.SendAsync("subscriptionResult", result);
+    private Task NotifyResult(Guid subscriptionId, SubscriptionStatus status, OperationType type) =>
+        Clients.Caller.SendAsync(
+            "subscriptionResult",
+            new SubscriptionResult(subscriptionId, status, type)
+        );
 
     private ISubscriptionHandlerWrapper GetSubscriptionHandler(Type topic)
     {
@@ -29,25 +32,41 @@ public class LeanPipeSubscriber : Hub
 
     private async Task ExecuteAsync(
         SubscriptionEnvelope envelope,
-        Func<ISubscriptionHandlerWrapper, ITopic, Task> action
+        Func<ISubscriptionHandlerWrapper, ITopic, Task> action,
+        OperationType type
     )
     {
-        var topic = deserializer.Deserialize(envelope);
-        if (topic is null)
+        try
         {
-            await NotifyResult(SubscriptionResult.Malformed(envelope.Id));
+            var topic = deserializer.Deserialize(envelope);
+            if (topic is null)
+            {
+                await NotifyResult(envelope.Id, SubscriptionStatus.Malformed, type);
+            }
+            else
+            {
+                var handler = GetSubscriptionHandler(topic.GetType());
+                await action(handler, topic);
+                await NotifyResult(envelope.Id, SubscriptionStatus.Success, type);
+            }
         }
-        else
+        catch
         {
-            var handler = GetSubscriptionHandler(topic.GetType());
-            await action(handler, topic);
-            await NotifyResult(SubscriptionResult.Success(envelope.Id));
+            await NotifyResult(envelope.Id, SubscriptionStatus.InternalServerError, type);
         }
     }
 
     public Task SubscribeAsync(SubscriptionEnvelope envelope) =>
-        ExecuteAsync(envelope, (handler, topic) => handler.OnSubscribed(topic, this));
+        ExecuteAsync(
+            envelope,
+            (handler, topic) => handler.OnSubscribed(topic, this),
+            OperationType.Subscribe
+        );
 
     public Task UnsubscribeAsync(SubscriptionEnvelope envelope) =>
-        ExecuteAsync(envelope, (handler, topic) => handler.OnUnsubscribed(topic, this));
+        ExecuteAsync(
+            envelope,
+            (handler, topic) => handler.OnUnsubscribed(topic, this),
+            OperationType.Unsubscribe
+        );
 }
