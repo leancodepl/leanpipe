@@ -12,13 +12,25 @@ public class DefaultEnvelopeDeserializer : IEnvelopeDeserializer
 {
     public ITopic? Deserialize(SubscriptionEnvelope envelope)
     {
-        // Type.GetType only works easily for current assembly
-        // so we'll need to change this
-        var topicType = Type.GetType(envelope.TopicType);
+        // I think we should rather register the types on startup rather than search each time
+        // but that's a detail we should take care of later
+        var topicType = AppDomain.CurrentDomain
+            .GetAssemblies()
+            .Select(a => a.GetType(envelope.TopicType))
+            .OfType<Type>()
+            .FirstOrDefault();
         var options = new JsonSerializerOptions();
-        var topic = topicType is not null
-            ? JsonSerializer.Deserialize(envelope.Topic, topicType, options)
-            : null;
-        return (ITopic?)topic;
+        try
+        {
+            var topic = topicType is not null
+                ? JsonSerializer.Deserialize(envelope.Topic, topicType, options)
+                : null;
+            return (ITopic?)topic;
+        }
+        catch
+        {
+            // TODO: log what's wrong
+            return null;
+        }
     }
 }
