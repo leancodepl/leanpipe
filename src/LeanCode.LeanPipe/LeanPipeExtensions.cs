@@ -19,7 +19,7 @@ public static class LeanPipeExtensions
         services.AddSignalR();
         services.TryAddTransient(typeof(IEnvelopeDeserializer), envelopeDeserializer);
         services.AddTransient(typeof(ISubscriptionHandler<>), typeof(KeyedSubscriptionHandler<>));
-        services.AddTransient(typeof(ILeanPipeContext<,>), typeof(LeanPipeContext<,>));
+        services.AddTransient(typeof(ILeanPipePublisher<,>), typeof(LeanPipePublisher<,>));
         return services;
     }
 
@@ -28,7 +28,7 @@ public static class LeanPipeExtensions
         string pattern
     )
     {
-        return endpoints.MapHub<LeanPipe>(pattern);
+        return endpoints.MapHub<LeanPipeSubscriber>(pattern);
     }
 
     public static IHubEndpointConventionBuilder MapLeanPipe(
@@ -37,6 +37,6 @@ public static class LeanPipeExtensions
         Action<HttpConnectionDispatcherOptions>? configureOptions
     )
     {
-        return endpoints.MapHub<LeanPipe>(pattern, configureOptions);
+        return endpoints.MapHub<LeanPipeSubscriber>(pattern, configureOptions);
     }
 }

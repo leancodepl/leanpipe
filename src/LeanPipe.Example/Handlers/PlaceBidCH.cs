@@ -6,9 +6,9 @@ namespace LeanPipe.Example.Handlers;
 
 public class PlaceBidCH : ICommandHandler<PlaceBid>
 {
-    private readonly ILeanPipeContext<Auction, BidPlaced> pipe;
+    private readonly ILeanPipePublisher<Auction, BidPlaced> pipe;
 
-    public PlaceBidCH(ILeanPipeContext<Auction, BidPlaced> pipe)
+    public PlaceBidCH(ILeanPipePublisher<Auction, BidPlaced> pipe)
     {
         this.pipe = pipe;
     }

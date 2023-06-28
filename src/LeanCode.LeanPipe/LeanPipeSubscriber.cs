@@ -4,12 +4,12 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LeanCode.LeanPipe;
 
-public class LeanPipe : Hub
+public class LeanPipeSubscriber : Hub
 {
     private readonly IServiceProvider services;
     private readonly IEnvelopeDeserializer deserializer;
 
-    public LeanPipe(IServiceProvider services, IEnvelopeDeserializer deserializer)
+    public LeanPipeSubscriber(IServiceProvider services, IEnvelopeDeserializer deserializer)
     {
         this.services = services;
         this.deserializer = deserializer;

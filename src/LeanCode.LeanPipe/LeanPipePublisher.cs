@@ -3,21 +3,24 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace LeanCode.LeanPipe;
 
-public interface ILeanPipeContext<TTopic, TNotification>
+public interface ILeanPipePublisher<TTopic, TNotification>
     where TTopic : ITopic, IProduceNotification<TNotification>
     where TNotification : notnull
 {
     Task SendAsync(TTopic topic, TNotification notification);
 }
 
-public class LeanPipeContext<TTopic, TNotification> : ILeanPipeContext<TTopic, TNotification>
+public class LeanPipePublisher<TTopic, TNotification> : ILeanPipePublisher<TTopic, TNotification>
     where TTopic : ITopic, IProduceNotification<TNotification>
     where TNotification : notnull
 {
-    internal IHubContext<LeanPipe> HubContext { get; }
+    internal IHubContext<LeanPipeSubscriber> HubContext { get; }
     internal IKeysFactory<TTopic> KeysFactory { get; }
 
-    public LeanPipeContext(IHubContext<LeanPipe> hubContext, IKeysFactory<TTopic> keysFactory)
+    public LeanPipePublisher(
+        IHubContext<LeanPipeSubscriber> hubContext,
+        IKeysFactory<TTopic> keysFactory
+    )
     {
         HubContext = hubContext;
         KeysFactory = keysFactory;

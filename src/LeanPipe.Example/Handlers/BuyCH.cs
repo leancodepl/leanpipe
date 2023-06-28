@@ -6,9 +6,9 @@ namespace LeanPipe.Example.Handlers;
 
 public class BuyCH : ICommandHandler<Buy>
 {
-    private readonly ILeanPipeContext<Auction, ItemSold> pipe;
+    private readonly ILeanPipePublisher<Auction, ItemSold> pipe;
 
-    public BuyCH(ILeanPipeContext<Auction, ItemSold> pipe)
+    public BuyCH(ILeanPipePublisher<Auction, ItemSold> pipe)
     {
         this.pipe = pipe;
     }
