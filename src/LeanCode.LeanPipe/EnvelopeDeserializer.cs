@@ -5,22 +5,20 @@ namespace LeanCode.LeanPipe;
 
 public interface IEnvelopeDeserializer
 {
-    ITopic Deserialize(SubscriptionEnvelope envelope);
+    ITopic? Deserialize(SubscriptionEnvelope envelope);
 }
 
 public class DefaultEnvelopeDeserializer : IEnvelopeDeserializer
 {
-    public ITopic Deserialize(SubscriptionEnvelope envelope)
+    public ITopic? Deserialize(SubscriptionEnvelope envelope)
     {
         // Type.GetType only works easily for current assembly
         // so we'll need to change this
-        var topicType =
-            Type.GetType(envelope.TopicType)
-            ?? throw new NullReferenceException($"Topic type '{envelope.TopicType}' unknown.");
+        var topicType = Type.GetType(envelope.TopicType);
         var options = new JsonSerializerOptions();
-        var topic =
-            JsonSerializer.Deserialize(envelope.Topic, topicType, options)
-            ?? throw new InvalidOperationException($"Cannot deserialize type '{topicType}'.");
-        return (ITopic)topic;
+        var topic = topicType is not null
+            ? JsonSerializer.Deserialize(envelope.Topic, topicType, options)
+            : null;
+        return (ITopic?)topic;
     }
 }

@@ -15,9 +15,18 @@ public class LeanPipe : Hub
         this.deserializer = deserializer;
     }
 
-    private Task ExecuteAsync(SubscriptionEnvelope envelope, string methodName)
+    private Task NotifyResult(SubscriptionResult result) =>
+        Clients.Caller.SendAsync("subscriptionResult", result);
+
+    private async Task ExecuteAsync(SubscriptionEnvelope envelope, string methodName)
     {
         var topic = deserializer.Deserialize(envelope);
+        if (topic is null)
+        {
+            await NotifyResult(SubscriptionResult.Malformed(envelope.Id));
+            return;
+        }
+
         var handlerType = typeof(ISubscriptionHandler<>).MakeGenericType(new[] { topic.GetType() });
         var method =
             handlerType.GetMethod(methodName)
@@ -30,7 +39,8 @@ public class LeanPipe : Hub
             ?? throw new InvalidOperationException(
                 $"Cannot invoke method '{handlerType}.{method.Name}'."
             );
-        return (Task)result;
+        await (Task)result;
+        await NotifyResult(SubscriptionResult.Success(envelope.Id));
     }
 
     public Task SubscribeAsync(SubscriptionEnvelope envelope) =>
