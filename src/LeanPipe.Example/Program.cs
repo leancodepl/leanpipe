@@ -2,6 +2,7 @@ using System.Reflection;
 using LeanCode.Components;
 using LeanCode.CQRS.AspNetCore;
 using LeanCode.LeanPipe.Extensions;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace BasicExample;
 
@@ -16,6 +17,8 @@ public class Program
             new TypesCatalog(Assembly.GetExecutingAssembly()),
             new TypesCatalog(Assembly.GetExecutingAssembly())
         );
+        // work-around for bug in current CoreLib version
+        builder.Services.RemoveAll(typeof(CQRSSecurityMiddleware));
         builder.Services.AddLeanPipe();
 
         var app = builder.Build();
