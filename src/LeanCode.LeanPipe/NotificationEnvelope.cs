@@ -4,6 +4,7 @@ namespace LeanCode.LeanPipe;
 
 public class NotificationEnvelope
 {
+    public Guid Id { get; private init; }
     public string TopicType { get; private init; } = default!;
     public string NotificationType { get; private init; } = default!;
     public object Topic { get; private init; } = default!;
@@ -18,6 +19,7 @@ public class NotificationEnvelope
     {
         return new()
         {
+            Id = Guid.NewGuid(),
             TopicType = typeof(TTopic).FullName!,
             NotificationType = typeof(TNotification).FullName!,
             Topic = topic,

@@ -13,14 +13,21 @@ const username = new Date().getTime();
 
 const connection = new signalR.HubConnectionBuilder().withUrl("/pipe").build();
 
-interface Envelope {
+interface NotificationEnvelope {
+  id: string;
   topicType: string;
   notificationType: string;
   topic: object;
   notification: object;
 }
 
-connection.on("notify", (message: Envelope) => {
+interface SubscriptionEnvelope {
+  Id: string;
+  TopicType: string;
+  Topic: string;
+}
+
+connection.on("notify", (message: NotificationEnvelope) => {
   const m = document.createElement("div");
 
   m.innerHTML = `<div>${JSON.stringify(message)}</div>`;
@@ -32,16 +39,20 @@ connection.on("notify", (message: Envelope) => {
 connection.start().catch((err) => document.write(err));
 
 btnSubscribe.addEventListener("click", () => {
-  connection.send("SubscribeAsync", {
+  const envelope: SubscriptionEnvelope = {
+    Id: crypto.randomUUID(),
     TopicType: "LeanPipe.Example.Contracts.Auction",
     Topic: JSON.stringify({ AuctionId: tbTopic.value }),
-  });
+  };
+  connection.send("SubscribeAsync", envelope);
 });
 btnUnsubscribe.addEventListener("click", () => {
-  connection.send("UnsubscribeAsync", {
+  const envelope: SubscriptionEnvelope = {
+    Id: crypto.randomUUID(),
     TopicType: "LeanPipe.Example.Contracts.Auction",
     Topic: JSON.stringify({ AuctionId: tbTopic.value }),
-  });
+  };
+  connection.send("UnsubscribeAsync", envelope);
 });
 btnBid.addEventListener("click", (event) => {
   fetch(normalize("/cqrs/command/LeanPipe.Example.Contracts.PlaceBid"), {
