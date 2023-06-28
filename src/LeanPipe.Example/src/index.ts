@@ -27,6 +27,26 @@ interface SubscriptionEnvelope {
   Topic: string;
 }
 
+enum SubscriptionStatus {
+  Success = 0,
+  Unauthorized = 1,
+  Malformed = 2,
+}
+
+interface SubscriptionResult {
+  SubscriptionId: string;
+  Status: SubscriptionStatus;
+}
+
+connection.on("subscriptionResult", (message: SubscriptionResult) => {
+  const m = document.createElement("div");
+
+  m.innerHTML = `<div>${JSON.stringify(message)}</div>`;
+
+  divMessages.appendChild(m);
+  divMessages.scrollTop = divMessages.scrollHeight;
+});
+
 connection.on("notify", (message: NotificationEnvelope) => {
   const m = document.createElement("div");
 
