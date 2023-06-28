@@ -27,9 +27,9 @@ public class Program
             "/cqrs",
             cqrs =>
             {
-                cqrs.Queries = q => q.Secure();
-                cqrs.Commands = c => c.Secure().Validate();
-                cqrs.Operations = o => o.Secure();
+                cqrs.Queries = _ => { };
+                cqrs.Commands = _ => { };
+                cqrs.Operations = _ => { };
             }
         );
         app.MapLeanPipe("/pipe");
