@@ -15,7 +15,6 @@ public class PlaceBidCH : ICommandHandler<PlaceBid>
 
     public Task ExecuteAsync(HttpContext context, PlaceBid command)
     {
-        Console.WriteLine("Bid placed");
         return pipe.SendAsync(
             new() { AuctionId = command.AuctionId },
             new() { Amount = command.Amount, User = command.UserId }

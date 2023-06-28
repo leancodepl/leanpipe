@@ -6,7 +6,7 @@ public class NotificationEnvelope
 {
     public string TopicType { get; private init; } = default!;
     public string NotificationType { get; private init; } = default!;
-    public ITopic Topic { get; private init; } = default!;
+    public object Topic { get; private init; } = default!;
     public object Notification { get; private init; } = default!;
 
     public static NotificationEnvelope Create<TTopic, TNotification>(
