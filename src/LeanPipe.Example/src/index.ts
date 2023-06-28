@@ -62,7 +62,7 @@ btnBuy.addEventListener("click", (event) => {
     method: "POST",
     body: JSON.stringify({
       AuctionId: tbTopic.value,
-      userId: username.toString(),
+      UserId: username.toString(),
     }),
     headers: {
       "Content-type": "application/json; charset=UTF-8",
