@@ -17,21 +17,9 @@ public static class LeanPipeExtensions
     )
     {
         services.AddSignalR();
-        services.TryAdd(
-            ServiceDescriptor.Transient(typeof(IEnvelopeDeserializer), envelopeDeserializer)
-        );
-        services.TryAdd(
-            ServiceDescriptor.Transient(typeof(IKeysFactory<>), typeof(DefaultKeysFactory<>))
-        );
-        services.TryAdd(
-            ServiceDescriptor.Transient(
-                typeof(ISubscriptionHandler<>),
-                typeof(KeyedSubscriptionHandler<>)
-            )
-        );
-        services.TryAdd(
-            ServiceDescriptor.Transient(typeof(ILeanPipeContext<,>), typeof(LeanPipeContext<,>))
-        );
+        services.TryAddTransient(typeof(IEnvelopeDeserializer), envelopeDeserializer);
+        services.AddTransient(typeof(ISubscriptionHandler<>), typeof(KeyedSubscriptionHandler<>));
+        services.AddTransient(typeof(ILeanPipeContext<,>), typeof(LeanPipeContext<,>));
         return services;
     }
 

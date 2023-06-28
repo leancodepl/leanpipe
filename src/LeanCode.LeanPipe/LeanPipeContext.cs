@@ -27,6 +27,6 @@ public class LeanPipeContext<TTopic, TNotification> : ILeanPipeContext<TTopic, T
     {
         var keys = KeysFactory.ToKeys(topic).ToList();
         var payload = NotificationEnvelope.Create(topic, notification);
-        return HubContext.Clients.Groups(keys).SendAsync(nameof(TTopic), payload);
+        return HubContext.Clients.Groups(keys).SendAsync("notify", payload);
     }
 }
