@@ -1,3 +1,4 @@
+using LeanCode.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Routing;
@@ -24,6 +25,38 @@ public static class LeanPipeExtensions
             typeof(ISubscriptionHandlerResolver<>),
             typeof(SubscriptionHandlerResolver<>)
         );
+        return services;
+    }
+
+    public static IServiceCollection AddKeysFactory<TTopic>(
+        this IServiceCollection services,
+        Type factory
+    )
+        where TTopic : ITopic
+    {
+        services.AddTransient(typeof(IKeysFactory<TTopic>), factory);
+        return services;
+    }
+
+    public static IServiceCollection AddSubscriptionHandler<TTopic>(
+        this IServiceCollection services,
+        Type handler
+    )
+        where TTopic : ITopic
+    {
+        services.AddTransient(typeof(ISubscriptionHandler<TTopic>), handler);
+        return services;
+    }
+
+    public static IServiceCollection AddSubscriptionHandler<TTopic>(
+        this IServiceCollection services,
+        Type handler,
+        Type factory
+    )
+        where TTopic : ITopic
+    {
+        services.AddTransient(typeof(IKeysFactory<TTopic>), factory);
+        services.AddTransient(typeof(ISubscriptionHandler<TTopic>), handler);
         return services;
     }
 
