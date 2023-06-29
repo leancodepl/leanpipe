@@ -8,21 +8,21 @@ public class LeanPipePublisher<TTopic, TNotification>
     where TNotification : notnull
 {
     internal IHubContext<LeanPipeSubscriber> HubContext { get; }
-    internal IKeysFactory<TTopic> KeysFactory { get; }
+    internal IKeysFactory<TTopic, TNotification> KeysFactory { get; }
 
     public LeanPipePublisher(
         IHubContext<LeanPipeSubscriber> hubContext,
-        IKeysFactory<TTopic> keysFactory
+        IKeysFactory<TTopic, TNotification> keysFactory
     )
     {
         HubContext = hubContext;
         KeysFactory = keysFactory;
     }
 
-    public virtual Task SendAsync(TTopic topic, TNotification notification)
+    public virtual async Task SendAsync(TTopic topic, TNotification notification)
     {
-        var keys = KeysFactory.ToKeys(topic).ToList();
+        var keys = await KeysFactory.ToKeysAsync(topic, notification);
         var payload = NotificationEnvelope.Create(topic, notification);
-        return HubContext.Clients.Groups(keys).SendAsync("notify", payload);
+        await HubContext.Clients.Groups(keys).SendAsync("notify", payload);
     }
 }

@@ -35,6 +35,17 @@ public static class LeanPipeExtensions
         where TTopic : ITopic
     {
         services.AddTransient(typeof(IKeysFactory<TTopic>), factory);
+        var interfaces = factory.FindInterfaces(
+            new(
+                (i, c) =>
+                    i.IsAbstract && i.IsGenericType && i.GetGenericTypeDefinition() == (Type)c!
+            ),
+            typeof(IKeysFactory<,>)
+        );
+        foreach (var @interface in interfaces)
+        {
+            services.AddTransient(@interface, factory);
+        }
         return services;
     }
 
@@ -55,7 +66,7 @@ public static class LeanPipeExtensions
     )
         where TTopic : ITopic
     {
-        services.AddTransient(typeof(IKeysFactory<TTopic>), factory);
+        services.AddKeysFactory<TTopic>(factory);
         services.AddTransient(typeof(ISubscriptionHandler<TTopic>), handler);
         return services;
     }
