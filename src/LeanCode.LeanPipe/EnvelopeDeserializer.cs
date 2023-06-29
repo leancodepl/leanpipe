@@ -5,12 +5,12 @@ namespace LeanCode.LeanPipe;
 
 public interface IEnvelopeDeserializer
 {
-    ITopic? Deserialize(SubscriptionEnvelope envelope);
+    ITopic Deserialize(SubscriptionEnvelope envelope);
 }
 
 public class DefaultEnvelopeDeserializer : IEnvelopeDeserializer
 {
-    public ITopic? Deserialize(SubscriptionEnvelope envelope)
+    public ITopic Deserialize(SubscriptionEnvelope envelope)
     {
         // I think we should rather register the types on startup rather than search each time
         // but that's a detail we should take care of later
@@ -18,19 +18,11 @@ public class DefaultEnvelopeDeserializer : IEnvelopeDeserializer
             .GetAssemblies()
             .Select(a => a.GetType(envelope.TopicType))
             .OfType<Type>()
-            .FirstOrDefault();
+            .First();
         var options = new JsonSerializerOptions();
-        try
-        {
-            var topic = topicType is not null
-                ? JsonSerializer.Deserialize(envelope.Topic, topicType, options)
-                : null;
-            return (ITopic?)topic;
-        }
-        catch
-        {
-            // TODO: log what's wrong
-            return null;
-        }
+        var topic =
+            JsonSerializer.Deserialize(envelope.Topic, topicType, options)
+            ?? throw new NullReferenceException("Topic should not deserialize to null.");
+        return (ITopic)topic;
     }
 }

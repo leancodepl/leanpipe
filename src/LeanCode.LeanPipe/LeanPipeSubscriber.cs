@@ -36,23 +36,29 @@ public class LeanPipeSubscriber : Hub
         OperationType type
     )
     {
+        ITopic topic;
         try
         {
-            var topic = deserializer.Deserialize(envelope);
-            if (topic is null)
-            {
-                await NotifyResult(envelope.Id, SubscriptionStatus.Malformed, type);
-            }
-            else
-            {
-                var handler = GetSubscriptionHandler(topic.GetType());
-                await action(handler, topic);
-                await NotifyResult(envelope.Id, SubscriptionStatus.Success, type);
-            }
+            topic = deserializer.Deserialize(envelope);
         }
-        catch
+        catch (Exception e)
+        {
+            await NotifyResult(envelope.Id, SubscriptionStatus.Malformed, type);
+            throw new InvalidOperationException(
+                $"Cannot deserialize topic {envelope.Topic} of type {envelope.TopicType}.",
+                e
+            );
+        }
+        try
+        {
+            var handler = GetSubscriptionHandler(topic.GetType());
+            await action(handler, topic);
+            await NotifyResult(envelope.Id, SubscriptionStatus.Success, type);
+        }
+        catch (Exception e)
         {
             await NotifyResult(envelope.Id, SubscriptionStatus.InternalServerError, type);
+            throw new InvalidOperationException($"Error on subscribing to topic {topic}.", e);
         }
     }
 
