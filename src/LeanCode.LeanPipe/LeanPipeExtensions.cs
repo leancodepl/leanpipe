@@ -20,7 +20,7 @@ public static class LeanPipeExtensions
         services.AddSignalR();
         services.TryAddTransient(typeof(IEnvelopeDeserializer), envelopeDeserializer);
         services.AddTransient(typeof(ISubscriptionHandler<>), typeof(KeyedSubscriptionHandler<>));
-        services.AddTransient(typeof(ILeanPipePublisher<,>), typeof(LeanPipePublisher<,>));
+        services.AddTransient(typeof(LeanPipePublisher<,>), typeof(LeanPipePublisher<,>));
         services.AddTransient(
             typeof(ISubscriptionHandlerResolver<>),
             typeof(SubscriptionHandlerResolver<>)

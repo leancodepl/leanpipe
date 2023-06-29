@@ -3,14 +3,7 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace LeanCode.LeanPipe;
 
-public interface ILeanPipePublisher<TTopic, TNotification>
-    where TTopic : ITopic, IProduceNotification<TNotification>
-    where TNotification : notnull
-{
-    Task SendAsync(TTopic topic, TNotification notification);
-}
-
-public class LeanPipePublisher<TTopic, TNotification> : ILeanPipePublisher<TTopic, TNotification>
+public class LeanPipePublisher<TTopic, TNotification>
     where TTopic : ITopic, IProduceNotification<TNotification>
     where TNotification : notnull
 {
