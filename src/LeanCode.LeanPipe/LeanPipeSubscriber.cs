@@ -1,4 +1,5 @@
-﻿using LeanCode.Contracts;
+﻿using System.Text.Json;
+using LeanCode.Contracts;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -36,29 +37,28 @@ public class LeanPipeSubscriber : Hub
         OperationType type
     )
     {
-        ITopic topic;
         try
         {
-            topic = deserializer.Deserialize(envelope);
-        }
-        catch (Exception e)
-        {
-            await NotifyResult(envelope.Id, SubscriptionStatus.Malformed, type);
-            throw new InvalidOperationException(
-                $"Cannot deserialize topic {envelope.Topic} of type {envelope.TopicType}.",
-                e
-            );
-        }
-        try
-        {
+            var topic = deserializer.Deserialize(envelope);
             var handler = GetSubscriptionHandler(topic.GetType());
             await action(handler, topic);
             await NotifyResult(envelope.Id, SubscriptionStatus.Success, type);
         }
-        catch (Exception e)
+        catch (JsonException error)
+        {
+            await NotifyResult(envelope.Id, SubscriptionStatus.Malformed, type);
+            throw new InvalidOperationException(
+                $"Cannot deserialize topic {envelope.Topic} of type {envelope.TopicType}.",
+                error
+            );
+        }
+        catch (Exception error)
         {
             await NotifyResult(envelope.Id, SubscriptionStatus.InternalServerError, type);
-            throw new InvalidOperationException($"Error on subscribing to topic {topic}.", e);
+            throw new InvalidOperationException(
+                $"Error on subscribing to topic {envelope.TopicType}.",
+                error
+            );
         }
     }
 
