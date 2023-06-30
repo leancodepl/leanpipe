@@ -3,26 +3,27 @@ using LeanPipe.Example.Contracts;
 
 namespace LeanPipe.Example.Handlers;
 
-public class AuctionKeysFactory : IKeysFactory<Auction, BidPlaced>, IKeysFactory<Auction, ItemSold>
+public class AuctionKeysFactory
+    : BasicKeysFactory<Auction>,
+        IKeysFactory<Auction, BidPlaced>,
+        IKeysFactory<Auction, ItemSold>
 {
-    public Task<IEnumerable<string>> ToKeysAsync(Auction topic) =>
-        Task.FromResult(new[] { $"{typeof(Auction)}:{topic.AuctionId}" }.AsEnumerable());
+    public override IEnumerable<string> ToKeys(Auction topic) =>
+        new[] { $"{typeof(Auction)}:{topic.AuctionId}" }.AsEnumerable();
 
-    // we should explain in docs that the default implementation of topic-based ToKeysAsync
-    // is usually what you want everywhere
     public Task<IEnumerable<string>> ToKeysAsync(Auction topic, BidPlaced notification) =>
-        ToKeysAsync(topic);
+        Task.FromResult(ToKeys(topic));
 
     public Task<IEnumerable<string>> ToKeysAsync(Auction topic, ItemSold notification) =>
-        ToKeysAsync(topic);
+        Task.FromResult(ToKeys(topic));
 }
 
 // this is missing an implementation, but it will be cached at startup time
 public class WrongKeysFactory : IKeysFactory<Auction, BidPlaced>
 {
-    public Task<IEnumerable<string>> ToKeysAsync(Auction topic) =>
+    public Task<IEnumerable<string>> ToKeysAsync(Auction topic, LeanPipeSubscriber pipe) =>
         Task.FromResult(new[] { $"{typeof(Auction)}:{topic.AuctionId}" }.AsEnumerable());
 
     public Task<IEnumerable<string>> ToKeysAsync(Auction topic, BidPlaced notification) =>
-        ToKeysAsync(topic);
+        Task.FromResult(new[] { "It's wrong anyway" }.AsEnumerable());
 }
