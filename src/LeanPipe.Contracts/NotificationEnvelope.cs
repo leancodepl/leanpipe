@@ -1,6 +1,4 @@
-using LeanCode.Contracts;
-
-namespace LeanCode.LeanPipe;
+namespace LeanCode.Contracts;
 
 public class NotificationEnvelope
 {

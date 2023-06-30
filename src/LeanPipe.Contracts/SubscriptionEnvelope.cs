@@ -1,4 +1,4 @@
-namespace LeanCode.LeanPipe;
+namespace LeanCode.Contracts;
 
 public class SubscriptionEnvelope
 {
