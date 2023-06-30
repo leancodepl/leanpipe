@@ -25,6 +25,12 @@ public class Program
         builder.Services.RemoveAll(typeof(CQRSSecurityMiddleware));
 
         builder.Services.AddKeysFactory<Auction>(typeof(AuctionKeysFactory));
+        // the following registers an invalid type and will throw at startup
+        // builder.Services.AddKeysFactory<Auction>(typeof(WrongKeysFactory));
+        // > Unhandled exception. System.InvalidOperationException: Keys factory should implement the same
+        // >   notification-related interfaces as it's topic; 'WrongKeysFactory' is missing following implementations:
+        // >   IKeysFactory<Auction, ItemSold>.
+
         builder.Services.AddLeanPipe();
 
         var app = builder.Build();
