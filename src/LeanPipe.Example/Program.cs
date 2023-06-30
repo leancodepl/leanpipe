@@ -2,9 +2,9 @@ using System.Reflection;
 using LeanCode.Components;
 using LeanCode.CQRS.AspNetCore;
 using LeanCode.CQRS.AspNetCore.Middleware;
-using LeanCode.LeanPipe;
 using LeanCode.LeanPipe.Extensions;
 using LeanPipe.Example.Contracts;
+using LeanPipe.Example.DataAccess;
 using LeanPipe.Example.Handlers;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -30,6 +30,8 @@ public class Program
         // > Unhandled exception. System.InvalidOperationException: Keys factory should implement the same
         // >   notification-related interfaces as it's topic; 'WrongKeysFactory' is missing following implementations:
         // >   IKeysFactory<Auction, ItemSold>.
+        builder.Services.AddKeysFactory<Games>(typeof(GamesKeysFactory));
+        builder.Services.AddSingleton(new GamesContext()); // mock
 
         builder.Services.AddLeanPipe();
 
