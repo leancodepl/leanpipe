@@ -30,12 +30,13 @@ public static class LeanPipeExtensions
         return services;
     }
 
-    public static IServiceCollection AddKeysFactory<TTopic>(
-        this IServiceCollection services,
-        Type factory
+    public static IServiceCollection AddKeysFactory<TTopic, TFactory>(
+        this IServiceCollection services
     )
         where TTopic : ITopic
+        where TFactory : IKeysFactory<TTopic>
     {
+        var factory = typeof(TFactory);
         services.AddTransient(typeof(IKeysFactory<TTopic>), factory);
         var filter = new TypeFilter(
             (i, c) => i.IsAbstract && i.IsGenericType && i.GetGenericTypeDefinition() == (Type)c!
@@ -73,25 +74,25 @@ public static class LeanPipeExtensions
         return services;
     }
 
-    public static IServiceCollection AddSubscriptionHandler<TTopic>(
-        this IServiceCollection services,
-        Type handler
+    public static IServiceCollection AddSubscriptionHandler<TTopic, THandler>(
+        this IServiceCollection services
     )
         where TTopic : ITopic
+        where THandler : ISubscriptionHandler<TTopic>
     {
-        services.AddTransient(typeof(ISubscriptionHandler<TTopic>), handler);
+        services.AddTransient(typeof(ISubscriptionHandler<TTopic>), typeof(THandler));
         return services;
     }
 
-    public static IServiceCollection AddSubscriptionHandler<TTopic>(
-        this IServiceCollection services,
-        Type handler,
-        Type factory
+    public static IServiceCollection AddHandlerAndFactory<TTopic, TFactory, THandler>(
+        this IServiceCollection services
     )
         where TTopic : ITopic
+        where TFactory : IKeysFactory<TTopic>
+        where THandler : ISubscriptionHandler<TTopic>
     {
-        services.AddKeysFactory<TTopic>(factory);
-        services.AddTransient(typeof(ISubscriptionHandler<TTopic>), handler);
+        services.AddKeysFactory<TTopic, TFactory>();
+        services.AddSubscriptionHandler<TTopic, THandler>();
         return services;
     }
 
