@@ -3,7 +3,6 @@ set -e
 
 readonly ACR_NAME="leancode"
 export APP_NAME="leanpipe-example"
-APP_VERSION=""
 
 while getopts "v:" opt; do
   case $opt in
