@@ -1,0 +1,18 @@
+<Project>
+
+  <PropertyGroup>
+    <LangVersion>preview</LangVersion>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Deterministic>true</Deterministic>
+    <EmbedAllSources>true</EmbedAllSources>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <AnalysisLevel>preview-All</AnalysisLevel>
+
+    <Authors>LeanCode</Authors>
+    <Company>LeanCode</Company>
+    <Copyright>Copyright 2023 LeanCode Sp. z o.o.</Copyright>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,15 @@
+<Project>
+
+  <ItemGroup>
+    <PackageReference Include="LeanCode.Contracts" Version="1.1.1" />
+    <PackageReference Include="LeanCode.CQRS.AspNetCore" Version="8.0.1890-preview" />
+    <PackageReference Include="LeanCode.CQRS.Execution" Version="8.0.1890-preview" />
+
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
+    <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.1.3">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
