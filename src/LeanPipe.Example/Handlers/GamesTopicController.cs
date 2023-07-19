@@ -23,11 +23,18 @@ public class GamesTopicController
         return Task.FromResult(keys);
     }
 
-    public Task<IEnumerable<string>> ToKeysAsync(Games topic, GameFinished notification, LeanPipeContext context) =>
+    public Task<IEnumerable<string>> ToKeysAsync(
+        Games topic,
+        GameFinished notification,
+        LeanPipeContext context
+    ) =>
         Task.FromResult(
             new[] { $"game:{notification.GameId}", $"player:{notification.Winner}" }.AsEnumerable()
         );
 
-    public Task<IEnumerable<string>> ToKeysAsync(Games topic, GameCancelled notification, LeanPipeContext context) =>
-        Task.FromResult(new[] { $"game:{notification.GameId}" }.AsEnumerable());
+    public Task<IEnumerable<string>> ToKeysAsync(
+        Games topic,
+        GameCancelled notification,
+        LeanPipeContext context
+    ) => Task.FromResult(new[] { $"game:{notification.GameId}" }.AsEnumerable());
 }

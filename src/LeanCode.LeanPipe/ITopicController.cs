@@ -15,7 +15,11 @@ public interface ITopicController<in TTopic, TNotification> : ITopicController<T
     where TTopic : ITopic, IProduceNotification<TNotification>
     where TNotification : notnull
 {
-    Task<IEnumerable<string>> ToKeysAsync(TTopic topic, TNotification notification, LeanPipeContext context);
+    Task<IEnumerable<string>> ToKeysAsync(
+        TTopic topic,
+        TNotification notification,
+        LeanPipeContext context
+    );
 }
 
 public abstract class BasicTopicController<TTopic> : ITopicController<TTopic>

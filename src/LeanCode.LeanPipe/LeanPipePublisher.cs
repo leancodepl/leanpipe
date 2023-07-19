@@ -25,7 +25,8 @@ public class LeanPipePublisher<TTopic>
     internal async Task PublishAsync(
         IEnumerable<string> keys,
         NotificationEnvelope payload,
-        CancellationToken cancellationToken = default)
+        CancellationToken cancellationToken = default
+    )
     {
         await HubContext.Clients.Groups(keys).SendAsync("notify", payload, cancellationToken);
     }
@@ -37,11 +38,14 @@ public static class LeanPipePublisherExtensions
         this LeanPipePublisher<TTopic> publisher,
         TTopic topic,
         TNotification notification,
-        LeanPipeContext context)
+        LeanPipeContext context
+    )
         where TTopic : ITopic, IProduceNotification<TNotification>
         where TNotification : notnull
     {
-        var topicController = publisher.ServiceProvider.GetRequiredService<ITopicController<TTopic, TNotification>>();
+        var topicController = publisher.ServiceProvider.GetRequiredService<
+            ITopicController<TTopic, TNotification>
+        >();
         var keys = await topicController.ToKeysAsync(topic, notification, context);
         var payload = NotificationEnvelope.Create(topic, notification);
 
@@ -53,7 +57,8 @@ public static class LeanPipePublisherExtensions
         string[] keys,
         TTopic topic,
         TNotification notification,
-        LeanPipeContext context)
+        LeanPipeContext context
+    )
         where TTopic : ITopic, IProduceNotification<TNotification>
         where TNotification : notnull
     {
@@ -66,7 +71,8 @@ public static class LeanPipePublisherExtensions
         this LeanPipePublisher<TTopic> publisher,
         TTopic topic,
         TNotification notification,
-        LeanPipeContext context)
+        LeanPipeContext context
+    )
         where TTopic : ITopic, IProduceNotification<TNotification>
         where TNotification : notnull
     {
