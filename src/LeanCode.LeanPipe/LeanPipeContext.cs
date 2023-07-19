@@ -4,9 +4,9 @@ namespace LeanCode.LeanPipe;
 
 public class LeanPipeContext
 {
-    public LeanPipeContext(HttpContext context)
+    public LeanPipeContext(HttpContext httpContext)
     {
-        HttpContext = context;
+        HttpContext = httpContext;
     }
 
     public HttpContext HttpContext { get; private init; }
