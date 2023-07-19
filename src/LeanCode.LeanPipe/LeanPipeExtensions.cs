@@ -22,7 +22,7 @@ public static class LeanPipeExtensions
         services.AddSignalR();
         services.TryAddTransient(typeof(IEnvelopeDeserializer), envelopeDeserializer);
         services.AddTransient(typeof(ISubscriptionHandler<>), typeof(KeyedSubscriptionHandler<>));
-        services.AddTransient(typeof(LeanPipePublisher<,>), typeof(LeanPipePublisher<,>));
+        services.AddTransient(typeof(LeanPipePublisher<>), typeof(LeanPipePublisher<>));
         services.AddTransient(
             typeof(ISubscriptionHandlerResolver<>),
             typeof(SubscriptionHandlerResolver<>)
@@ -30,19 +30,19 @@ public static class LeanPipeExtensions
         return services;
     }
 
-    public static IServiceCollection AddKeysFactory<TTopic, TFactory>(
+    public static IServiceCollection AddTopicController<TTopic, TController>(
         this IServiceCollection services
     )
         where TTopic : ITopic
-        where TFactory : IKeysFactory<TTopic>
+        where TController : ITopicController<TTopic>
     {
-        var factory = typeof(TFactory);
-        services.AddTransient(typeof(IKeysFactory<TTopic>), factory);
+        var factory = typeof(TController);
+        services.AddTransient(typeof(ITopicController<TTopic>), factory);
         var filter = new TypeFilter(
             (i, c) => i.IsAbstract && i.IsGenericType && i.GetGenericTypeDefinition() == (Type)c!
         );
         var topicInterfaces = typeof(TTopic).FindInterfaces(filter, typeof(IProduceNotification<>));
-        var factoryInterfaces = factory.FindInterfaces(filter, typeof(IKeysFactory<,>));
+        var factoryInterfaces = factory.FindInterfaces(filter, typeof(ITopicController<,>));
 
         var topicNotifications = topicInterfaces
             .Select(t => t.GetGenericArguments().First())
@@ -55,10 +55,10 @@ public static class LeanPipeExtensions
         if (missing.Any())
         {
             var msg = new StringBuilder(
-                "Keys factory should implement the same notification-related interfaces as it's topic; "
+                "Topic controller should implement the same notification-related interfaces as it's topic; "
             );
             var fmt = (Type t) =>
-                $"{typeof(IKeysFactory<,>).Name.Split('`').First()}<{typeof(TTopic).Name}, {t.Name}>";
+                $"{typeof(ITopicController<,>).Name.Split('`').First()}<{typeof(TTopic).Name}, {t.Name}>";
             msg.AppendFormat(
                 "'{0}' is missing following implementations: {1}",
                 factory.Name,
@@ -84,14 +84,14 @@ public static class LeanPipeExtensions
         return services;
     }
 
-    public static IServiceCollection AddHandlerAndFactory<TTopic, TFactory, THandler>(
+    public static IServiceCollection AddHandlerAndFactory<TTopic, TController, THandler>(
         this IServiceCollection services
     )
         where TTopic : ITopic
-        where TFactory : IKeysFactory<TTopic>
+        where TController : ITopicController<TTopic>
         where THandler : ISubscriptionHandler<TTopic>
     {
-        services.AddKeysFactory<TTopic, TFactory>();
+        services.AddTopicController<TTopic, TController>();
         services.AddSubscriptionHandler<TTopic, THandler>();
         return services;
     }

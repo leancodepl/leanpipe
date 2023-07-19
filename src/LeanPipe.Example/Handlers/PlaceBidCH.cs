@@ -6,18 +6,19 @@ namespace LeanPipe.Example.Handlers;
 
 public class PlaceBidCH : ICommandHandler<PlaceBid>
 {
-    private readonly LeanPipePublisher<Auction, BidPlaced> pipe;
+    private readonly LeanPipePublisher<Auction> pipe;
 
-    public PlaceBidCH(LeanPipePublisher<Auction, BidPlaced> pipe)
+    public PlaceBidCH(LeanPipePublisher<Auction> pipe)
     {
         this.pipe = pipe;
     }
 
     public Task ExecuteAsync(HttpContext context, PlaceBid command)
     {
-        return pipe.SendAsync(
+        return pipe.PublishAsync(
             new() { AuctionId = command.AuctionId },
-            new() { Amount = command.Amount, User = command.UserId }
+            new BidPlaced { Amount = command.Amount, User = command.UserId },
+            new(context)
         );
     }
 }

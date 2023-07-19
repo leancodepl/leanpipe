@@ -24,13 +24,13 @@ public class Program
         // work-around for bug in current CoreLib version
         builder.Services.RemoveAll(typeof(CQRSSecurityMiddleware));
 
-        builder.Services.AddKeysFactory<Auction, AuctionKeysFactory>();
+        builder.Services.AddTopicController<Auction, AuctionTopicController>();
         // the following registers an invalid type and will throw at startup
-        // builder.Services.AddKeysFactory<Auction, WrongKeysFactory>();
-        // > Unhandled exception. System.InvalidOperationException: Keys factory should implement the same
-        // >   notification-related interfaces as it's topic; 'WrongKeysFactory' is missing following implementations:
-        // >   IKeysFactory<Auction, ItemSold>.
-        builder.Services.AddKeysFactory<Games, GamesKeysFactory>();
+        // builder.Services.AddTopicController<Auction, WrongTopicController>();
+        // > Unhandled exception. System.InvalidOperationException: Topic controller should implement the same
+        // >   notification-related interfaces as it's topic; 'WrongTopicController' is missing following implementations:
+        // >   ITopicController<Auction, ItemSold>.
+        builder.Services.AddTopicController<Games, GamesTopicController>();
         builder.Services.AddSingleton(new GamesContext()); // mock
 
         builder.Services.AddLeanPipe();
