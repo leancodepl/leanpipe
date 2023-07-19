@@ -35,7 +35,7 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
             await pipe.Groups.AddToGroupAsync(
                 pipe.Context.ConnectionId,
                 key,
-                context.Context.RequestAborted
+                context.HttpContext.RequestAborted
             );
         }
     }
@@ -54,7 +54,7 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
             await pipe.Groups.RemoveFromGroupAsync(
                 pipe.Context.ConnectionId,
                 key,
-                context.Context.RequestAborted
+                context.HttpContext.RequestAborted
             );
         }
     }

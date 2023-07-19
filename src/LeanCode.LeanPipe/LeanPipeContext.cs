@@ -6,8 +6,8 @@ public class LeanPipeContext
 {
     public LeanPipeContext(HttpContext context)
     {
-        Context = context;
+        HttpContext = context;
     }
 
-    public HttpContext Context { get; private init; }
+    public HttpContext HttpContext { get; private init; }
 }

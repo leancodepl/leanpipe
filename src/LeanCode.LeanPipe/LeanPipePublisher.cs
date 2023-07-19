@@ -49,7 +49,7 @@ public static class LeanPipePublisherExtensions
         var keys = await topicController.ToKeysAsync(topic, notification, context);
         var payload = NotificationEnvelope.Create(topic, notification);
 
-        await publisher.PublishAsync(keys, payload, context.Context.RequestAborted);
+        await publisher.PublishAsync(keys, payload, context.HttpContext.RequestAborted);
     }
 
     public static async Task PublishAsync<TTopic, TNotification>(
@@ -64,7 +64,7 @@ public static class LeanPipePublisherExtensions
     {
         var payload = NotificationEnvelope.Create(topic, notification);
 
-        await publisher.PublishAsync(keys, payload, context.Context.RequestAborted);
+        await publisher.PublishAsync(keys, payload, context.HttpContext.RequestAborted);
     }
 
     public static async Task PublishToTopicAsync<TTopic, TNotification>(
@@ -79,6 +79,6 @@ public static class LeanPipePublisherExtensions
         var keys = await publisher.TopicController.ToKeysAsync(topic, context);
         var payload = NotificationEnvelope.Create(topic, notification);
 
-        await publisher.PublishAsync(keys, payload, context.Context.RequestAborted);
+        await publisher.PublishAsync(keys, payload, context.HttpContext.RequestAborted);
     }
 }
