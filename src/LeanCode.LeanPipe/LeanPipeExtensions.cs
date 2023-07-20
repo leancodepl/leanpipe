@@ -31,7 +31,8 @@ public static class LeanPipeExtensions
     }
 
     public static IServiceCollection AddTopicController<TTopic, TController>(
-        this IServiceCollection services
+        this IServiceCollection services,
+        bool requireNotificationImplementations = true
     )
         where TTopic : ITopic
         where TController : ITopicController<TTopic>
@@ -50,21 +51,25 @@ public static class LeanPipeExtensions
         var factoryNotifications = factoryInterfaces
             .Select(t => t.GetGenericArguments().ElementAt(1))
             .ToHashSet();
-        var missing = topicNotifications.Except(factoryNotifications);
 
-        if (missing.Any())
+        if (requireNotificationImplementations)
         {
-            var msg = new StringBuilder(
-                "Topic controller should implement the same notification-related interfaces as it's topic; "
-            );
-            var fmt = (Type t) =>
-                $"{typeof(ITopicController<,>).Name.Split('`').First()}<{typeof(TTopic).Name}, {t.Name}>";
-            msg.AppendFormat(
-                "'{0}' is missing following implementations: {1}",
-                factory.Name,
-                string.Join(", ", missing.Select(fmt))
-            );
-            throw new InvalidOperationException(msg.Append('.').ToString());
+            var missing = topicNotifications.Except(factoryNotifications);
+
+            if (missing.Any())
+            {
+                var msg = new StringBuilder(
+                    "Topic controller should implement the same notification-related interfaces as it's topic; "
+                );
+                var fmt = (Type t) =>
+                    $"{typeof(ITopicController<,>).Name.Split('`').First()}<{typeof(TTopic).Name}, {t.Name}>";
+                msg.AppendFormat(
+                    "'{0}' is missing following implementations: {1}",
+                    factory.Name,
+                    string.Join(", ", missing.Select(fmt))
+                );
+                throw new InvalidOperationException(msg.Append('.').ToString());
+            }
         }
 
         foreach (var @interface in factoryInterfaces)
