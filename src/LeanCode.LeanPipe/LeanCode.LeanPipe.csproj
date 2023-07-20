@@ -5,10 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../LeanPipe.Contracts/LeanPipe.Contracts.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <PackageReference Update="LeanCode.Contracts" />
     <PackageReference Update="Microsoft.AspNetCore.SignalR" />
   </ItemGroup>
 

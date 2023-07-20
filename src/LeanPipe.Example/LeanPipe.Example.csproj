@@ -1,7 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <ItemGroup>
-    <ProjectReference Include="../LeanPipe.Contracts/LeanPipe.Contracts.csproj" />
     <ProjectReference Include="../LeanCode.LeanPipe/LeanCode.LeanPipe.csproj" />
   </ItemGroup>
 
@@ -13,6 +12,7 @@
     <PackageReference Update="LeanCode.Contracts" />
     <PackageReference Update="LeanCode.CQRS.AspNetCore" />
     <PackageReference Update="LeanCode.CQRS.Execution" />
+    <PackageReference Update="Microsoft.EntityFrameworkCore" />
   </ItemGroup>
 
 </Project>
