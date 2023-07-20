@@ -1,6 +1,7 @@
 using LeanCode.LeanPipe;
 using LeanPipe.Example.Contracts;
 using LeanPipe.Example.DataAccess;
+using Microsoft.EntityFrameworkCore;
 
 namespace LeanPipe.Example.Handlers;
 
@@ -15,12 +16,12 @@ public class GamesTopicController
         this.dbContext = dbContext;
     }
 
-    public Task<IEnumerable<string>> ToKeysAsync(Games topic, LeanPipeContext context)
+    public async Task<IEnumerable<string>> ToKeysAsync(Games topic, LeanPipeContext context)
     {
         var fanId = new Guid().ToString();
-        var fan = dbContext.Fans.First(f => f.Id == fanId);
+        var fan = await dbContext.Fans.AsQueryable().FirstAsync(f => f.Id == fanId);
         var keys = fan.WatchedGames.Select(g => $"game:{g}");
-        return Task.FromResult(keys);
+        return keys;
     }
 
     public Task<IEnumerable<string>> ToKeysAsync(
