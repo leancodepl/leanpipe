@@ -72,7 +72,7 @@ public class LeanPipeSubscriber : Hub
     public Task UnsubscribeAsync(SubscriptionEnvelope envelope) =>
         ExecuteAsync(
             envelope,
-            (handler, topic) => handler.OnUnsubscribedASync(topic, this),
+            (handler, topic) => handler.OnUnsubscribedAsync(topic, this),
             OperationType.Unsubscribe
         );
 }
