@@ -24,11 +24,11 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
     public async Task OnSubscribedAsync(TTopic topic, LeanPipeSubscriber pipe)
     {
         var context = new LeanPipeContext(
-            pipe.Context.GetHttpContext() ?? new DefaultHttpContext()
+            pipe.Context.GetHttpContext() ?? throw new InvalidOperationException("Connection is not associated with an HTTP request.")
         );
         var keys = await topicController.ToKeysAsync(
             topic,
-            new(pipe.Context.GetHttpContext() ?? new DefaultHttpContext())
+            context
         );
         foreach (var key in keys)
         {
@@ -46,7 +46,7 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
         // if we subscribe to topic.something and topic.something.specific,
         // then we do not know when to unsubscribe from topic.something
         var context = new LeanPipeContext(
-            pipe.Context.GetHttpContext() ?? new DefaultHttpContext()
+            pipe.Context.GetHttpContext() ?? throw new InvalidOperationException("Connection is not associated with an HTTP request.")
         );
         var keys = await topicController.ToKeysAsync(topic, context);
         foreach (var key in keys)
