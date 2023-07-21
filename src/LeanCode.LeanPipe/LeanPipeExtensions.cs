@@ -31,8 +31,7 @@ public static class LeanPipeExtensions
     }
 
     public static IServiceCollection AddTopicController<TTopic, TController>(
-        this IServiceCollection services,
-        bool requireNotificationImplementations = true
+        this IServiceCollection services
     )
         where TTopic : ITopic
         where TController : ITopicController<TTopic>
@@ -52,30 +51,37 @@ public static class LeanPipeExtensions
             .Select(t => t.GetGenericArguments().ElementAt(1))
             .ToHashSet();
 
-        if (requireNotificationImplementations)
-        {
-            var missing = topicNotifications.Except(factoryNotifications);
+        var missing = topicNotifications.Except(factoryNotifications);
 
-            if (missing.Any())
-            {
-                var msg = new StringBuilder(
-                    "Topic controller should implement the same notification-related interfaces as it's topic; "
-                );
-                var fmt = (Type t) =>
-                    $"{typeof(ITopicController<,>).Name.Split('`').First()}<{typeof(TTopic).Name}, {t.Name}>";
-                msg.AppendFormat(
-                    "'{0}' is missing following implementations: {1}",
-                    factory.Name,
-                    string.Join(", ", missing.Select(fmt))
-                );
-                throw new InvalidOperationException(msg.Append('.').ToString());
-            }
+        if (missing.Any())
+        {
+            var msg = new StringBuilder(
+                "Topic controller should implement the same notification-related interfaces as it's topic; "
+            );
+            var fmt = (Type t) =>
+                $"{typeof(ITopicController<,>).Name.Split('`').First()}<{typeof(TTopic).Name}, {t.Name}>";
+            msg.AppendFormat(
+                "'{0}' is missing following implementations: {1}",
+                factory.Name,
+                string.Join(", ", missing.Select(fmt))
+            );
+            throw new InvalidOperationException(msg.Append('.').ToString());
         }
 
         foreach (var @interface in factoryInterfaces)
         {
             services.AddTransient(@interface, factory);
         }
+        return services;
+    }
+
+    public static IServiceCollection AddTopicControllerWithDefaults<TTopic, TController>(
+        this IServiceCollection services
+    )
+        where TTopic : ITopic
+        where TController : ITopicController<TTopic>
+    {
+        services.AddTransient(typeof(ITopicController<TTopic>), typeof(TController));
         return services;
     }
 
