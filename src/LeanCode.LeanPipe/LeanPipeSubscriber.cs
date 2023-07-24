@@ -33,15 +33,29 @@ public class LeanPipeSubscriber : Hub
 
     private async Task ExecuteAsync(
         SubscriptionEnvelope envelope,
-        Func<ISubscriptionHandlerWrapper, ITopic, Task> action,
+        Func<ISubscriptionHandlerWrapper, ITopic, LeanPipeContext, Task> action,
         OperationType type
     )
     {
         try
         {
             var topic = deserializer.Deserialize(envelope);
+            var context = new LeanPipeContext(
+                Context.GetHttpContext()
+                    ?? throw new InvalidOperationException(
+                        "Connection is not associated with an HTTP request."
+                    )
+            );
+            var authorized = await LeanPipeSecurity.CheckIfAuthorizedAsync(topic, context);
+
+            if (!authorized)
+            {
+                await NotifyResult(envelope.Id, SubscriptionStatus.Unauthorized, type);
+                return;
+            }
+
             var handler = GetSubscriptionHandler(topic.GetType());
-            await action(handler, topic);
+            await action(handler, topic, context);
             await NotifyResult(envelope.Id, SubscriptionStatus.Success, type);
         }
         catch (JsonException error)
@@ -65,14 +79,14 @@ public class LeanPipeSubscriber : Hub
     public Task SubscribeAsync(SubscriptionEnvelope envelope) =>
         ExecuteAsync(
             envelope,
-            (handler, topic) => handler.OnSubscribedAsync(topic, this),
+            (handler, topic, context) => handler.OnSubscribedAsync(topic, this, context),
             OperationType.Subscribe
         );
 
     public Task UnsubscribeAsync(SubscriptionEnvelope envelope) =>
         ExecuteAsync(
             envelope,
-            (handler, topic) => handler.OnUnsubscribedAsync(topic, this),
+            (handler, topic, context) => handler.OnUnsubscribedAsync(topic, this, context),
             OperationType.Unsubscribe
         );
 }
