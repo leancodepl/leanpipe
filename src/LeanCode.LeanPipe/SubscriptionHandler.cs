@@ -1,14 +1,12 @@
 using LeanCode.Contracts;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR;
 
 namespace LeanCode.LeanPipe;
 
 public interface ISubscriptionHandler<in TTopic>
     where TTopic : ITopic
 {
-    Task OnSubscribedAsync(TTopic topic, LeanPipeSubscriber pipe);
-    Task OnUnsubscribedAsync(TTopic topic, LeanPipeSubscriber pipe);
+    Task OnSubscribedAsync(TTopic topic, LeanPipeSubscriber pipe, LeanPipeContext context);
+    Task OnUnsubscribedAsync(TTopic topic, LeanPipeSubscriber pipe, LeanPipeContext context);
 }
 
 public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
@@ -21,14 +19,12 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
         this.topicController = topicController;
     }
 
-    public async Task OnSubscribedAsync(TTopic topic, LeanPipeSubscriber pipe)
+    public async Task OnSubscribedAsync(
+        TTopic topic,
+        LeanPipeSubscriber pipe,
+        LeanPipeContext context
+    )
     {
-        var context = new LeanPipeContext(
-            pipe.Context.GetHttpContext()
-                ?? throw new InvalidOperationException(
-                    "Connection is not associated with an HTTP request."
-                )
-        );
         var keys = await topicController.ToKeysAsync(topic, context);
         foreach (var key in keys)
         {
@@ -40,17 +36,15 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
         }
     }
 
-    public async Task OnUnsubscribedAsync(TTopic topic, LeanPipeSubscriber pipe)
+    public async Task OnUnsubscribedAsync(
+        TTopic topic,
+        LeanPipeSubscriber pipe,
+        LeanPipeContext context
+    )
     {
         // with this implementation there is a problem of "higher level" groups:
         // if we subscribe to topic.something and topic.something.specific,
         // then we do not know when to unsubscribe from topic.something
-        var context = new LeanPipeContext(
-            pipe.Context.GetHttpContext()
-                ?? throw new InvalidOperationException(
-                    "Connection is not associated with an HTTP request."
-                )
-        );
         var keys = await topicController.ToKeysAsync(topic, context);
         foreach (var key in keys)
         {
