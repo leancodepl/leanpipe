@@ -1,6 +1,5 @@
 ﻿using System.Text.Json;
 using LeanCode.Contracts;
-using LeanCode.CQRS.Security.Exceptions;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -47,7 +46,14 @@ public class LeanPipeSubscriber : Hub
                         "Connection is not associated with an HTTP request."
                     )
             );
-            await LeanPipeSecurity.AuthorizeAsync(topic, context);
+            var authorized = await LeanPipeSecurity.CheckIfAuthorizedAsync(topic, context);
+
+            if (!authorized)
+            {
+                await NotifyResult(envelope.Id, SubscriptionStatus.Unauthorized, type);
+                return;
+            }
+
             var handler = GetSubscriptionHandler(topic.GetType());
             await action(handler, topic, context);
             await NotifyResult(envelope.Id, SubscriptionStatus.Success, type);
@@ -59,16 +65,6 @@ public class LeanPipeSubscriber : Hub
                 $"Cannot deserialize topic {envelope.Topic} of type {envelope.TopicType}.",
                 error
             );
-        }
-        catch (UnauthenticatedException)
-        {
-            await NotifyResult(envelope.Id, SubscriptionStatus.Unauthorized, type);
-            throw;
-        }
-        catch (InsufficientPermissionException)
-        {
-            await NotifyResult(envelope.Id, SubscriptionStatus.Unauthorized, type);
-            throw;
         }
         catch (Exception error)
         {

@@ -1,13 +1,12 @@
 using LeanCode.Contracts;
 using LeanCode.Contracts.Security;
 using LeanCode.CQRS.Security;
-using LeanCode.CQRS.Security.Exceptions;
 
 namespace LeanCode.LeanPipe;
 
 internal static class LeanPipeSecurity
 {
-    internal static async Task AuthorizeAsync(ITopic topic, LeanPipeContext context)
+    internal static async Task<bool> CheckIfAuthorizedAsync(ITopic topic, LeanPipeContext context)
     {
         var topicType = topic.GetType();
         var customAuthorizers = AuthorizeWhenAttribute.GetCustomAuthorizers(topicType);
@@ -15,9 +14,7 @@ internal static class LeanPipeSecurity
 
         if (customAuthorizers.Count > 0 && !(user?.Identity?.IsAuthenticated ?? false))
         {
-            throw new UnauthenticatedException(
-                $"User is not authenticated and the topic {topicType.FullName} requires authorization."
-            );
+            return false;
         }
 
         foreach (var customAuthorizerDefinition in customAuthorizers)
@@ -40,11 +37,10 @@ internal static class LeanPipeSecurity
 
             if (!authorized)
             {
-                throw new InsufficientPermissionException(
-                    $"User is not authorized for topic {topicType.FullName}, authorizer {authorizerType.FullName} did not pass.",
-                    authorizerType.FullName
-                );
+                return false;
             }
         }
+
+        return true;
     }
 }
