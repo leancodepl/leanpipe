@@ -1,9 +1,13 @@
 <Project>
+  <PropertyGroup>
+    <CoreLibVersion>8.0.1890-preview</CoreLibVersion>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="LeanCode.Contracts" Version="2.0.0-preview" />
-    <PackageReference Include="LeanCode.CQRS.AspNetCore" Version="8.0.1890-preview" />
-    <PackageReference Include="LeanCode.CQRS.Execution" Version="8.0.1890-preview" />
+    <PackageReference Include="LeanCode.CQRS.AspNetCore" Version="$(CoreLibVersion)" />
+    <PackageReference Include="LeanCode.CQRS.Execution" Version="$(CoreLibVersion)" />
+    <PackageReference Include="LeanCode.CQRS.Security" Version="$(CoreLibVersion)" />
 
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     <PackageReference Include="Microsoft.TypeScript.MSBuild" Version="5.1.3">
