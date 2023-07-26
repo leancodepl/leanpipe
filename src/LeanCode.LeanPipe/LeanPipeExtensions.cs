@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
 using LeanCode.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Connections;
@@ -19,7 +20,11 @@ public static class LeanPipeExtensions
         Type envelopeDeserializer
     )
     {
-        services.AddSignalR();
+        services
+            .AddSignalR()
+            .AddJsonProtocol(
+                options => options.PayloadSerializerOptions.PropertyNamingPolicy = null
+            );
         services.TryAddTransient(typeof(IEnvelopeDeserializer), envelopeDeserializer);
         services.AddTransient(typeof(ISubscriptionHandler<>), typeof(KeyedSubscriptionHandler<>));
         services.AddTransient(typeof(LeanPipePublisher<>), typeof(LeanPipePublisher<>));
