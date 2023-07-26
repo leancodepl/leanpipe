@@ -10,8 +10,11 @@ const btnUnsubscribe: HTMLButtonElement =
 const btnBid: HTMLButtonElement = document.querySelector("#btnBid");
 const btnBuy: HTMLButtonElement = document.querySelector("#btnBuy");
 const username = new Date().getTime();
+const token = 'token';
 
-const connection = new signalR.HubConnectionBuilder().withUrl("/pipe").build();
+const connection = new signalR.HubConnectionBuilder()
+  .withUrl("/pipe", { accessTokenFactory: () => token })
+  .build();
 
 interface NotificationEnvelope {
   id: string;
@@ -62,7 +65,7 @@ btnSubscribe.addEventListener("click", () => {
   const envelope: SubscriptionEnvelope = {
     Id: crypto.randomUUID(),
     TopicType: "LeanPipe.Example.Contracts.Auction",
-    Topic: JSON.stringify({ AuctionId: tbTopic.value }),
+    Topic: JSON.stringify({ AuctionId: tbTopic.value, Authorized: true }),
   };
   connection.send("SubscribeAsync", envelope);
 });
@@ -70,7 +73,7 @@ btnUnsubscribe.addEventListener("click", () => {
   const envelope: SubscriptionEnvelope = {
     Id: crypto.randomUUID(),
     TopicType: "LeanPipe.Example.Contracts.Auction",
-    Topic: JSON.stringify({ AuctionId: tbTopic.value }),
+    Topic: JSON.stringify({ AuctionId: tbTopic.value, Authorized: true }),
   };
   connection.send("UnsubscribeAsync", envelope);
 });
