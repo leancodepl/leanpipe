@@ -2,10 +2,13 @@ using System.Reflection;
 using LeanCode.Components;
 using LeanCode.CQRS.AspNetCore;
 using LeanCode.CQRS.AspNetCore.Middleware;
+using LeanCode.CQRS.Security;
 using LeanCode.LeanPipe.Extensions;
+using LeanPipe.Example.Auth;
 using LeanPipe.Example.Contracts;
 using LeanPipe.Example.DataAccess;
 using LeanPipe.Example.Handlers;
+using LeanPipe.Example.Handlers.Authorizers;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace LeanPipe.Example;
@@ -16,6 +19,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddSingleton<IRoleRegistration, AppRoles>();
         builder.Services.AddRouting();
         builder.Services.AddCQRS(
             new TypesCatalog(Assembly.GetExecutingAssembly()),
@@ -24,6 +28,7 @@ public class Program
         // work-around for bug in current CoreLib version
         builder.Services.RemoveAll(typeof(CQRSSecurityMiddleware));
 
+        builder.Services.AddTransient<AllowAuthorizedAuthorizer>();
         builder.Services.AddTopicController<Auction, AuctionTopicController>();
         // the following registers an invalid type and will throw at startup
         // builder.Services.AddTopicController<Auction, WrongTopicController>();
@@ -34,11 +39,13 @@ public class Program
         builder.Services.AddSingleton(new GamesContext()); // mock
 
         builder.Services.AddLeanPipe();
+        builder.Services.AddAuthentication(AuthenticationHandler.SchemeName).AddAuthenticationHandler();
 
         var app = builder.Build();
 
         app.UseDefaultFiles();
         app.UseStaticFiles();
+        app.UseAuthentication();
 
         app.MapRemoteCqrs(
             "/cqrs",

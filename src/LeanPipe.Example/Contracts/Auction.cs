@@ -1,10 +1,15 @@
 using LeanCode.Contracts;
+using LeanCode.Contracts.Security;
+using LeanPipe.Example.Handlers.Authorizers;
 
 namespace LeanPipe.Example.Contracts;
 
+[AuthorizeWhenHasAnyOf("user")]
+[AllowAuthorized]
 public class Auction : ITopic, IProduceNotification<BidPlaced>, IProduceNotification<ItemSold>
 {
     public string AuctionId { get; set; } = default!;
+    public bool Authorized { get; set; }
 }
 
 public class BidPlaced
@@ -31,4 +36,10 @@ public class Buy : ICommand
 {
     public string AuctionId { get; set; } = default!;
     public string UserId { get; set; } = default!;
+}
+
+public class AllowAuthorized : AuthorizeWhenAttribute
+{
+    public AllowAuthorized()
+        : base(typeof(AllowAuthorizedAuthorizer)) { }
 }

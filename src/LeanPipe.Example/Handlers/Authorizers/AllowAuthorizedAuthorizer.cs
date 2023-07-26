@@ -3,13 +3,13 @@ using LeanPipe.Example.Contracts;
 
 namespace LeanPipe.Example.Handlers.Authorizers;
 
-public class AlwaysFailingAuthorizer : CustomAuthorizer<TopicWithFailingAuthorization>
+public class AllowAuthorizedAuthorizer : CustomAuthorizer<Auction>
 {
     protected override Task<bool> CheckIfAuthorizedAsync(
         HttpContext httpContext,
-        TopicWithFailingAuthorization obj
+        Auction obj
     )
     {
-        return Task.FromResult(false);
+        return Task.FromResult(obj.Authorized);
     }
 }
