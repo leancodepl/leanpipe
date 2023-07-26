@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <CoreLibVersion>8.0.1890-preview</CoreLibVersion>
+    <CoreLibVersion>8.0.2022-preview</CoreLibVersion>
   </PropertyGroup>
 
   <ItemGroup>
