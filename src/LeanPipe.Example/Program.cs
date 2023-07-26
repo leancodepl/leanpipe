@@ -39,7 +39,9 @@ public class Program
         builder.Services.AddSingleton(new GamesContext()); // mock
 
         builder.Services.AddLeanPipe();
-        builder.Services.AddAuthentication(AuthenticationHandler.SchemeName).AddAuthenticationHandler();
+        builder.Services
+            .AddAuthentication(AuthenticationHandler.SchemeName)
+            .AddAuthenticationHandler();
 
         var app = builder.Build();
 
