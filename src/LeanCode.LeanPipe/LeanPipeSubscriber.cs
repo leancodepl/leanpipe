@@ -16,11 +16,27 @@ public class LeanPipeSubscriber : Hub
         this.deserializer = deserializer;
     }
 
-    private Task NotifyResult(Guid subscriptionId, SubscriptionStatus status, OperationType type) =>
-        Clients.Caller.SendAsync(
+    public async Task Subscribe(SubscriptionEnvelope envelope)
+    {
+        await ExecuteAsync(envelope, OperationType.Subscribe);
+    }
+
+    public async Task Unsubscribe(SubscriptionEnvelope envelope)
+    {
+        await ExecuteAsync(envelope, OperationType.Unsubscribe);
+    }
+
+    private async Task NotifyResultAsync(
+        Guid subscriptionId,
+        SubscriptionStatus status,
+        OperationType type
+    )
+    {
+        await Clients.Caller.SendAsync(
             "subscriptionResult",
             new SubscriptionResult(subscriptionId, status, type)
         );
+    }
 
     private ISubscriptionHandlerWrapper GetSubscriptionHandler(Type topic)
     {
@@ -31,62 +47,51 @@ public class LeanPipeSubscriber : Hub
         return handler;
     }
 
-    private async Task ExecuteAsync(
-        SubscriptionEnvelope envelope,
-        Func<ISubscriptionHandlerWrapper, ITopic, LeanPipeContext, Task> action,
-        OperationType type
-    )
+    private async Task ExecuteAsync(SubscriptionEnvelope envelope, OperationType type)
     {
-        var httpContext =
-            Context.GetHttpContext()
-            ?? throw new InvalidOperationException(
-                "Connection is not associated with an HTTP request."
-            );
-
         try
         {
+            var httpContext =
+                Context.GetHttpContext()
+                ?? throw new InvalidOperationException(
+                    "Connection is not associated with an HTTP request."
+                );
             var topic = deserializer.Deserialize(envelope);
             var authorized = await LeanPipeSecurity.CheckIfAuthorizedAsync(topic, httpContext);
 
             if (!authorized)
             {
-                await NotifyResult(envelope.Id, SubscriptionStatus.Unauthorized, type);
+                await NotifyResultAsync(envelope.Id, SubscriptionStatus.Unauthorized, type);
                 return;
             }
 
+            var context = new LeanPipeContext(httpContext);
             var handler = GetSubscriptionHandler(topic.GetType());
-            await action(handler, topic, new(httpContext));
-            await NotifyResult(envelope.Id, SubscriptionStatus.Success, type);
+            if (type == OperationType.Subscribe)
+            {
+                await handler.OnSubscribedAsync(topic, this, context);
+            }
+            else
+            {
+                await handler.OnUnsubscribedAsync(topic, this, context);
+            }
+            await NotifyResultAsync(envelope.Id, SubscriptionStatus.Success, type);
         }
-        catch (JsonException error)
+        catch (JsonException e)
         {
-            await NotifyResult(envelope.Id, SubscriptionStatus.Malformed, type);
+            await NotifyResultAsync(envelope.Id, SubscriptionStatus.Malformed, type);
             throw new InvalidOperationException(
                 $"Cannot deserialize topic {envelope.Topic} of type {envelope.TopicType}.",
-                error
+                e
             );
         }
-        catch (Exception error)
+        catch (Exception e)
         {
-            await NotifyResult(envelope.Id, SubscriptionStatus.InternalServerError, type);
+            await NotifyResultAsync(envelope.Id, SubscriptionStatus.InternalServerError, type);
             throw new InvalidOperationException(
                 $"Error on subscribing to topic {envelope.TopicType}.",
-                error
+                e
             );
         }
     }
-
-    public Task SubscribeAsync(SubscriptionEnvelope envelope) =>
-        ExecuteAsync(
-            envelope,
-            (handler, topic, context) => handler.OnSubscribedAsync(topic, this, context),
-            OperationType.Subscribe
-        );
-
-    public Task UnsubscribeAsync(SubscriptionEnvelope envelope) =>
-        ExecuteAsync(
-            envelope,
-            (handler, topic, context) => handler.OnUnsubscribedAsync(topic, this, context),
-            OperationType.Unsubscribe
-        );
 }
