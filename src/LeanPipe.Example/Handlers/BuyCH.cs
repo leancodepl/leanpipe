@@ -13,10 +13,15 @@ public class BuyCH : ICommandHandler<Buy>
         this.pipe = pipe;
     }
 
-    public Task ExecuteAsync(HttpContext context, Buy command)
+    public async Task ExecuteAsync(HttpContext context, Buy command)
     {
-        return pipe.PublishAsync(
-            new() { AuctionId = command.AuctionId },
+        await pipe.PublishAsync(
+            new() { AuctionId = command.AuctionId, Authorized = true },
+            new ItemSold { Buyer = command.UserId },
+            new(context)
+        );
+        await pipe.PublishAsync(
+            new() { AuctionId = command.AuctionId, Authorized = false },
             new ItemSold { Buyer = command.UserId },
             new(context)
         );

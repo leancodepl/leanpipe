@@ -9,7 +9,7 @@ public class AuctionTopicController
         ITopicController<Auction, ItemSold>
 {
     public override IEnumerable<string> ToKeys(Auction topic) =>
-        new[] { $"{typeof(Auction)}:{topic.AuctionId}" }.AsEnumerable();
+        new[] { $"{typeof(Auction)}:{topic.AuctionId}:{topic.Authorized}" }.AsEnumerable();
 
     public Task<IEnumerable<string>> ToKeysAsync(
         Auction topic,

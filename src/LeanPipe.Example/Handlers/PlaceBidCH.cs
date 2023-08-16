@@ -13,10 +13,15 @@ public class PlaceBidCH : ICommandHandler<PlaceBid>
         this.pipe = pipe;
     }
 
-    public Task ExecuteAsync(HttpContext context, PlaceBid command)
+    public async Task ExecuteAsync(HttpContext context, PlaceBid command)
     {
-        return pipe.PublishAsync(
-            new() { AuctionId = command.AuctionId },
+        await pipe.PublishAsync(
+            new() { AuctionId = command.AuctionId, Authorized = true },
+            new BidPlaced { Amount = command.Amount, User = command.UserId },
+            new(context)
+        );
+        await pipe.PublishAsync(
+            new() { AuctionId = command.AuctionId, Authorized = false },
             new BidPlaced { Amount = command.Amount, User = command.UserId },
             new(context)
         );
