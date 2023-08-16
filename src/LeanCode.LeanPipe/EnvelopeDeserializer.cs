@@ -1,28 +1,47 @@
+using System.Collections.Immutable;
 using System.Text.Json;
+using LeanCode.Components;
 using LeanCode.Contracts;
 
 namespace LeanCode.LeanPipe;
 
 public interface IEnvelopeDeserializer
 {
-    ITopic Deserialize(SubscriptionEnvelope envelope);
+    ITopic? Deserialize(SubscriptionEnvelope envelope);
 }
 
 public class DefaultEnvelopeDeserializer : IEnvelopeDeserializer
 {
-    public ITopic Deserialize(SubscriptionEnvelope envelope)
+    private readonly TypesCatalog types;
+    private readonly JsonSerializerOptions? options;
+    private readonly Lazy<ImmutableDictionary<string, Type>> topicTypes;
+
+    public DefaultEnvelopeDeserializer(TypesCatalog types, JsonSerializerOptions? options)
     {
-        // I think we should rather register the types on startup rather than search each time
-        // but that's a detail we should take care of later
-        var topicType = AppDomain.CurrentDomain
-            .GetAssemblies()
-            .Select(a => a.GetType(envelope.TopicType))
-            .OfType<Type>()
-            .First();
-        var options = new JsonSerializerOptions();
-        var topic =
-            JsonSerializer.Deserialize(envelope.Topic, topicType, options)
-            ?? throw new NullReferenceException("Topic should not deserialize to null.");
-        return (ITopic)topic;
+        this.types = types;
+        this.options = options;
+
+        topicTypes = new(BuildCache);
+    }
+
+    public ITopic? Deserialize(SubscriptionEnvelope envelope)
+    {
+        if (topicTypes.Value.TryGetValue(envelope.TopicType, out var topicType))
+        {
+            return (ITopic?)JsonSerializer.Deserialize(envelope.Topic, topicType, options);
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private ImmutableDictionary<string, Type> BuildCache()
+    {
+        var topicType = typeof(ITopic);
+        return types.Assemblies
+            .SelectMany(t => t.ExportedTypes)
+            .Where(t => t.IsAssignableTo(topicType) && !t.IsAbstract && !t.IsGenericType)
+            .ToImmutableDictionary(t => t.FullName!);
     }
 }

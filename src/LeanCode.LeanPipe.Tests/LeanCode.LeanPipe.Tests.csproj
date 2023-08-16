@@ -17,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../LeanCode.LeanPipe/LeanCode.LeanPipe.csproj" />
+    <ProjectReference Include="../LeanCode.LeanPipe.Tests.Additional/LeanCode.LeanPipe.Tests.Additional.csproj" />
   </ItemGroup>
 
 </Project>

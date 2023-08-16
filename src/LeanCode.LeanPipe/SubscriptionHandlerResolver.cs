@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace LeanCode.LeanPipe;
 
-internal sealed class SubscriptionHandlerResolver
+public sealed class SubscriptionHandlerResolver
 {
     private static readonly Type HandlerBase = typeof(ISubscriptionHandler<>);
     private static readonly Type HandlerWrapperBase = typeof(SubscriptionHandlerWrapper<>);

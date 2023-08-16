@@ -1,8 +1,11 @@
 using System.Globalization;
 using System.Reflection;
 using System.Text;
+using System.Text.Json;
+using LeanCode.Components;
 using LeanCode.Contracts;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,9 +13,13 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace LeanCode.LeanPipe.Extensions;
 
-public static class LeanPipeExtensions
+public static class LeanPipeServiceCollectionExtensions
 {
-    public static LeanPipeServicesBuilder AddLeanPipe(this IServiceCollection services)
+    public static LeanPipeServicesBuilder AddLeanPipe(
+        this IServiceCollection services,
+        TypesCatalog topics,
+        TypesCatalog handlers
+    )
     {
         services
             .AddSignalR()
@@ -20,12 +27,11 @@ public static class LeanPipeExtensions
                 options => options.PayloadSerializerOptions.PropertyNamingPolicy = null
             );
 
-        services.TryAddTransient<IEnvelopeDeserializer, DefaultEnvelopeDeserializer>();
         services.AddTransient(typeof(ISubscriptionHandler<>), typeof(KeyedSubscriptionHandler<>));
         services.AddTransient(typeof(LeanPipePublisher<>), typeof(LeanPipePublisher<>));
         services.AddSingleton<SubscriptionHandlerResolver>();
 
-        return new(services);
+        return new(services, topics);
     }
 
     public static IServiceCollection AddTopicController<TTopic, TController>(
@@ -127,14 +133,53 @@ public class LeanPipeServicesBuilder
 {
     public IServiceCollection Services { get; }
 
-    public LeanPipeServicesBuilder(IServiceCollection services)
+    private JsonSerializerOptions? options;
+    private TypesCatalog topics;
+
+    public LeanPipeServicesBuilder(IServiceCollection services, TypesCatalog topics)
     {
         Services = services;
+        this.topics = topics;
+
+        Services.AddSingleton<IEnvelopeDeserializer>(new DefaultEnvelopeDeserializer(topics, null));
+    }
+
+    public LeanPipeServicesBuilder WithEnvelopeDeserializerOptions(JsonSerializerOptions options)
+    {
+        this.options = options;
+        ReplaceDefaultEnveloperDeserializer();
+        return this;
     }
 
     public LeanPipeServicesBuilder WithEnvelopeDeserializer(IEnvelopeDeserializer deserializer)
     {
         Services.Replace(new ServiceDescriptor(typeof(IEnvelopeDeserializer), deserializer));
         return this;
+    }
+
+    public LeanPipeServicesBuilder AddTopics(TypesCatalog newTopics)
+    {
+        topics = topics.Merge(newTopics);
+        ReplaceDefaultEnveloperDeserializer();
+        return this;
+    }
+
+    private void ReplaceDefaultEnveloperDeserializer()
+    {
+        for (var i = Services.Count - 1; i >= 0; i--)
+        {
+            var descriptor = Services[i];
+            if (
+                descriptor.ServiceType == typeof(IEnvelopeDeserializer)
+                && descriptor.ImplementationInstance is DefaultEnvelopeDeserializer
+            )
+            {
+                Services.RemoveAt(i);
+                Services.AddSingleton<IEnvelopeDeserializer>(
+                    new DefaultEnvelopeDeserializer(topics, options)
+                );
+                break;
+            }
+        }
     }
 }
