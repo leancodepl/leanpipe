@@ -12,20 +12,14 @@ namespace LeanCode.LeanPipe.Extensions;
 
 public static class LeanPipeExtensions
 {
-    public static IServiceCollection AddLeanPipe(this IServiceCollection services) =>
-        services.AddLeanPipe(typeof(DefaultEnvelopeDeserializer));
-
-    public static IServiceCollection AddLeanPipe(
-        this IServiceCollection services,
-        Type envelopeDeserializer
-    )
+    public static IServiceCollection AddLeanPipe(this IServiceCollection services)
     {
         services
             .AddSignalR()
             .AddJsonProtocol(
                 options => options.PayloadSerializerOptions.PropertyNamingPolicy = null
             );
-        services.TryAddTransient(typeof(IEnvelopeDeserializer), envelopeDeserializer);
+        services.TryAddTransient<IEnvelopeDeserializer, DefaultEnvelopeDeserializer>();
         services.AddTransient(typeof(ISubscriptionHandler<>), typeof(KeyedSubscriptionHandler<>));
         services.AddTransient(typeof(LeanPipePublisher<>), typeof(LeanPipePublisher<>));
         services.AddTransient(
