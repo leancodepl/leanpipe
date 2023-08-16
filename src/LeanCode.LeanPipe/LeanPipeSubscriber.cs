@@ -37,16 +37,16 @@ public class LeanPipeSubscriber : Hub
         OperationType type
     )
     {
+        var httpContext =
+            Context.GetHttpContext()
+            ?? throw new InvalidOperationException(
+                "Connection is not associated with an HTTP request."
+            );
+
         try
         {
             var topic = deserializer.Deserialize(envelope);
-            var context = new LeanPipeContext(
-                Context.GetHttpContext()
-                    ?? throw new InvalidOperationException(
-                        "Connection is not associated with an HTTP request."
-                    )
-            );
-            var authorized = await LeanPipeSecurity.CheckIfAuthorizedAsync(topic, context);
+            var authorized = await LeanPipeSecurity.CheckIfAuthorizedAsync(topic, httpContext);
 
             if (!authorized)
             {
@@ -55,7 +55,7 @@ public class LeanPipeSubscriber : Hub
             }
 
             var handler = GetSubscriptionHandler(topic.GetType());
-            await action(handler, topic, context);
+            await action(handler, topic, new(httpContext));
             await NotifyResult(envelope.Id, SubscriptionStatus.Success, type);
         }
         catch (JsonException error)
