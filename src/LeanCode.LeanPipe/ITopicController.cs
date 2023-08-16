@@ -8,14 +8,14 @@ namespace LeanCode.LeanPipe;
 public interface ITopicController<in TTopic>
     where TTopic : ITopic
 {
-    Task<IEnumerable<string>> ToKeysAsync(TTopic topic, LeanPipeContext context);
+    ValueTask<IEnumerable<string>> ToKeysAsync(TTopic topic, LeanPipeContext context);
 }
 
 public interface ITopicController<in TTopic, TNotification> : ITopicController<TTopic>
     where TTopic : ITopic, IProduceNotification<TNotification>
     where TNotification : notnull
 {
-    Task<IEnumerable<string>> ToKeysAsync(
+    ValueTask<IEnumerable<string>> ToKeysAsync(
         TTopic topic,
         TNotification notification,
         LeanPipeContext context
@@ -27,6 +27,6 @@ public abstract class BasicTopicController<TTopic> : ITopicController<TTopic>
 {
     public abstract IEnumerable<string> ToKeys(TTopic topic);
 
-    public Task<IEnumerable<string>> ToKeysAsync(TTopic topic, LeanPipeContext context) =>
-        Task.FromResult(ToKeys(topic));
+    public ValueTask<IEnumerable<string>> ToKeysAsync(TTopic topic, LeanPipeContext context) =>
+        ValueTask.FromResult(ToKeys(topic));
 }
