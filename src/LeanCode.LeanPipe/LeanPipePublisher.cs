@@ -8,17 +8,14 @@ public class LeanPipePublisher<TTopic>
     where TTopic : ITopic
 {
     internal IHubContext<LeanPipeSubscriber> HubContext { get; }
-    internal ITopicController<TTopic> TopicController { get; }
     internal IServiceProvider ServiceProvider { get; }
 
     public LeanPipePublisher(
         IHubContext<LeanPipeSubscriber> hubContext,
-        ITopicController<TTopic> topicController,
         IServiceProvider serviceProvider
     )
     {
         HubContext = hubContext;
-        TopicController = topicController;
         ServiceProvider = serviceProvider;
     }
 
@@ -76,7 +73,10 @@ public static class LeanPipePublisherExtensions
         where TTopic : ITopic, IProduceNotification<TNotification>
         where TNotification : notnull
     {
-        var keys = await publisher.TopicController.ToKeysAsync(topic, context);
+        var topicController = publisher.ServiceProvider.GetRequiredService<
+            ITopicController<TTopic>
+        >();
+        var keys = await topicController.ToKeysAsync(topic, context);
         var payload = NotificationEnvelope.Create(topic, notification);
 
         await publisher.PublishAsync(keys, payload, context.HttpContext.RequestAborted);
