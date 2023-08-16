@@ -5,7 +5,7 @@ namespace LeanCode.LeanPipe;
 /// <summary>
 /// Marker interface, do not use directly.
 /// </summary>
-public interface ISubscriptionHandlerWrapper
+internal interface ISubscriptionHandlerWrapper
 {
     Task OnSubscribedAsync(object topic, LeanPipeSubscriber pipe, LeanPipeContext context);
     Task OnUnsubscribedAsync(object topic, LeanPipeSubscriber pipe, LeanPipeContext context);

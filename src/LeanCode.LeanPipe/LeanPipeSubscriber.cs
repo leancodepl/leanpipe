@@ -1,18 +1,20 @@
 using System.Text.Json;
 using LeanCode.Contracts;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace LeanCode.LeanPipe;
 
 public class LeanPipeSubscriber : Hub
 {
-    private readonly IServiceProvider services;
+    private readonly SubscriptionHandlerResolver resolver;
     private readonly IEnvelopeDeserializer deserializer;
 
-    public LeanPipeSubscriber(IServiceProvider services, IEnvelopeDeserializer deserializer)
+    internal LeanPipeSubscriber(
+        SubscriptionHandlerResolver resolver,
+        IEnvelopeDeserializer deserializer
+    )
     {
-        this.services = services;
+        this.resolver = resolver;
         this.deserializer = deserializer;
     }
 
@@ -38,15 +40,6 @@ public class LeanPipeSubscriber : Hub
         );
     }
 
-    private ISubscriptionHandlerWrapper GetSubscriptionHandler(Type topic)
-    {
-        var resolverType = typeof(ISubscriptionHandlerResolver<>).MakeGenericType(new[] { topic });
-        var resolver =
-            (ISubscriptionHandlerResolver<ITopic>)services.GetRequiredService(resolverType);
-        var handler = resolver.FindSubscriptionHandler();
-        return handler;
-    }
-
     private async Task ExecuteAsync(SubscriptionEnvelope envelope, OperationType type)
     {
         try
@@ -66,7 +59,11 @@ public class LeanPipeSubscriber : Hub
             }
 
             var context = new LeanPipeContext(httpContext);
-            var handler = GetSubscriptionHandler(topic.GetType());
+            var handler =
+                resolver.FindSubscriptionHandler(topic.GetType())
+                ?? throw new InvalidOperationException(
+                    $"The resolver for topic {topic.GetType()} cannot be found."
+                );
             if (type == OperationType.Subscribe)
             {
                 await handler.OnSubscribedAsync(topic, this, context);
