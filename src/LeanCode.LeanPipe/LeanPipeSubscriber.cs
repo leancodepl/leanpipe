@@ -49,7 +49,9 @@ public class LeanPipeSubscriber : Hub
                 ?? throw new InvalidOperationException(
                     "Connection is not associated with an HTTP request."
                 );
-            var topic = deserializer.Deserialize(envelope);
+            var topic =
+                deserializer.Deserialize(envelope)
+                ?? throw new InvalidOperationException("Cannot deserialize the topic.");
             var authorized = await LeanPipeSecurity.CheckIfAuthorizedAsync(topic, httpContext);
 
             if (!authorized)
