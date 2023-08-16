@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Reflection;
 using System.Text;
 using LeanCode.Contracts;
@@ -11,18 +12,20 @@ namespace LeanCode.LeanPipe.Extensions;
 
 public static class LeanPipeExtensions
 {
-    public static IServiceCollection AddLeanPipe(this IServiceCollection services)
+    public static LeanPipeServicesBuilder AddLeanPipe(this IServiceCollection services)
     {
         services
             .AddSignalR()
             .AddJsonProtocol(
                 options => options.PayloadSerializerOptions.PropertyNamingPolicy = null
             );
+
         services.TryAddTransient<IEnvelopeDeserializer, DefaultEnvelopeDeserializer>();
         services.AddTransient(typeof(ISubscriptionHandler<>), typeof(KeyedSubscriptionHandler<>));
         services.AddTransient(typeof(LeanPipePublisher<>), typeof(LeanPipePublisher<>));
         services.AddSingleton<SubscriptionHandlerResolver>();
-        return services;
+
+        return new(services);
     }
 
     public static IServiceCollection AddTopicController<TTopic, TController>(
@@ -117,5 +120,21 @@ public static class LeanPipeExtensions
     )
     {
         return endpoints.MapHub<LeanPipeSubscriber>(pattern, configureOptions);
+    }
+}
+
+public class LeanPipeServicesBuilder
+{
+    public IServiceCollection Services { get; }
+
+    public LeanPipeServicesBuilder(IServiceCollection services)
+    {
+        Services = services;
+    }
+
+    public LeanPipeServicesBuilder WithEnvelopeDeserializer(IEnvelopeDeserializer deserializer)
+    {
+        Services.Replace(new ServiceDescriptor(typeof(IEnvelopeDeserializer), deserializer));
+        return this;
     }
 }
