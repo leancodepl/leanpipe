@@ -5,8 +5,8 @@ namespace LeanCode.LeanPipe;
 public interface ISubscriptionHandler<in TTopic>
     where TTopic : ITopic
 {
-    Task OnSubscribedAsync(TTopic topic, LeanPipeSubscriber pipe, LeanPipeContext context);
-    Task OnUnsubscribedAsync(TTopic topic, LeanPipeSubscriber pipe, LeanPipeContext context);
+    ValueTask OnSubscribedAsync(TTopic topic, LeanPipeSubscriber pipe, LeanPipeContext context);
+    ValueTask OnUnsubscribedAsync(TTopic topic, LeanPipeSubscriber pipe, LeanPipeContext context);
 }
 
 public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
@@ -19,7 +19,7 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
         this.topicController = topicController;
     }
 
-    public async Task OnSubscribedAsync(
+    public async ValueTask OnSubscribedAsync(
         TTopic topic,
         LeanPipeSubscriber pipe,
         LeanPipeContext context
@@ -36,7 +36,7 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
         }
     }
 
-    public async Task OnUnsubscribedAsync(
+    public async ValueTask OnUnsubscribedAsync(
         TTopic topic,
         LeanPipeSubscriber pipe,
         LeanPipeContext context
