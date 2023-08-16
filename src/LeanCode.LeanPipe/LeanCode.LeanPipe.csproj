@@ -7,7 +7,6 @@
   <ItemGroup>
     <PackageReference Update="LeanCode.Contracts" />
     <PackageReference Update="LeanCode.CQRS.Security" />
-    <PackageReference Update="Microsoft.AspNetCore.SignalR" />
   </ItemGroup>
 
 </Project>
