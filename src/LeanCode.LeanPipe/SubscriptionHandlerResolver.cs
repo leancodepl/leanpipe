@@ -1,22 +1,17 @@
-using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Concurrent;
+using System.Reflection;
 
 namespace LeanCode.LeanPipe;
 
-public interface ISubscriptionHandlerResolver<out TTopic>
+internal sealed class SubscriptionHandlerResolver
 {
-    ISubscriptionHandlerWrapper FindSubscriptionHandler();
-}
-
-internal sealed class SubscriptionHandlerResolver<TTopic> : ISubscriptionHandlerResolver<TTopic>
-{
-    private static readonly Type TopicType = typeof(TTopic);
     private static readonly Type HandlerBase = typeof(ISubscriptionHandler<>);
     private static readonly Type HandlerWrapperBase = typeof(SubscriptionHandlerWrapper<>);
-    private static readonly Type HandlerType = HandlerBase.MakeGenericType(new[] { TopicType });
-    private static readonly Type WrapperType = HandlerWrapperBase.MakeGenericType(
-        new[] { TopicType }
-    );
 
+    private readonly ConcurrentDictionary<
+        Type,
+        (Type HandlerType, ConstructorInfo Constructor)
+    > cache = new();
     private readonly IServiceProvider services;
 
     public SubscriptionHandlerResolver(IServiceProvider services)
@@ -24,14 +19,26 @@ internal sealed class SubscriptionHandlerResolver<TTopic> : ISubscriptionHandler
         this.services = services;
     }
 
-    public ISubscriptionHandlerWrapper FindSubscriptionHandler()
+    public ISubscriptionHandlerWrapper? FindSubscriptionHandler(Type topicType)
     {
-        var handler = services.GetRequiredService(HandlerType);
-        var wrapper =
-            Activator.CreateInstance(WrapperType, new[] { handler })
-            ?? throw new InvalidOperationException(
-                $"Cannot create subscription handler wrapper instance of type {WrapperType}."
-            );
-        return (ISubscriptionHandlerWrapper)wrapper;
+        var (handlerType, constructor) = cache.GetOrAdd(topicType, ResolveTypes);
+        var handler = services.GetService(handlerType);
+        if (handler is not null)
+        {
+            var wrapper = constructor.Invoke(new[] { handler });
+            return (ISubscriptionHandlerWrapper)wrapper;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private static (Type HandlerType, ConstructorInfo Constructor) ResolveTypes(Type topicType)
+    {
+        var handlerType = HandlerBase.MakeGenericType(topicType);
+        var wrapperType = HandlerWrapperBase.MakeGenericType(topicType);
+        var ctor = wrapperType.GetConstructors()[0];
+        return (handlerType, ctor);
     }
 }
