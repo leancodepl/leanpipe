@@ -6,6 +6,16 @@
   <ItemGroup>
     <PackageReference Include="LeanCode.Contracts" Version="2.0.0-preview" />
     <PackageReference Include="LeanCode.CQRS.Security" Version="$(CoreLibVersion)" />
+    <PackageReference Include="LeanCode.Components" Version="$(CoreLibVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.7.0" />
+    <PackageReference Update="xunit.analyzers" Version="1.2.0" />
+    <PackageReference Update="xunit.runner.visualstudio" Version="2.5.0" />
+    <PackageReference Update="xunit" Version="2.5.0" />
+
+    <PackageReference Update="coverlet.collector" Version="6.0.0" />
   </ItemGroup>
 
 </Project>
