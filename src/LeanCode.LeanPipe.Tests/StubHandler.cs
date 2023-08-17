@@ -22,3 +22,12 @@ public class StubHandler<T> : ISubscriptionHandler<T>
 }
 
 public class StubHandler : StubHandler<Topic1> { }
+
+public class DummyController<T> : ITopicController<T>
+    where T : ITopic
+{
+    public ValueTask<IEnumerable<string>> ToKeysAsync(T topic, LeanPipeContext context)
+    {
+        return new(Enumerable.Empty<string>());
+    }
+}

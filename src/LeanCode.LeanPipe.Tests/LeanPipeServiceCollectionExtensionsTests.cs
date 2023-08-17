@@ -57,4 +57,31 @@ public class LeanPipeServiceCollectionExtensionsTests
 
         topic.Should().NotBeNull().And.BeOfType<ExternalTopic>();
     }
+
+    [Fact]
+    public void Registers_all_handlers_in_the_assembly()
+    {
+        var collection = new ServiceCollection();
+        collection.AddLeanPipe(ThisCatalog, ThisCatalog);
+        var provider = collection.BuildServiceProvider();
+
+        provider
+            .GetRequiredService<ISubscriptionHandler<Topic1>>()
+            .Should()
+            .BeOfType<StubHandler>();
+    }
+
+    [Fact]
+    public void Does_not_register_handlers_that_cannot_be_instantiated()
+    {
+        var collection = new ServiceCollection();
+        collection.AddLeanPipe(ThisCatalog, ThisCatalog);
+        collection.AddTransient<ITopicController<Topic2>, DummyController<Topic2>>();
+        var provider = collection.BuildServiceProvider();
+
+        provider
+            .GetRequiredService<ISubscriptionHandler<Topic2>>()
+            .Should()
+            .BeOfType<KeyedSubscriptionHandler<Topic2>>();
+    }
 }

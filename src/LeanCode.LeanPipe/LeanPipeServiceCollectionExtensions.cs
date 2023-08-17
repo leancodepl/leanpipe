@@ -1,11 +1,9 @@
-using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using LeanCode.Components;
 using LeanCode.Contracts;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,7 +29,7 @@ public static class LeanPipeServiceCollectionExtensions
         services.AddTransient(typeof(LeanPipePublisher<>), typeof(LeanPipePublisher<>));
         services.AddTransient<SubscriptionHandlerResolver>();
 
-        return new(services, topics);
+        return new LeanPipeServicesBuilder(services, topics).AddHandlers(handlers);
     }
 
     public static IServiceCollection AddTopicController<TTopic, TController>(
@@ -161,6 +159,26 @@ public class LeanPipeServicesBuilder
     {
         topics = topics.Merge(newTopics);
         ReplaceDefaultEnvelopeDeserializer();
+        return this;
+    }
+
+    public LeanPipeServicesBuilder AddHandlers(TypesCatalog newHandlers)
+    {
+        Services.RegisterGenericTypes(
+            newHandlers,
+            typeof(ISubscriptionHandler<>),
+            ServiceLifetime.Transient
+        );
+        Services.RegisterGenericTypes(
+            newHandlers,
+            typeof(ITopicController<>),
+            ServiceLifetime.Transient
+        );
+        Services.RegisterGenericTypes(
+            newHandlers,
+            typeof(ITopicController<,>),
+            ServiceLifetime.Transient
+        );
         return this;
     }
 
