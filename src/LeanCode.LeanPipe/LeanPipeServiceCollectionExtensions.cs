@@ -147,7 +147,7 @@ public class LeanPipeServicesBuilder
     public LeanPipeServicesBuilder WithEnvelopeDeserializerOptions(JsonSerializerOptions options)
     {
         this.options = options;
-        ReplaceDefaultEnveloperDeserializer();
+        ReplaceDefaultEnvelopeDeserializer();
         return this;
     }
 
@@ -160,11 +160,11 @@ public class LeanPipeServicesBuilder
     public LeanPipeServicesBuilder AddTopics(TypesCatalog newTopics)
     {
         topics = topics.Merge(newTopics);
-        ReplaceDefaultEnveloperDeserializer();
+        ReplaceDefaultEnvelopeDeserializer();
         return this;
     }
 
-    private void ReplaceDefaultEnveloperDeserializer()
+    private void ReplaceDefaultEnvelopeDeserializer()
     {
         for (var i = Services.Count - 1; i >= 0; i--)
         {
