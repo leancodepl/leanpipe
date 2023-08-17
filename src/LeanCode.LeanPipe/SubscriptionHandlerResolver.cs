@@ -8,7 +8,7 @@ public sealed class SubscriptionHandlerResolver
     private static readonly Type HandlerBase = typeof(ISubscriptionHandler<>);
     private static readonly Type HandlerWrapperBase = typeof(SubscriptionHandlerWrapper<>);
 
-    private readonly ConcurrentDictionary<
+    private static readonly ConcurrentDictionary<
         Type,
         (Type HandlerType, ConstructorInfo Constructor)
     > cache = new();

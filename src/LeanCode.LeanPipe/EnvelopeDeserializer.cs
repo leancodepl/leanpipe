@@ -28,7 +28,7 @@ public class DefaultEnvelopeDeserializer : IEnvelopeDeserializer
     {
         if (topicTypes.Value.TryGetValue(envelope.TopicType, out var topicType))
         {
-            return (ITopic?)JsonSerializer.Deserialize(envelope.Topic, topicType, options);
+            return (ITopic?)envelope.Topic.Deserialize(topicType, options);
         }
         else
         {
