@@ -29,7 +29,7 @@ public static class LeanPipeServiceCollectionExtensions
 
         services.AddTransient(typeof(ISubscriptionHandler<>), typeof(KeyedSubscriptionHandler<>));
         services.AddTransient(typeof(LeanPipePublisher<>), typeof(LeanPipePublisher<>));
-        services.AddSingleton<SubscriptionHandlerResolver>();
+        services.AddTransient<SubscriptionHandlerResolver>();
 
         return new(services, topics);
     }

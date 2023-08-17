@@ -1,8 +1,9 @@
+using FluentAssertions;
 using LeanCode.Components;
-using LeanCode.Contracts;
 using LeanCode.LeanPipe.Extensions;
 using LeanCode.LeanPipe.Tests.Additional;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.ObjectPool;
 using Xunit;
 
 namespace LeanCode.LeanPipe.Tests;
@@ -17,11 +18,28 @@ public class LeanPipeServiceCollectionExtensionsTests
     {
         var collection = new ServiceCollection();
         collection.AddLeanPipe(ThisCatalog, ThisCatalog);
-
-        Assert.Single(collection, d => d.ServiceType == typeof(IEnvelopeDeserializer));
-        Assert.Single(collection, d => d.ServiceType == typeof(SubscriptionHandlerResolver));
-        Assert.Single(collection, d => d.ServiceType == typeof(LeanPipePublisher<>));
-        Assert.Single(collection, d => d.ServiceType == typeof(ISubscriptionHandler<>));
+        collection
+            .Should()
+            .ContainSingle(
+                d =>
+                    d.ServiceType == typeof(IEnvelopeDeserializer)
+                    && d.Lifetime == ServiceLifetime.Singleton
+            )
+            .And.ContainSingle(
+                d =>
+                    d.ServiceType == typeof(SubscriptionHandlerResolver)
+                    && d.Lifetime == ServiceLifetime.Transient
+            )
+            .And.ContainSingle(
+                d =>
+                    d.ServiceType == typeof(LeanPipePublisher<>)
+                    && d.Lifetime == ServiceLifetime.Transient
+            )
+            .And.ContainSingle(
+                d =>
+                    d.ServiceType == typeof(ISubscriptionHandler<>)
+                    && d.Lifetime == ServiceLifetime.Transient
+            );
     }
 
     [Fact]
@@ -35,24 +53,8 @@ public class LeanPipeServiceCollectionExtensionsTests
         var deserializer = collection
             .BuildServiceProvider()
             .GetRequiredService<IEnvelopeDeserializer>();
-        var topic = deserializer.Deserialize(
-            new()
-            {
-                Id = Guid.NewGuid(),
-                Topic = "{}",
-                TopicType = typeof(ExternalTopic).FullName!
-            }
-        );
+        var topic = deserializer.Deserialize(Envelope.Empty<ExternalTopic>());
 
-        Assert.NotNull(topic);
-        Assert.IsType<ExternalTopic>(topic);
+        topic.Should().NotBeNull().And.BeOfType<ExternalTopic>();
     }
 }
-
-public abstract class AbstractTopic : ITopic { }
-
-public class GenericTopic<T> : ITopic { }
-
-public class Topic1 : ITopic { }
-
-public class Topic2 : AbstractTopic { }

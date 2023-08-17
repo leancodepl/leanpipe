@@ -11,7 +11,7 @@ public interface ISubscriptionHandlerWrapper
     ValueTask OnUnsubscribedAsync(object topic, LeanPipeSubscriber pipe, LeanPipeContext context);
 }
 
-internal sealed class SubscriptionHandlerWrapper<TTopic> : ISubscriptionHandlerWrapper
+public sealed class SubscriptionHandlerWrapper<TTopic> : ISubscriptionHandlerWrapper
     where TTopic : ITopic
 {
     private readonly ISubscriptionHandler<TTopic> handler;
