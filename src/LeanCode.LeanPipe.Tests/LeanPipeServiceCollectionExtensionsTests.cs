@@ -76,7 +76,7 @@ public class LeanPipeServiceCollectionExtensionsTests
     {
         var collection = new ServiceCollection();
         collection.AddLeanPipe(ThisCatalog, ThisCatalog);
-        collection.AddTransient<ITopicController<Topic2>, DummyController<Topic2>>();
+        collection.AddTransient<ITopicKeys<Topic2>, DummyKeys<Topic2>>();
         var provider = collection.BuildServiceProvider();
 
         provider

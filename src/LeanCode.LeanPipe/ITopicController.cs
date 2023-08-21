@@ -5,28 +5,28 @@ namespace LeanCode.LeanPipe;
 /// <summary>
 /// Marker interface, do not use directly
 /// </summary>
-public interface ITopicController<in TTopic>
+public interface ITopicKeys<in TTopic>
     where TTopic : ITopic
 {
-    ValueTask<IEnumerable<string>> ToKeysAsync(TTopic topic, LeanPipeContext context);
+    ValueTask<IEnumerable<string>> GetAsync(TTopic topic, LeanPipeContext context);
 }
 
-public interface ITopicController<in TTopic, TNotification> : ITopicController<TTopic>
+public interface INotificationKeys<in TTopic, TNotification> : ITopicKeys<TTopic>
     where TTopic : ITopic, IProduceNotification<TNotification>
     where TNotification : notnull
 {
-    ValueTask<IEnumerable<string>> ToKeysAsync(
+    ValueTask<IEnumerable<string>> GetAsync(
         TTopic topic,
         TNotification notification,
         LeanPipeContext context
     );
 }
 
-public abstract class BasicTopicController<TTopic> : ITopicController<TTopic>
+public abstract class BasicTopicKeys<TTopic> : ITopicKeys<TTopic>
     where TTopic : ITopic
 {
-    public abstract IEnumerable<string> ToKeys(TTopic topic);
+    public abstract IEnumerable<string> Get(TTopic topic);
 
-    public ValueTask<IEnumerable<string>> ToKeysAsync(TTopic topic, LeanPipeContext context) =>
-        ValueTask.FromResult(ToKeys(topic));
+    public ValueTask<IEnumerable<string>> GetAsync(TTopic topic, LeanPipeContext context) =>
+        ValueTask.FromResult(Get(topic));
 }
