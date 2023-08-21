@@ -31,3 +31,27 @@ public class DummyKeys<T> : ITopicKeys<T>
         return new(Enumerable.Empty<string>());
     }
 }
+
+public class TopicWithAllKeysKeys
+    : DummyKeys<TopicWithAllKeys>,
+        INotificationKeys<TopicWithAllKeys, Notification1>,
+        INotificationKeys<TopicWithAllKeys, Notification2>
+{
+    public ValueTask<IEnumerable<string>> GetAsync(
+        TopicWithAllKeys topic,
+        Notification1 notification,
+        LeanPipeContext context
+    )
+    {
+        return new(Array.Empty<string>());
+    }
+
+    public ValueTask<IEnumerable<string>> GetAsync(
+        TopicWithAllKeys topic,
+        Notification2 notification,
+        LeanPipeContext context
+    )
+    {
+        return new(Array.Empty<string>());
+    }
+}

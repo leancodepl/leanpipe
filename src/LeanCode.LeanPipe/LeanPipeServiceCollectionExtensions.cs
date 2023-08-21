@@ -1,5 +1,3 @@
-using System.Reflection;
-using System.Text;
 using System.Text.Json;
 using LeanCode.Components;
 using LeanCode.Contracts;
@@ -98,6 +96,7 @@ public class LeanPipeServicesBuilder
             typeof(INotificationKeys<,>),
             ServiceLifetime.Transient
         );
+        VerifyNotificationKeysImplementations();
         return this;
     }
 
@@ -118,5 +117,57 @@ public class LeanPipeServicesBuilder
                 break;
             }
         }
+    }
+
+    private void VerifyNotificationKeysImplementations()
+    {
+        var notificationKeysType = typeof(INotificationKeys<,>);
+        var typesToCheck = new HashSet<(Type, Type)>();
+
+        foreach (var service in Services)
+        {
+            if (
+                service.ServiceType.IsGenericType
+                && service.ServiceType.GetGenericTypeDefinition() == notificationKeysType
+                && (service.ImplementationType ?? service.ImplementationInstance?.GetType())
+                    is { } implementationType
+            )
+            {
+                var topicType = service.ServiceType.GenericTypeArguments[0];
+                typesToCheck.Add((topicType, implementationType));
+            }
+        }
+
+        foreach (var (topicType, keysType) in typesToCheck)
+        {
+            VerifyNotificationKeys(topicType, keysType);
+        }
+    }
+
+    private static void VerifyNotificationKeys(Type topicType, Type keysType)
+    {
+        var producedNotifications = topicType
+            .FindInterfaces(Filter, typeof(IProduceNotification<>))
+            .Select(t => t.GenericTypeArguments[0])
+            .ToHashSet();
+        var implementedKeys = keysType
+            .FindInterfaces(Filter, typeof(INotificationKeys<,>))
+            .Select(t => t.GenericTypeArguments[1])
+            .ToHashSet();
+
+        var missing = producedNotifications.Except(implementedKeys);
+
+        if (implementedKeys.Count > 0 && missing.Any())
+        {
+            var msg = $"""
+            If topic keys implements `INotificationKeys`, it needs to be implemented for all notification types.
+            The class `{keysType.FullName}` is missing following implementations:
+            {string.Join(", ", missing.Select(t => $"  - INotificationKeys<{topicType.Name}, {t.Name}>"))}
+            """;
+            throw new InvalidOperationException(msg);
+        }
+
+        static bool Filter(Type i, object? c) =>
+            i.IsAbstract && i.IsGenericType && i.GetGenericTypeDefinition() == (Type)c!;
     }
 }
