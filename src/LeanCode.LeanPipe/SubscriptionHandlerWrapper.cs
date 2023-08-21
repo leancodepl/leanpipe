@@ -2,9 +2,6 @@ using LeanCode.Contracts;
 
 namespace LeanCode.LeanPipe;
 
-/// <summary>
-/// Marker interface, do not use directly.
-/// </summary>
 public interface ISubscriptionHandlerWrapper
 {
     ValueTask OnSubscribedAsync(object topic, LeanPipeSubscriber pipe, LeanPipeContext context);
