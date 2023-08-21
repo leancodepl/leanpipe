@@ -3,15 +3,14 @@ using LeanCode.Components;
 using LeanCode.LeanPipe.Extensions;
 using LeanCode.LeanPipe.Tests.Additional;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.ObjectPool;
 using Xunit;
 
 namespace LeanCode.LeanPipe.Tests;
 
 public class LeanPipeServiceCollectionExtensionsTests
 {
-    private static readonly TypesCatalog ThisCatalog =
-        TypesCatalog.Of<LeanPipeServiceCollectionExtensionsTests>();
+    private static readonly TypesCatalog ThisCatalog = TypesCatalog.Of<Topic1>();
+    private static readonly TypesCatalog ExternalCatalog = TypesCatalog.Of<ExternalTopic>();
 
     [Fact]
     public void Registers_all_basic_types()
@@ -46,9 +45,7 @@ public class LeanPipeServiceCollectionExtensionsTests
     public void Updates_deserializer_when_registering_additional_types()
     {
         var collection = new ServiceCollection();
-        collection
-            .AddLeanPipe(ThisCatalog, ThisCatalog)
-            .AddTopics(TypesCatalog.Of<ExternalTopic>());
+        collection.AddLeanPipe(ThisCatalog, ThisCatalog).AddTopics(ExternalCatalog);
 
         var deserializer = collection
             .BuildServiceProvider()
@@ -83,5 +80,58 @@ public class LeanPipeServiceCollectionExtensionsTests
             .GetRequiredService<ISubscriptionHandler<Topic2>>()
             .Should()
             .BeOfType<KeyedSubscriptionHandler<Topic2>>();
+    }
+
+    [Fact]
+    public void Registers_topic_keys_if_provided()
+    {
+        var collection = new ServiceCollection();
+        collection.AddLeanPipe(ThisCatalog, ThisCatalog);
+        var provider = collection.BuildServiceProvider();
+
+        provider
+            .GetRequiredService<ITopicKeys<TopicWithAllKeys>>()
+            .Should()
+            .BeOfType<TopicWithAllKeysKeys>();
+    }
+
+    [Fact]
+    public void Registers_KeyedSubscriptionHandler_by_default()
+    {
+        var collection = new ServiceCollection();
+        collection.AddLeanPipe(ThisCatalog, ThisCatalog);
+        var provider = collection.BuildServiceProvider();
+
+        provider
+            .GetRequiredService<ISubscriptionHandler<TopicWithAllKeys>>()
+            .Should()
+            .BeOfType<KeyedSubscriptionHandler<TopicWithAllKeys>>();
+    }
+
+    [Fact]
+    public void Registers_all_notification_keys()
+    {
+        var collection = new ServiceCollection();
+        collection.AddLeanPipe(ThisCatalog, ThisCatalog);
+        var provider = collection.BuildServiceProvider();
+
+        provider
+            .GetRequiredService<INotificationKeys<TopicWithAllKeys, Notification1>>()
+            .Should()
+            .BeOfType<TopicWithAllKeysKeys>();
+        provider
+            .GetRequiredService<INotificationKeys<TopicWithAllKeys, Notification2>>()
+            .Should()
+            .BeOfType<TopicWithAllKeysKeys>();
+    }
+
+    [Fact]
+    public void Throws_if_user_does_not_provide_all_notification_keys_implementation_but_provides_at_least_one()
+    {
+        var collection = new ServiceCollection();
+        var builder = collection.AddLeanPipe(ThisCatalog, ThisCatalog);
+
+        var act = () => builder.AddHandlers(ExternalCatalog);
+        act.Should().Throw<InvalidOperationException>();
     }
 }
