@@ -1,11 +1,10 @@
 using FluentAssertions;
 using LeanCode.Components;
-using LeanCode.LeanPipe.Extensions;
-using LeanCode.LeanPipe.Tests.Additional;
+using LeanPipe.Tests.Additional;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace LeanCode.LeanPipe.Tests;
+namespace LeanPipe.Tests;
 
 public class LeanPipeServiceCollectionExtensionsTests
 {

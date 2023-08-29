@@ -1,6 +1,6 @@
 using LeanCode.Contracts;
 
-namespace LeanCode.LeanPipe.Tests;
+namespace LeanPipe.Tests;
 
 public abstract class AbstractTopic : ITopic { }
 

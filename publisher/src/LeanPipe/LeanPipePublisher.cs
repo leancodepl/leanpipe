@@ -2,7 +2,7 @@ using LeanCode.Contracts;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace LeanCode.LeanPipe;
+namespace LeanPipe;
 
 public class LeanPipePublisher<TTopic>
     where TTopic : ITopic

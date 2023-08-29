@@ -1,8 +1,7 @@
 using FluentAssertions;
 using Xunit;
-using Xunit.Sdk;
 
-namespace LeanCode.LeanPipe.Tests;
+namespace LeanPipe.Tests;
 
 public class SubscriptionHandlerWrapperTests
 {

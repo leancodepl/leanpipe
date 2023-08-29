@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
 using System.Reflection;
 
-namespace LeanCode.LeanPipe;
+namespace LeanPipe;
 
 public sealed class SubscriptionHandlerResolver
 {

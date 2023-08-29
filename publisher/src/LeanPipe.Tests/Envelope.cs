@@ -1,7 +1,7 @@
 using System.Text.Json;
 using LeanCode.Contracts;
 
-namespace LeanCode.LeanPipe.Tests;
+namespace LeanPipe.Tests;
 
 public static class Envelope
 {

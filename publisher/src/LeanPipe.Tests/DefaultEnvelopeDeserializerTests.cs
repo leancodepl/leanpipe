@@ -1,9 +1,9 @@
 using FluentAssertions;
 using LeanCode.Components;
-using LeanCode.LeanPipe.Tests.Additional;
+using LeanPipe.Tests.Additional;
 using Xunit;
 
-namespace LeanCode.LeanPipe.Tests;
+namespace LeanPipe.Tests;
 
 public class DefaultEnvelopeDeserializerTests
 {

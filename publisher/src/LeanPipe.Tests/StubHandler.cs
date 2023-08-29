@@ -1,6 +1,6 @@
 using LeanCode.Contracts;
 
-namespace LeanCode.LeanPipe.Tests;
+namespace LeanPipe.Tests;
 
 public class StubHandler<T> : ISubscriptionHandler<T>
     where T : ITopic

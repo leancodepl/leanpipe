@@ -2,7 +2,7 @@ using System.Text.Json;
 using LeanCode.Contracts;
 using Microsoft.AspNetCore.SignalR;
 
-namespace LeanCode.LeanPipe;
+namespace LeanPipe;
 
 public class LeanPipeSubscriber : Hub
 {

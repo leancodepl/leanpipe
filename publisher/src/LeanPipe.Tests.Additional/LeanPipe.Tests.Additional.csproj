@@ -2,7 +2,7 @@
 
   <ItemGroup>
     <PackageReference Update="LeanCode.Contracts" />
-    <ProjectReference Include="../LeanCode.LeanPipe/LeanCode.LeanPipe.csproj" />
+    <ProjectReference Include="..\LeanPipe\LeanPipe.csproj" />
   </ItemGroup>
 
 </Project>

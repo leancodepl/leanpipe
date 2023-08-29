@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Http;
 
-namespace LeanCode.LeanPipe;
+namespace LeanPipe;
 
 public class LeanPipeContext
 {

@@ -1,9 +1,9 @@
-using Microsoft.AspNetCore.Http;
 using LeanCode.Contracts;
 using LeanCode.Contracts.Security;
 using LeanCode.CQRS.Security;
+using Microsoft.AspNetCore.Http;
 
-namespace LeanCode.LeanPipe;
+namespace LeanPipe;
 
 internal static class LeanPipeSecurity
 {

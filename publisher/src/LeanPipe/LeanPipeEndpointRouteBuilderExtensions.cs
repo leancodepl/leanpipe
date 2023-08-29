@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.AspNetCore.Routing;
 
-namespace LeanCode.LeanPipe.Extensions;
+namespace LeanPipe;
 
 public static class LeanPipeEndpointRouteBuilderExtensions
 {

@@ -3,7 +3,7 @@ using System.Text.Json;
 using LeanCode.Components;
 using LeanCode.Contracts;
 
-namespace LeanCode.LeanPipe;
+namespace LeanPipe;
 
 public interface IEnvelopeDeserializer
 {

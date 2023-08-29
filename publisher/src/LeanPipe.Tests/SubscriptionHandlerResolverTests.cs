@@ -3,7 +3,7 @@ using LeanCode.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace LeanCode.LeanPipe.Tests;
+namespace LeanPipe.Tests;
 
 public class SubscriptionHandlerResolverTests
 {

@@ -4,7 +4,7 @@ using LeanCode.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace LeanCode.LeanPipe.Extensions;
+namespace LeanPipe;
 
 public static class LeanPipeServiceCollectionExtensions
 {

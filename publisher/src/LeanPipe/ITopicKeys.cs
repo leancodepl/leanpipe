@@ -1,6 +1,6 @@
 using LeanCode.Contracts;
 
-namespace LeanCode.LeanPipe;
+namespace LeanPipe;
 
 public interface ITopicKeys<in TTopic>
     where TTopic : ITopic
