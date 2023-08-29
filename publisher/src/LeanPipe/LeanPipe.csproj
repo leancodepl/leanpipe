@@ -5,9 +5,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="LeanCode.CQRS.Security" />
-    <PackageReference Update="LeanCode.Components" />
-    <PackageReference Update="LeanCode.Contracts" />
+    <PackageReference Include="LeanCode.CQRS.Security" />
+    <PackageReference Include="LeanCode.Components" />
+    <PackageReference Include="LeanCode.Contracts" />
   </ItemGroup>
 
 </Project>

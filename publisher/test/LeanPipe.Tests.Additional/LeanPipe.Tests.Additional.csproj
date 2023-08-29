@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <PackageReference Update="LeanCode.Contracts" />
-    <ProjectReference Include="..\LeanPipe\LeanPipe.csproj" />
+    <ProjectReference Include="..\..\src\LeanPipe\LeanPipe.csproj" />
   </ItemGroup>
 
 </Project>

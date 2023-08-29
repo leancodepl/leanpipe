@@ -4,9 +4,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LeanCode.Contracts" Version="2.0.0-preview.2" />
-    <PackageReference Include="LeanCode.CQRS.Security" Version="$(CoreLibVersion)" />
-    <PackageReference Include="LeanCode.Components" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.Contracts" Version="2.0.0-preview.2" />
+    <PackageReference Update="LeanCode.CQRS.Security" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.Components" Version="$(CoreLibVersion)" />
   </ItemGroup>
 
   <ItemGroup>
