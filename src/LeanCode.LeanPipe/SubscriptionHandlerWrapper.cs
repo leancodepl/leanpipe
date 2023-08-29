@@ -2,16 +2,13 @@ using LeanCode.Contracts;
 
 namespace LeanCode.LeanPipe;
 
-/// <summary>
-/// Marker interface, do not use directly.
-/// </summary>
 public interface ISubscriptionHandlerWrapper
 {
-    Task OnSubscribedAsync(object topic, LeanPipeSubscriber pipe, LeanPipeContext context);
-    Task OnUnsubscribedAsync(object topic, LeanPipeSubscriber pipe, LeanPipeContext context);
+    ValueTask OnSubscribedAsync(object topic, LeanPipeSubscriber pipe, LeanPipeContext context);
+    ValueTask OnUnsubscribedAsync(object topic, LeanPipeSubscriber pipe, LeanPipeContext context);
 }
 
-internal sealed class SubscriptionHandlerWrapper<TTopic> : ISubscriptionHandlerWrapper
+public sealed class SubscriptionHandlerWrapper<TTopic> : ISubscriptionHandlerWrapper
     where TTopic : ITopic
 {
     private readonly ISubscriptionHandler<TTopic> handler;
@@ -21,10 +18,13 @@ internal sealed class SubscriptionHandlerWrapper<TTopic> : ISubscriptionHandlerW
         this.handler = handler;
     }
 
-    public Task OnSubscribedAsync(object topic, LeanPipeSubscriber pipe, LeanPipeContext context) =>
-        handler.OnSubscribedAsync((TTopic)topic, pipe, context);
+    public ValueTask OnSubscribedAsync(
+        object topic,
+        LeanPipeSubscriber pipe,
+        LeanPipeContext context
+    ) => handler.OnSubscribedAsync((TTopic)topic, pipe, context);
 
-    public Task OnUnsubscribedAsync(
+    public ValueTask OnUnsubscribedAsync(
         object topic,
         LeanPipeSubscriber pipe,
         LeanPipeContext context

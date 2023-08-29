@@ -5,9 +5,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Update="LeanCode.Contracts" />
     <PackageReference Update="LeanCode.CQRS.Security" />
-    <PackageReference Update="Microsoft.AspNetCore.SignalR" />
+    <PackageReference Update="LeanCode.Components" />
+    <PackageReference Update="LeanCode.Contracts" />
   </ItemGroup>
 
 </Project>

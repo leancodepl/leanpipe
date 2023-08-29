@@ -1,92 +1,96 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using LeanCode.Contracts;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace LeanCode.LeanPipe;
 
 public class LeanPipeSubscriber : Hub
 {
-    private readonly IServiceProvider services;
+    private readonly SubscriptionHandlerResolver resolver;
     private readonly IEnvelopeDeserializer deserializer;
 
-    public LeanPipeSubscriber(IServiceProvider services, IEnvelopeDeserializer deserializer)
+    internal LeanPipeSubscriber(
+        SubscriptionHandlerResolver resolver,
+        IEnvelopeDeserializer deserializer
+    )
     {
-        this.services = services;
+        this.resolver = resolver;
         this.deserializer = deserializer;
     }
 
-    private Task NotifyResult(Guid subscriptionId, SubscriptionStatus status, OperationType type) =>
-        Clients.Caller.SendAsync(
-            "subscriptionResult",
-            new SubscriptionResult(subscriptionId, status, type)
-        );
-
-    private ISubscriptionHandlerWrapper GetSubscriptionHandler(Type topic)
+    public async Task Subscribe(SubscriptionEnvelope envelope)
     {
-        var resolverType = typeof(ISubscriptionHandlerResolver<>).MakeGenericType(new[] { topic });
-        var resolver =
-            (ISubscriptionHandlerResolver<ITopic>)services.GetRequiredService(resolverType);
-        var handler = resolver.FindSubscriptionHandler();
-        return handler;
+        await ExecuteAsync(envelope, OperationType.Subscribe);
     }
 
-    private async Task ExecuteAsync(
-        SubscriptionEnvelope envelope,
-        Func<ISubscriptionHandlerWrapper, ITopic, LeanPipeContext, Task> action,
+    public async Task Unsubscribe(SubscriptionEnvelope envelope)
+    {
+        await ExecuteAsync(envelope, OperationType.Unsubscribe);
+    }
+
+    private async Task NotifyResultAsync(
+        Guid subscriptionId,
+        SubscriptionStatus status,
         OperationType type
     )
     {
+        await Clients.Caller.SendAsync(
+            "subscriptionResult",
+            new SubscriptionResult(subscriptionId, status, type)
+        );
+    }
+
+    private async Task ExecuteAsync(SubscriptionEnvelope envelope, OperationType type)
+    {
         try
         {
-            var topic = deserializer.Deserialize(envelope);
-            var context = new LeanPipeContext(
+            var httpContext =
                 Context.GetHttpContext()
-                    ?? throw new InvalidOperationException(
-                        "Connection is not associated with an HTTP request."
-                    )
-            );
-            var authorized = await LeanPipeSecurity.CheckIfAuthorizedAsync(topic, context);
+                ?? throw new InvalidOperationException(
+                    "Connection is not associated with an HTTP request."
+                );
+            var topic =
+                deserializer.Deserialize(envelope)
+                ?? throw new InvalidOperationException("Cannot deserialize the topic.");
+            var authorized = await LeanPipeSecurity.CheckIfAuthorizedAsync(topic, httpContext);
 
             if (!authorized)
             {
-                await NotifyResult(envelope.Id, SubscriptionStatus.Unauthorized, type);
+                await NotifyResultAsync(envelope.Id, SubscriptionStatus.Unauthorized, type);
                 return;
             }
 
-            var handler = GetSubscriptionHandler(topic.GetType());
-            await action(handler, topic, context);
-            await NotifyResult(envelope.Id, SubscriptionStatus.Success, type);
+            var context = new LeanPipeContext(httpContext);
+            var handler =
+                resolver.FindSubscriptionHandler(topic.GetType())
+                ?? throw new InvalidOperationException(
+                    $"The resolver for topic {topic.GetType()} cannot be found."
+                );
+            if (type == OperationType.Subscribe)
+            {
+                await handler.OnSubscribedAsync(topic, this, context);
+            }
+            else
+            {
+                await handler.OnUnsubscribedAsync(topic, this, context);
+            }
+            await NotifyResultAsync(envelope.Id, SubscriptionStatus.Success, type);
         }
-        catch (JsonException error)
+        catch (JsonException e)
         {
-            await NotifyResult(envelope.Id, SubscriptionStatus.Malformed, type);
+            await NotifyResultAsync(envelope.Id, SubscriptionStatus.Malformed, type);
             throw new InvalidOperationException(
                 $"Cannot deserialize topic {envelope.Topic} of type {envelope.TopicType}.",
-                error
+                e
             );
         }
-        catch (Exception error)
+        catch (Exception e)
         {
-            await NotifyResult(envelope.Id, SubscriptionStatus.InternalServerError, type);
+            await NotifyResultAsync(envelope.Id, SubscriptionStatus.InternalServerError, type);
             throw new InvalidOperationException(
                 $"Error on subscribing to topic {envelope.TopicType}.",
-                error
+                e
             );
         }
     }
-
-    public Task SubscribeAsync(SubscriptionEnvelope envelope) =>
-        ExecuteAsync(
-            envelope,
-            (handler, topic, context) => handler.OnSubscribedAsync(topic, this, context),
-            OperationType.Subscribe
-        );
-
-    public Task UnsubscribeAsync(SubscriptionEnvelope envelope) =>
-        ExecuteAsync(
-            envelope,
-            (handler, topic, context) => handler.OnUnsubscribedAsync(topic, this, context),
-            OperationType.Unsubscribe
-        );
 }
