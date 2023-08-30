@@ -13,6 +13,15 @@
     <Authors>LeanCode</Authors>
     <Company>LeanCode</Company>
     <Copyright>Copyright 2023 LeanCode Sp. z o.o.</Copyright>
+    <PackageProjectUrl>https://github.com/leancodepl/leanpipe/publisher</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/leancodepl/leanpipe</RepositoryUrl>
+    <RepositoryCommit Condition="'$(GITHUB_SHA)' != ''">$(GITHUB_SHA)</RepositoryCommit>
+
+    <Version Condition="$(Version) == '' And '$(BUILD_VERSION)' != ''">$(BUILD_VERSION)</Version>
+    <Version Condition="$(Version) == '' And '$(BUILD_VERSION)' == ''">0.0.1</Version>
+
+    <InformationalVersion Condition="'$(RepositoryCommit)' != ''">$(Version)+$(RepositoryCommit)</InformationalVersion>
+    <InformationalVersion Condition="'$(RepositoryCommit)' == ''">$(Version)+local</InformationalVersion>
   </PropertyGroup>
 
 </Project>
