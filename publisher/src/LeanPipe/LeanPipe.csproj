@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LeanCode.CQRS.Security" />
+    <PackageReference Include="LeanCode.Components" />
+    <PackageReference Include="LeanCode.Contracts" />
+  </ItemGroup>
+
+</Project>

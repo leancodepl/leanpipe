@@ -1,0 +1,22 @@
+<Project>
+  <PropertyGroup>
+    <CoreLibVersion>8.0.2022-preview</CoreLibVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Update="LeanCode.Contracts" Version="2.0.0-preview.2" />
+    <PackageReference Update="LeanCode.CQRS.Security" Version="$(CoreLibVersion)" />
+    <PackageReference Update="LeanCode.Components" Version="$(CoreLibVersion)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="Microsoft.NET.Test.Sdk" Version="17.7.0" />
+    <PackageReference Update="xunit.analyzers" Version="1.2.0" />
+    <PackageReference Update="xunit.runner.visualstudio" Version="2.5.0" />
+    <PackageReference Update="xunit" Version="2.5.0" />
+    <PackageReference Update="FluentAssertions" Version="6.11.0" />
+
+    <PackageReference Update="coverlet.collector" Version="6.0.0" />
+  </ItemGroup>
+
+</Project>
