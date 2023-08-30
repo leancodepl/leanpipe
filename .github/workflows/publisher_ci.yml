@@ -29,7 +29,7 @@ jobs:
       - name: Check formatting
         run: dotnet csharpier . --check
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build --no-restore
       - name: Test
         run: dotnet test --logger trx --results-directory TestResults
       - name: Upload Test Results
