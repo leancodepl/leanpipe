@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./publisher/src/LeanPipe
+        working-directory: ./publisher
     env:
       DOTNET_VERSION: 8.0.1xx
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
@@ -21,27 +21,28 @@ jobs:
         run: echo ::set-output name=version::$(echo $GITHUB_REF | cut -d / -f 3 | cut -c2-)
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          lfs: true
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Restore
+        run: dotnet restore
       - name: Build
         env:
           BUILD_VERSION: ${{ steps.version.outputs.version }}
-        run: dotnet build --no-restore --configuration Release
+        run: dotnet build --no-restore -c Release
       - name: Test
         env:
           BUILD_VERSION: ${{ steps.version.outputs.version }}
-        run: dotnet test --configuration Release
-        working-directory: ./publisher
+        run: dotnet test --no-restore -c Release
       - name: Pack
         env:
           BUILD_VERSION: ${{ steps.version.outputs.version }}
         run: dotnet pack --no-build -c Release
+        working-directory: ./publisher/src/LeanPipe
       - name: Publish to Feedz
         run: |
-          dotnet nuget push -k "$FEEDZ_API_KEY" -s 'https://f.feedz.io/leancode/public/nuget/index.json' -n
+          dotnet nuget push "bin/Release/LeanPipe.${BUILD_VERSION}.nupkg" -k "$FEEDZ_API_KEY" -s 'https://f.feedz.io/leancode/public/nuget/index.json' -n
+        working-directory: ./publisher/src/LeanPipe
         env:
           FEEDZ_API_KEY: ${{ secrets.FEEDZ_API_KEY }}

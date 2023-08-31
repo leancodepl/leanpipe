@@ -3,7 +3,7 @@ name: Publisher Build & Test
 on: push
 
 jobs:
-  publisher-ci:
+  ci:
     name: Build & Test
     runs-on: ubuntu-latest
     defaults:
@@ -16,8 +16,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        with:
-          lfs: true
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v3
         with:
@@ -31,7 +29,7 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
       - name: Test
-        run: dotnet test --logger trx --results-directory TestResults
+        run: dotnet test --no-restore --logger trx --results-directory TestResults
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@v3
@@ -39,12 +37,12 @@ jobs:
           name: publisher_test_results.zip
           path: publisher/TestResults/*.trx
 
-
   publish-test-results:
-    name: "Publish Tests Results"
-    needs: publisher-ci
+    name: Publish Tests Results
+    needs: ci
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       checks: write
       pull-requests: write
     if: always()
