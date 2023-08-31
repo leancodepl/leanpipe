@@ -19,6 +19,7 @@ jobs:
       - name: Version
         id: version
         run: echo ::set-output name=version::$(echo $GITHUB_REF | cut -d / -f 3 | cut -c2-)
+        working-directory: .
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup .NET SDK
