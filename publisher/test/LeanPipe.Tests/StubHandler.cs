@@ -26,7 +26,15 @@ public class StubHandler : StubHandler<Topic1> { }
 public class DummyKeys<T> : ITopicKeys<T>
     where T : ITopic
 {
-    public ValueTask<IEnumerable<string>> GetAsync(T topic, LeanPipeContext context)
+    public ValueTask<IEnumerable<string>> GetForSubscribingAsync(T topic, LeanPipeContext context)
+    {
+        return new(Enumerable.Empty<string>());
+    }
+
+    public ValueTask<IEnumerable<string>> GetForPublishingAsync(
+        T topic,
+        CancellationToken ct = default
+    )
     {
         return new(Enumerable.Empty<string>());
     }
@@ -37,19 +45,19 @@ public class TopicWithAllKeysKeys
         INotificationKeys<TopicWithAllKeys, Notification1>,
         INotificationKeys<TopicWithAllKeys, Notification2>
 {
-    public ValueTask<IEnumerable<string>> GetAsync(
+    public ValueTask<IEnumerable<string>> GetForPublishingAsync(
         TopicWithAllKeys topic,
         Notification1 notification,
-        LeanPipeContext context
+        CancellationToken ct = default
     )
     {
         return new(Array.Empty<string>());
     }
 
-    public ValueTask<IEnumerable<string>> GetAsync(
+    public ValueTask<IEnumerable<string>> GetForPublishingAsync(
         TopicWithAllKeys topic,
         Notification2 notification,
-        LeanPipeContext context
+        CancellationToken ct = default
     )
     {
         return new(Array.Empty<string>());
