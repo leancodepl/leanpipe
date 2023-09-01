@@ -15,7 +15,7 @@ public class TopicWithoutAllKeysKeys
     : ITopicKeys<TopicWithoutAllKeys>,
         INotificationKeys<TopicWithoutAllKeys, Notification1>
 {
-    public ValueTask<IEnumerable<string>> GetAsync(
+    public ValueTask<IEnumerable<string>> GetForSubscribingAsync(
         TopicWithoutAllKeys topic,
         LeanPipeContext context
     )
@@ -23,10 +23,18 @@ public class TopicWithoutAllKeysKeys
         return new(Array.Empty<string>());
     }
 
-    public ValueTask<IEnumerable<string>> GetAsync(
+    public ValueTask<IEnumerable<string>> GetForPublishingAsync(
+        TopicWithoutAllKeys topic,
+        CancellationToken ct = default
+    )
+    {
+        return new(Array.Empty<string>());
+    }
+
+    public ValueTask<IEnumerable<string>> GetForPublishingAsync(
         TopicWithoutAllKeys topic,
         Notification1 notification,
-        LeanPipeContext context
+        CancellationToken ct = default
     )
     {
         return new(Array.Empty<string>());
