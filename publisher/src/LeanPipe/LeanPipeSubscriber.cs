@@ -9,7 +9,7 @@ public class LeanPipeSubscriber : Hub
     private readonly SubscriptionHandlerResolver resolver;
     private readonly IEnvelopeDeserializer deserializer;
 
-    internal LeanPipeSubscriber(
+    public LeanPipeSubscriber(
         SubscriptionHandlerResolver resolver,
         IEnvelopeDeserializer deserializer
     )
