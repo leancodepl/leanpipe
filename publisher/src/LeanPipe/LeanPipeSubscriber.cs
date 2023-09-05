@@ -80,7 +80,7 @@ public class LeanPipeSubscriber : Hub
         {
             await NotifyResultAsync(envelope.Id, SubscriptionStatus.Malformed, type);
             throw new InvalidOperationException(
-                $"Cannot deserialize topic {envelope.Topic} of type {envelope.TopicType}.",
+                $"Cannot deserialize topic {envelope.Topic.RootElement.GetRawText()} of type {envelope.TopicType}.",
                 e
             );
         }
