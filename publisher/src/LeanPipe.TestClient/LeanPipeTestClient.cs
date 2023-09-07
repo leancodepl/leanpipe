@@ -9,7 +9,8 @@ namespace LeanPipe.TestClient;
 
 public class LeanPipeTestClient : IAsyncDisposable
 {
-    private readonly ConcurrentDictionary<ITopic, List<object>> receivedNotifications = new();
+    private readonly ConcurrentDictionary<ITopic, List<object>> receivedNotifications =
+        new(TopicDeepEqualityComparer.Instance);
 
     private readonly HubConnection hubConnection;
     private readonly JsonSerializerOptions? serializerOptions;
@@ -42,22 +43,7 @@ public class LeanPipeTestClient : IAsyncDisposable
                     return;
                 }
 
-                var serializedTopic = JsonSerializer.SerializeToUtf8Bytes(
-                    n.Topic,
-                    topicType,
-                    serializerOptions
-                );
-
-                var subscription = receivedNotifications
-                    .Select(n => (KeyValuePair<ITopic, List<object>>?)n)
-                    .FirstOrDefault(
-                        t =>
-                            JsonSerializer
-                                .SerializeToUtf8Bytes(t!.Value.Key, serializerOptions)
-                                .SequenceEqual(serializedTopic)
-                    );
-
-                subscription?.Value.Add(n.Notification);
+                receivedNotifications.GetValueOrDefault((ITopic)n.Topic)?.Add(n.Notification);
             }
         );
 
