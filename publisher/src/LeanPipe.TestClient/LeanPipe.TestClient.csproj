@@ -12,6 +12,7 @@
     <ProjectReference Include="../../src/LeanPipe/LeanPipe.csproj" />
       
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
+    <PackageReference Include="FluentAssertions" />
   </ItemGroup>
 
 </Project>
