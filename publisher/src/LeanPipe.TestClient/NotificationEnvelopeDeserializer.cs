@@ -39,6 +39,12 @@ internal class NotificationEnvelopeDeserializer
             {
                 return new(topic, notification);
             }
+            else
+            {
+                throw new JsonException(
+                    "Failed to deserialize topic or notification from notification envelope."
+                );
+            }
         }
 
         return null;
