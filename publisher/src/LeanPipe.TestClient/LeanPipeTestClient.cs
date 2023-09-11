@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Text.Json;
+using LeanCode.Components;
 using LeanCode.Contracts;
 using Microsoft.AspNetCore.Http.Connections.Client;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -13,43 +14,44 @@ public class LeanPipeTestClient : IAsyncDisposable
         new(TopicDeepEqualityComparer.Instance);
 
     private readonly HubConnection hubConnection;
+    private readonly NotificationEnvelopeDeserializer notificationEnvelopeDeserializer;
     private readonly JsonSerializerOptions? serializerOptions;
     private readonly TimeSpan subscriptionCompletionTimeout;
 
     public IReadOnlyDictionary<ITopic, List<object>> ReceivedNotifications => receivedNotifications;
 
     public LeanPipeTestClient(
-        Uri leanpipeUrl,
+        Uri leanPipeUrl,
+        TypesCatalog leanpipeTypes,
         Action<HttpConnectionOptions>? config = null,
         JsonSerializerOptions? serializerOptions = null,
         TimeSpan? subscriptionCompletionTimeout = null
     )
     {
         hubConnection = new HubConnectionBuilder()
-            .WithUrl(leanpipeUrl, config!)
-            .AddJsonProtocol(
-                options => options.PayloadSerializerOptions.PropertyNamingPolicy = null
-            )
+            .WithUrl(leanPipeUrl, config!)
+            .AddJsonProtocol(options =>
+            {
+                options.PayloadSerializerOptions.PropertyNamingPolicy = null;
+            })
             .Build();
+
+        notificationEnvelopeDeserializer = new(leanpipeTypes, serializerOptions);
+
+        this.serializerOptions = serializerOptions;
+        this.subscriptionCompletionTimeout =
+            subscriptionCompletionTimeout ?? TimeSpan.FromSeconds(10);
 
         hubConnection.On<NotificationEnvelope>(
             "notify",
             n =>
             {
-                var topicType = Type.GetType(n.TopicType);
-
-                if (topicType is null)
+                if (notificationEnvelopeDeserializer.Deserialize(n) is var (topic, notification))
                 {
-                    return;
+                    receivedNotifications.GetValueOrDefault(topic)?.Add(notification);
                 }
-
-                receivedNotifications.GetValueOrDefault((ITopic)n.Topic)?.Add(n.Notification);
             }
         );
-
-        this.serializerOptions = serializerOptions;
-        this.subscriptionCompletionTimeout =
-            subscriptionCompletionTimeout ?? TimeSpan.FromSeconds(10);
     }
 
     public async Task<SubscriptionResult?> UnsubscribeAsync<TTopic>(

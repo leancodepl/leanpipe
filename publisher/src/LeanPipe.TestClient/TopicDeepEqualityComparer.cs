@@ -2,9 +2,9 @@ using System.Collections;
 
 namespace LeanPipe.TestClient;
 
-public class TopicDeepEqualityComparer : EqualityComparer<object>
+internal class TopicDeepEqualityComparer : EqualityComparer<object>
 {
-    public static readonly TopicDeepEqualityComparer Instance = new();
+    internal static readonly TopicDeepEqualityComparer Instance = new();
 
     public override bool Equals(object? x, object? y)
     {
