@@ -140,16 +140,22 @@ public class LeanPipeTestClient : IAsyncDisposable
             ct
         );
 
-        if (
-            await Task.WhenAny(
-                subscriptionCompletionSource.Task,
-                Task.Delay(subscriptionCompletionTimeout, ct)
-            ) == subscriptionCompletionSource.Task
-        )
-        {
-            return subscriptionCompletionSource.Task.Result;
-        }
+        return await AwaitWithTimeout(
+            subscriptionCompletionSource,
+            subscriptionCompletionTimeout,
+            ct
+        );
+    }
 
-        return null;
+    private static async Task<TResult?> AwaitWithTimeout<TResult>(
+        TaskCompletionSource<TResult> tcs,
+        TimeSpan timeout,
+        CancellationToken ct
+    )
+        where TResult : class
+    {
+        return await Task.WhenAny(tcs.Task, Task.Delay(timeout, ct)) == tcs.Task
+            ? tcs.Task.Result
+            : null;
     }
 }
