@@ -76,10 +76,10 @@ internal class NotificationEnvelopeDeserializer
         return new(topicTypes, notificationTypes);
     }
 
-    internal sealed record TopicsNotification(ITopic Topic, object Notification);
-
     private sealed record LeanPipeTypes(
         ImmutableDictionary<string, Type> Topics,
         ImmutableDictionary<string, Type> Notifications
     );
 }
+
+internal sealed record TopicsNotification(ITopic Topic, object Notification);

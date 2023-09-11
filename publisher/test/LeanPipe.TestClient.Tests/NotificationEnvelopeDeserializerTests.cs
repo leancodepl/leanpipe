@@ -31,9 +31,7 @@ public class NotificationEnvelopeDeserializerTests
         Deserializer
             .Deserialize(deserializedEnvelope!)
             .Should()
-            .BeEquivalentTo(
-                new NotificationEnvelopeDeserializer.TopicsNotification(topic, notification)
-            );
+            .BeEquivalentTo(new TopicsNotification(topic, notification));
     }
 
     public class Topic : ITopic, IProduceNotification<Notification>
