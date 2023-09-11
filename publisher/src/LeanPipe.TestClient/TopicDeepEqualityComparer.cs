@@ -2,6 +2,7 @@ using System.Collections;
 
 namespace LeanPipe.TestClient;
 
+// Based on https://gist.github.com/danielkillyevo/5443439
 internal class TopicDeepEqualityComparer : EqualityComparer<object>
 {
     internal static readonly TopicDeepEqualityComparer Instance = new();
