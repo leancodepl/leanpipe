@@ -9,21 +9,21 @@ internal class NotificationEnvelopeDeserializer
 {
     private readonly TypesCatalog types;
     private readonly JsonSerializerOptions? options;
-    private readonly Lazy<LeanPipeTypes> leanPipeTypes;
+    private readonly Lazy<LeanPipeTypes> typesCache;
 
     public NotificationEnvelopeDeserializer(TypesCatalog types, JsonSerializerOptions? options)
     {
         this.types = types;
         this.options = options;
 
-        leanPipeTypes = new(BuildTypesCache());
+        typesCache = new(BuildTypesCache);
     }
 
     public TopicsNotification? Deserialize(NotificationEnvelope envelope)
     {
         if (
-            leanPipeTypes.Value.Topics.TryGetValue(envelope.TopicType, out var topicType)
-            && leanPipeTypes.Value.Notifications.TryGetValue(
+            typesCache.Value.Topics.TryGetValue(envelope.TopicType, out var topicType)
+            && typesCache.Value.Notifications.TryGetValue(
                 envelope.NotificationType,
                 out var notificationType
             )
