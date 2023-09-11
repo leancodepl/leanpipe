@@ -19,10 +19,24 @@ internal class TopicDeepEqualityComparer : EqualityComparer<object>
             return false;
         }
 
+        var xType = x.GetType();
+
         // Compare the types
-        if (x.GetType() != y!.GetType())
+        if (xType != y!.GetType())
         {
             return false;
+        }
+
+        if (IsPrimitive(xType))
+        {
+            if (x is string xString)
+            {
+                return string.Equals(xString, y as string, StringComparison.InvariantCulture);
+            }
+            else
+            {
+                return x.Equals(y);
+            }
         }
 
         // Get all property infos of the right object
@@ -107,35 +121,43 @@ internal class TopicDeepEqualityComparer : EqualityComparer<object>
     {
         var hashCode = new HashCode();
 
-        hashCode.Add(obj.GetType());
+        var type = obj.GetType();
 
-        foreach (var propertyInfo in obj.GetType().GetProperties())
+        hashCode.Add(type);
+
+        if (IsPrimitive(type))
         {
-            var value = propertyInfo.GetValue(obj);
-
-            if (value is IList valueList && propertyInfo.PropertyType.IsGenericType)
+            hashCode.Add(obj);
+        }
+        else
+        {
+            foreach (var propertyInfo in obj.GetType().GetProperties())
             {
-                foreach (var listValue in valueList)
-                {
-                    hashCode.AddBytes(BitConverter.GetBytes(GetHashCode(listValue)));
-                }
-            }
-            else
-            {
-                var type = value!.GetType();
+                var value = propertyInfo.GetValue(obj);
 
-                // Values are primitive
-                if (type.IsValueType || value is string)
+                if (value is IList valueList && propertyInfo.PropertyType.IsGenericType)
                 {
-                    hashCode.Add(value);
+                    foreach (var listValue in valueList)
+                    {
+                        hashCode.AddBytes(BitConverter.GetBytes(GetHashCode(listValue)));
+                    }
                 }
-                else // Values are complex
+                else
                 {
-                    hashCode.AddBytes(BitConverter.GetBytes(GetHashCode(value)));
+                    if (IsPrimitive(value!.GetType()))
+                    {
+                        hashCode.Add(value);
+                    }
+                    else // Values are complex
+                    {
+                        hashCode.AddBytes(BitConverter.GetBytes(GetHashCode(value)));
+                    }
                 }
             }
         }
 
         return hashCode.ToHashCode();
     }
+
+    private static bool IsPrimitive(Type type) => type.IsValueType || type == typeof(string);
 }

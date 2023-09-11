@@ -1,10 +1,13 @@
 ﻿using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using LeanCode.Components;
 using LeanCode.Contracts;
 using Microsoft.AspNetCore.Http.Connections.Client;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
+
+[assembly: InternalsVisibleTo("LeanPipe.TestClient.Tests")]
 
 namespace LeanPipe.TestClient;
 
