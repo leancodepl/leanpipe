@@ -1,4 +1,3 @@
-using FluentAssertions;
 using LeanCode.Contracts;
 
 namespace LeanPipe.TestClient;
@@ -14,18 +13,19 @@ public static class LeanPipeTestClientExtensions
     {
         var subscriptionResult = await client.SubscribeAsync(topic, ct);
 
-        subscriptionResult
-            .Should()
-            .BeEquivalentTo(
-                new SubscriptionResult(
-                    Guid.Empty,
-                    SubscriptionStatus.Success,
-                    OperationType.Subscribe
-                ),
-                opts => opts.Excluding(e => e.SubscriptionId)
+        if (
+            subscriptionResult?.Type == OperationType.Subscribe
+            && subscriptionResult.Status == SubscriptionStatus.Success
+        )
+        {
+            return subscriptionResult.SubscriptionId;
+        }
+        else
+        {
+            throw new InvalidOperationException(
+                "LeanPipe test client did not manage to subscribe to topic with success."
             );
-
-        return subscriptionResult!.SubscriptionId;
+        }
     }
 
     public static async Task<Guid> UnsubscribeSuccessAsync<TTopic>(
@@ -37,38 +37,27 @@ public static class LeanPipeTestClientExtensions
     {
         var subscriptionResult = await client.UnsubscribeAsync(topic, ct);
 
-        subscriptionResult
-            .Should()
-            .BeEquivalentTo(
-                new SubscriptionResult(
-                    Guid.Empty,
-                    SubscriptionStatus.Success,
-                    OperationType.Unsubscribe
-                ),
-                opts => opts.Excluding(e => e.SubscriptionId)
+        if (
+            subscriptionResult?.Type == OperationType.Subscribe
+            && subscriptionResult.Status == SubscriptionStatus.Success
+        )
+        {
+            return subscriptionResult.SubscriptionId;
+        }
+        else
+        {
+            throw new InvalidOperationException(
+                "LeanPipe test client did not manage to unsubscribe from topic with success."
             );
-
-        return subscriptionResult!.SubscriptionId;
+        }
     }
 
-    public static void CheckLastNotificationsOnTopic<TTopic, TNotification>(
+    public static IReadOnlyCollection<object> NotificationsOn<TTopic>(
         this LeanPipeTestClient client,
-        TTopic topic,
-        params TNotification[] notifications
+        TTopic topic
     )
-        where TTopic : ITopic, IProduceNotification<TNotification>
-        where TNotification : notnull
+        where TTopic : ITopic
     {
-        client.ReceivedNotifications
-            .Should()
-            .ContainKey(topic)
-            .WhoseValue.Should()
-            .HaveCountGreaterOrEqualTo(notifications.Length)
-            .And.Subject.TakeLast(notifications.Length)
-            .Should()
-            .BeEquivalentTo(
-                notifications,
-                opts => opts.WithStrictOrdering().RespectingRuntimeTypes()
-            );
+        return client.ReceivedNotifications.GetValueOrDefault(topic, new());
     }
 }
