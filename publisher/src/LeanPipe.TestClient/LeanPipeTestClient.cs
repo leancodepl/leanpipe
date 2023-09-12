@@ -25,7 +25,7 @@ public class LeanPipeTestClient : IAsyncDisposable
 
     public LeanPipeTestClient(
         Uri leanPipeUrl,
-        TypesCatalog leanpipeTypes,
+        TypesCatalog leanPipeTypes,
         Action<HttpConnectionOptions>? config = null,
         JsonSerializerOptions? serializerOptions = null,
         TimeSpan? subscriptionCompletionTimeout = null
@@ -39,7 +39,7 @@ public class LeanPipeTestClient : IAsyncDisposable
             })
             .Build();
 
-        notificationEnvelopeDeserializer = new(leanpipeTypes, serializerOptions);
+        notificationEnvelopeDeserializer = new(leanPipeTypes, serializerOptions);
 
         this.serializerOptions = serializerOptions;
         this.subscriptionCompletionTimeout =
