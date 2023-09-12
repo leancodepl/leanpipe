@@ -1,4 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
@@ -17,8 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/LeanPipe/LeanPipe.csproj" />
-    <ProjectReference Include="../LeanPipe.Tests.Additional/LeanPipe.Tests.Additional.csproj" />
+    <ProjectReference Include="../../src/LeanPipe.TestClient/LeanPipe.TestClient.csproj" />
   </ItemGroup>
 
 </Project>
