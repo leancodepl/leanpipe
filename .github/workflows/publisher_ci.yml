@@ -29,7 +29,15 @@ jobs:
       - name: Build
         run: dotnet build --no-restore
       - name: Test
-        run: dotnet test --no-restore --logger trx --results-directory TestResults
+        run: dotnet test \
+          --no-restore \
+          --collect "XPlat Code Coverage" \
+          --settings test/coverlet.runsettings \
+          --logger trx \
+          --results-directory TestResults
+      - name: Upload coverage to Codecov
+        if: always()
+        uses: codecov/codecov-action@v3
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@v3
