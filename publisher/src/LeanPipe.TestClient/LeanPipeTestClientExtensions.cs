@@ -38,7 +38,7 @@ public static class LeanPipeTestClientExtensions
         var subscriptionResult = await client.UnsubscribeAsync(topic, ct);
 
         if (
-            subscriptionResult?.Type == OperationType.Subscribe
+            subscriptionResult?.Type == OperationType.Unsubscribe
             && subscriptionResult.Status == SubscriptionStatus.Success
         )
         {
@@ -58,6 +58,7 @@ public static class LeanPipeTestClientExtensions
     )
         where TTopic : ITopic
     {
-        return client.ReceivedNotifications.GetValueOrDefault(topic, new());
+        return client.Subscriptions.GetValueOrDefault(topic)?.ReceivedNotifications
+            ?? new List<object>();
     }
 }

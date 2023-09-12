@@ -13,7 +13,7 @@ namespace LeanPipe.TestClient;
 
 public class LeanPipeTestClient : IAsyncDisposable
 {
-    private readonly ConcurrentDictionary<ITopic, List<object>> receivedNotifications =
+    private readonly ConcurrentDictionary<ITopic, LeanPipeSubscription> subscriptions =
         new(TopicDeepEqualityComparer.Instance);
 
     private readonly HubConnection hubConnection;
@@ -21,7 +21,7 @@ public class LeanPipeTestClient : IAsyncDisposable
     private readonly JsonSerializerOptions? serializerOptions;
     private readonly TimeSpan subscriptionCompletionTimeout;
 
-    public IReadOnlyDictionary<ITopic, List<object>> ReceivedNotifications => receivedNotifications;
+    public IReadOnlyDictionary<ITopic, LeanPipeSubscription> Subscriptions => subscriptions;
 
     public LeanPipeTestClient(
         Uri leanPipeUrl,
@@ -39,6 +39,21 @@ public class LeanPipeTestClient : IAsyncDisposable
             })
             .Build();
 
+        hubConnection.Closed += e =>
+        {
+            foreach (var subscription in subscriptions.Values)
+            {
+                subscription.Unsubscribe();
+            }
+
+            if (e is not null)
+            {
+                throw e;
+            }
+
+            return Task.CompletedTask;
+        };
+
         notificationEnvelopeDeserializer = new(leanPipeTypes, serializerOptions);
 
         this.serializerOptions = serializerOptions;
@@ -51,7 +66,7 @@ public class LeanPipeTestClient : IAsyncDisposable
             {
                 if (notificationEnvelopeDeserializer.Deserialize(n) is var (topic, notification))
                 {
-                    receivedNotifications.GetValueOrDefault(topic)?.Add(notification);
+                    subscriptions.GetValueOrDefault(topic)?.AddNotification(notification);
                 }
             }
         );
@@ -63,12 +78,23 @@ public class LeanPipeTestClient : IAsyncDisposable
     )
         where TTopic : ITopic
     {
+        SubscriptionResult? result;
+
         if (hubConnection.State != HubConnectionState.Connected)
         {
-            return new(default, SubscriptionStatus.Success, OperationType.Unsubscribe);
+            result = new(default, SubscriptionStatus.Success, OperationType.Unsubscribe);
+        }
+        else
+        {
+            result = await ManageSubscriptionCoreAsync(topic, OperationType.Unsubscribe, ct);
         }
 
-        return await ManageSubscriptionCoreAsync(topic, OperationType.Unsubscribe, ct);
+        if (result?.Status == SubscriptionStatus.Success)
+        {
+            subscriptions.GetValueOrDefault(topic)?.Unsubscribe();
+        }
+
+        return result;
     }
 
     public async Task<SubscriptionResult?> SubscribeAsync<TTopic>(
@@ -86,7 +112,7 @@ public class LeanPipeTestClient : IAsyncDisposable
 
         if (result?.Status == SubscriptionStatus.Success)
         {
-            receivedNotifications.TryAdd(topic, new());
+            subscriptions.TryAdd(topic, new(topic, result.SubscriptionId));
         }
 
         return result;
@@ -111,12 +137,13 @@ public class LeanPipeTestClient : IAsyncDisposable
         OperationType operationType,
         CancellationToken ct
     )
+        where TTopic : ITopic
     {
         var topicType = typeof(TTopic);
 
         var subscriptionEnvelope = new SubscriptionEnvelope
         {
-            Id = Guid.NewGuid(),
+            Id = subscriptions.GetValueOrDefault(topic)?.SubscriptionId ?? Guid.NewGuid(),
             TopicType = topicType.FullName!,
             Topic = JsonSerializer.SerializeToDocument(topic, serializerOptions),
         };
@@ -135,7 +162,17 @@ public class LeanPipeTestClient : IAsyncDisposable
         );
 
         await hubConnection.InvokeAsync(
-            nameof(LeanPipeSubscriber.Subscribe),
+            operationType switch
+            {
+                OperationType.Subscribe => nameof(LeanPipeSubscriber.Subscribe),
+                OperationType.Unsubscribe => nameof(LeanPipeSubscriber.Unsubscribe),
+                _
+                    => throw new ArgumentOutOfRangeException(
+                        nameof(operationType),
+                        operationType,
+                        "LeanPipe OperationType is out of range."
+                    ),
+            },
             subscriptionEnvelope,
             ct
         );
