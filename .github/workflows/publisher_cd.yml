@@ -35,7 +35,7 @@ jobs:
       - name: Test
         env:
           BUILD_VERSION: ${{ steps.version.outputs.version }}
-        run: dotnet test --no-restore -c Release
+        run: dotnet test --no-build -c Release
       - name: Pack Publisher
         env:
           BUILD_VERSION: ${{ steps.version.outputs.version }}

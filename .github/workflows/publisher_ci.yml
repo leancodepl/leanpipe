@@ -28,16 +28,27 @@ jobs:
         run: dotnet csharpier . --check
       - name: Build
         run: dotnet build --no-restore
-      - name: Test
-        run: dotnet test \
-          --no-restore \
-          --collect "XPlat Code Coverage" \
-          --settings test/coverlet.runsettings \
-          --logger trx \
+      - name: Test Publisher
+        run: >
+          dotnet test ./test/LeanPipe.Tests/LeanPipe.Tests.csproj
+          --no-build
+          --collect "XPlat Code Coverage"
+          --settings test/coverlet.runsettings
+          --logger trx
+          --results-directory TestResults
+      - name: Test test client
+        run: >
+          dotnet test ./test/LeanPipe.TestClient.Tests/LeanPipe.TestClient.Tests.csproj
+          --no-build
+          --collect "XPlat Code Coverage"
+          --settings test/coverlet.runsettings
+          --logger trx
           --results-directory TestResults
       - name: Upload coverage to Codecov
         if: always()
         uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@v3
