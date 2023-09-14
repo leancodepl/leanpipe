@@ -32,6 +32,7 @@ public class BasicTopicTests : TestApplicationFactory
         await leanPipeClient.SubscribeSuccessAsync(topic);
         leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
 
+        var notificationTask = leanPipeClient.GetNextNotificationTaskOn(topic);
         await httpClient.PostAsJsonAsync(
             "/publish_unauthorized",
             new NotificationDataDTO
@@ -42,9 +43,23 @@ public class BasicTopicTests : TestApplicationFactory
             }
         );
 
-        await Task.Delay(1000);
-
-        leanPipeClient.NotificationsOn(topic).Should().ContainSingle().Which.Should()
+        (await notificationTask).Should()
             .BeEquivalentTo(new GreetingNotificationDTO { Greeting = "Hello Tester" });
+
+        notificationTask = leanPipeClient.GetNextNotificationTaskOn(topic);
+        await httpClient.PostAsJsonAsync(
+            "/publish_unauthorized",
+            new NotificationDataDTO
+            {
+                TopicId = topic.TopicId,
+                Kind = NotificationKindDTO.Farewell,
+                Name = "Tester",
+            }
+        );
+
+        (await notificationTask).Should()
+            .BeEquivalentTo(new FarewellNotificationDTO { Farewell = "Goodbye Tester" });
+
+        await leanPipeClient.UnsubscribeSuccessAsync(topic);
     }
 }

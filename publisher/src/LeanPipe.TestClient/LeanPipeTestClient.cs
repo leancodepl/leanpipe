@@ -112,7 +112,14 @@ public class LeanPipeTestClient : IAsyncDisposable
 
         if (result?.Status == SubscriptionStatus.Success)
         {
-            subscriptions.TryAdd(topic, new(topic, result.SubscriptionId));
+            if (subscriptions.GetValueOrDefault(topic) is { } subscription)
+            {
+                subscription.Subscribe(result.SubscriptionId);
+            }
+            else
+            {
+                subscriptions[topic] = new(topic, result.SubscriptionId);
+            }
         }
 
         return result;
@@ -178,21 +185,21 @@ public class LeanPipeTestClient : IAsyncDisposable
         );
 
         return await AwaitWithTimeout(
-            subscriptionCompletionSource,
+            subscriptionCompletionSource.Task,
             subscriptionCompletionTimeout,
             ct
         );
     }
 
-    private static async Task<TResult?> AwaitWithTimeout<TResult>(
-        TaskCompletionSource<TResult> tcs,
+    internal static async Task<TResult?> AwaitWithTimeout<TResult>(
+        Task<TResult> task,
         TimeSpan timeout,
         CancellationToken ct
     )
         where TResult : class
     {
-        return await Task.WhenAny(tcs.Task, Task.Delay(timeout, ct)) == tcs.Task
-            ? tcs.Task.Result
+        return await Task.WhenAny(task, Task.Delay(timeout, ct)) == task
+            ? task.Result
             : null;
     }
 }
