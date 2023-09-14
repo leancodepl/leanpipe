@@ -198,8 +198,6 @@ public class LeanPipeTestClient : IAsyncDisposable
     )
         where TResult : class
     {
-        return await Task.WhenAny(task, Task.Delay(timeout, ct)) == task
-            ? task.Result
-            : null;
+        return await Task.WhenAny(task, Task.Delay(timeout, ct)) == task ? task.Result : null;
     }
 }
