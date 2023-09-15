@@ -44,6 +44,14 @@ jobs:
           --settings test/coverlet.runsettings
           --logger trx
           --results-directory TestResults
+      - name: Integration test
+        run: >
+          dotnet test ./test/LeanPipe.IntegrationTests/LeanPipe.IntegrationTests.csproj
+          --no-build
+          --collect "XPlat Code Coverage"
+          --settings test/coverlet.runsettings
+          --logger trx
+          --results-directory TestResults
       - name: Upload coverage to Codecov
         if: always()
         uses: codecov/codecov-action@v3
