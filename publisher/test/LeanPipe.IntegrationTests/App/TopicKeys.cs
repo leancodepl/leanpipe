@@ -1,8 +1,8 @@
 namespace LeanPipe.IntegrationTests.App;
 
-public class UnauthorizedTopicKeys : BasicTopicKeys<UnauthorizedTopic>
+public class BasicTopicKeys : BasicTopicKeys<BasicTopic>
 {
-    public override IEnumerable<string> Get(UnauthorizedTopic topic) =>
+    public override IEnumerable<string> Get(BasicTopic topic) =>
         new[] { topic.TopicId.ToString() };
 }
 

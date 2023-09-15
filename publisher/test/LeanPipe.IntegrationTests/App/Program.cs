@@ -27,14 +27,14 @@ app.UseEndpoints(e =>
     e.MapLeanPipe("/leanpipe");
 
     e.Map(
-        "/publish_unauthorized",
+        "/publish_basic",
         async (
             HttpContext ctx,
             NotificationDataDTO notificationData,
-            LeanPipePublisher<UnauthorizedTopic> publisher
+            LeanPipePublisher<BasicTopic> publisher
         ) =>
         {
-            var topic = new UnauthorizedTopic { TopicId = notificationData.TopicId };
+            var topic = new BasicTopic { TopicId = notificationData.TopicId };
 
             await ApiHandlers.PublishGreetingOrFarewell(
                 publisher,
@@ -69,5 +69,5 @@ app.Run();
 
 public partial class Program
 {
-    public static readonly TypesCatalog LeanPipeTypes = TypesCatalog.Of<UnauthorizedTopic>();
+    public static readonly TypesCatalog LeanPipeTypes = TypesCatalog.Of<BasicTopic>();
 }

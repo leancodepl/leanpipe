@@ -26,12 +26,12 @@ public class BasicTopicTests : TestApplicationFactory
     [Fact]
     public async Task Subscriber_receives_both_kinds_of_notifications_when_subscribed()
     {
-        var topic = new UnauthorizedTopic { TopicId = Guid.NewGuid() };
+        var topic = new BasicTopic { TopicId = Guid.NewGuid() };
 
         await leanPipeClient.SubscribeSuccessAsync(topic);
         leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
 
-        await httpClient.PublishToUnauthorizedTopicAndAwaitNotificationAsync(
+        await httpClient.PublishToBasicTopicAndAwaitNotificationAsync(
             new()
             {
                 TopicId = topic.TopicId,
@@ -43,7 +43,7 @@ public class BasicTopicTests : TestApplicationFactory
             new GreetingNotificationDTO { Greeting = "Hello Tester" }
         );
 
-        await httpClient.PublishToUnauthorizedTopicAndAwaitNotificationAsync(
+        await httpClient.PublishToBasicTopicAndAwaitNotificationAsync(
             new()
             {
                 TopicId = topic.TopicId,
@@ -57,7 +57,7 @@ public class BasicTopicTests : TestApplicationFactory
 
         await leanPipeClient.UnsubscribeSuccessAsync(topic);
 
-        await httpClient.PublishToUnauthorizedTopicAndAwaitNoNotificationsAsync(
+        await httpClient.PublishToBasicTopicAndAwaitNoNotificationsAsync(
             new()
             {
                 TopicId = topic.TopicId,
@@ -72,12 +72,12 @@ public class BasicTopicTests : TestApplicationFactory
     [Fact]
     public async Task Subscriber_does_not_receive_messages_from_other_topic_instances()
     {
-        var topic = new UnauthorizedTopic { TopicId = Guid.NewGuid() };
-        var otherTopic = new UnauthorizedTopic { TopicId = Guid.NewGuid() };
+        var topic = new BasicTopic { TopicId = Guid.NewGuid() };
+        var otherTopic = new BasicTopic { TopicId = Guid.NewGuid() };
 
         await leanPipeClient.SubscribeSuccessAsync(topic);
 
-        await httpClient.PublishToUnauthorizedTopicAndAwaitNoNotificationsAsync(
+        await httpClient.PublishToBasicTopicAndAwaitNoNotificationsAsync(
             new()
             {
                 TopicId = otherTopic.TopicId,
@@ -95,12 +95,12 @@ public class BasicTopicTests : TestApplicationFactory
     [Fact]
     public async Task Resubscribing_after_disconnect_works()
     {
-        var topic = new UnauthorizedTopic { TopicId = Guid.NewGuid() };
+        var topic = new BasicTopic { TopicId = Guid.NewGuid() };
 
         await leanPipeClient.SubscribeSuccessAsync(topic);
         leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
 
-        await httpClient.PublishToUnauthorizedTopicAndAwaitNotificationAsync(
+        await httpClient.PublishToBasicTopicAndAwaitNotificationAsync(
             new()
             {
                 TopicId = topic.TopicId,
@@ -115,7 +115,7 @@ public class BasicTopicTests : TestApplicationFactory
         await leanPipeClient.DisconnectAsync();
         await leanPipeClient.SubscribeSuccessAsync(topic);
 
-        await httpClient.PublishToUnauthorizedTopicAndAwaitNotificationAsync(
+        await httpClient.PublishToBasicTopicAndAwaitNotificationAsync(
             new()
             {
                 TopicId = topic.TopicId,

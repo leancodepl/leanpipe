@@ -8,17 +8,17 @@ namespace LeanPipe.IntegrationTests;
 
 public static class PublishingExtensions
 {
-    public static Task PublishToUnauthorizedTopicAndAwaitNotificationAsync<TNotification>(
+    public static Task PublishToBasicTopicAndAwaitNotificationAsync<TNotification>(
         this HttpClient client,
         NotificationDataDTO notificationData,
         LeanPipeTestClient leanPipeClient,
-        UnauthorizedTopic topic,
+        BasicTopic topic,
         TNotification expectedNotification
     )
     {
         return PostToPublishAndCheckNotificationAsync(
             client,
-            "/publish_unauthorized",
+            "/publish_basic",
             notificationData,
             leanPipeClient,
             topic,
@@ -26,14 +26,14 @@ public static class PublishingExtensions
         );
     }
 
-    public static Task PublishToUnauthorizedTopicAndAwaitNoNotificationsAsync(
+    public static Task PublishToBasicTopicAndAwaitNoNotificationsAsync(
         this HttpClient client,
         NotificationDataDTO notificationData
     )
     {
         return PostToPublishAndAwaitNoNotificationsAsync(
             client,
-            "/publish_unauthorized",
+            "/publish_basic",
             notificationData
         );
     }
@@ -42,7 +42,7 @@ public static class PublishingExtensions
         this HttpClient client,
         NotificationDataDTO notificationData,
         LeanPipeTestClient leanPipeClient,
-        UnauthorizedTopic topic,
+        BasicTopic topic,
         TNotification expectedNotification
     )
     {
