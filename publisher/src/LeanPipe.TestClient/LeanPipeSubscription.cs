@@ -5,7 +5,7 @@ namespace LeanPipe.TestClient;
 
 public class LeanPipeSubscription
 {
-    private TaskCompletionSource<object>? nextMessageAwaiter;
+    private TaskCompletionSource<object> nextMessageAwaiter = new();
     private readonly ConcurrentStack<object> receivedNotifications = new();
 
     public ITopic Topic { get; private init; }
@@ -16,7 +16,6 @@ public class LeanPipeSubscription
     {
         Topic = topic;
         SubscriptionId = subscriptionId;
-        nextMessageAwaiter = null;
     }
 
     public void Subscribe(Guid subscriptionId)
@@ -27,26 +26,17 @@ public class LeanPipeSubscription
     public void Unsubscribe()
     {
         SubscriptionId = null;
-
-        ClearMessageAwaiter();
     }
 
     public void AddNotification(object notification)
     {
         receivedNotifications.Push(notification);
-        nextMessageAwaiter?.TrySetResult(notification);
-
-        ClearMessageAwaiter();
+        nextMessageAwaiter.TrySetResult(notification);
+        nextMessageAwaiter = new();
     }
 
     public Task<object> GetNextNotificationTask()
     {
-        nextMessageAwaiter ??= new();
         return nextMessageAwaiter.Task;
-    }
-
-    private void ClearMessageAwaiter()
-    {
-        nextMessageAwaiter = null;
     }
 }
