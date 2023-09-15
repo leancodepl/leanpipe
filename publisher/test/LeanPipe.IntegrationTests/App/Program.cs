@@ -25,48 +25,46 @@ using var app = appBuilder.Build();
 
 app.UseRouting();
 app.UseAuthentication();
-app.UseEndpoints(e =>
-{
-    e.MapLeanPipe("/leanpipe");
 
-    e.Map(
-        "/publish_basic",
-        async (
-            HttpContext ctx,
-            NotificationDataDTO notificationData,
-            LeanPipePublisher<BasicTopic> publisher
-        ) =>
-        {
-            var topic = new BasicTopic { TopicId = notificationData.TopicId };
+app.MapLeanPipe("/leanpipe");
 
-            await ApiHandlers.PublishGreetingOrFarewell(
-                publisher,
-                topic,
-                notificationData,
-                ctx.RequestAborted
-            );
-        }
-    );
+app.MapPost(
+    "/publish_basic",
+    async (
+        HttpContext ctx,
+        NotificationDataDTO notificationData,
+        LeanPipePublisher<BasicTopic> publisher
+    ) =>
+    {
+        var topic = new BasicTopic { TopicId = notificationData.TopicId };
 
-    e.Map(
-        "/publish_authorized",
-        async (
-            HttpContext ctx,
-            NotificationDataDTO notificationData,
-            LeanPipePublisher<AuthorizedTopic> publisher
-        ) =>
-        {
-            var topic = new AuthorizedTopic { TopicId = notificationData.TopicId };
+        await ApiHandlers.PublishGreetingOrFarewell(
+            publisher,
+            topic,
+            notificationData,
+            ctx.RequestAborted
+        );
+    }
+);
 
-            await ApiHandlers.PublishGreetingOrFarewell(
-                publisher,
-                topic,
-                notificationData,
-                ctx.RequestAborted
-            );
-        }
-    );
-});
+app.MapPost(
+    "/publish_authorized",
+    async (
+        HttpContext ctx,
+        NotificationDataDTO notificationData,
+        LeanPipePublisher<AuthorizedTopic> publisher
+    ) =>
+    {
+        var topic = new AuthorizedTopic { TopicId = notificationData.TopicId };
+
+        await ApiHandlers.PublishGreetingOrFarewell(
+            publisher,
+            topic,
+            notificationData,
+            ctx.RequestAborted
+        );
+    }
+);
 
 app.Run();
 
