@@ -39,21 +39,6 @@ public class LeanPipeTestClient : IAsyncDisposable
             })
             .Build();
 
-        hubConnection.Closed += e =>
-        {
-            foreach (var subscription in subscriptions.Values)
-            {
-                subscription.Unsubscribe();
-            }
-
-            if (e is not null)
-            {
-                throw e;
-            }
-
-            return Task.CompletedTask;
-        };
-
         notificationEnvelopeDeserializer = new(leanPipeTypes, serializerOptions);
 
         this.serializerOptions = serializerOptions;
@@ -137,7 +122,15 @@ public class LeanPipeTestClient : IAsyncDisposable
     /// <remarks>
     /// Also clears all subscriptions.
     /// </remarks>
-    public Task DisconnectAsync(CancellationToken ct = default) => hubConnection.StopAsync(ct);
+    public Task DisconnectAsync(CancellationToken ct = default)
+    {
+        foreach (var subscription in subscriptions.Values)
+        {
+            subscription.Unsubscribe();
+        }
+
+        return hubConnection.StopAsync(ct);
+    }
 
     public async ValueTask DisposeAsync()
     {
