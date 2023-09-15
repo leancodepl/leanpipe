@@ -12,7 +12,7 @@ public class BasicTopic
     public Guid TopicId { get; set; }
 }
 
-[AuthorizeWhenHasAnyOf("user")]
+[AuthorizeWhenHasAnyOf(AuthConfig.Roles.User)]
 public class AuthorizedTopic
     : ITopic,
         IProduceNotification<GreetingNotificationDTO>,

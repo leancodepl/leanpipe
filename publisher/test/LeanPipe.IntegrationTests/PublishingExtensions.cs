@@ -42,7 +42,7 @@ public static class PublishingExtensions
         this HttpClient client,
         NotificationDataDTO notificationData,
         LeanPipeTestClient leanPipeClient,
-        BasicTopic topic,
+        AuthorizedTopic topic,
         TNotification expectedNotification
     )
     {

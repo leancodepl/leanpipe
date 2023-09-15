@@ -13,14 +13,7 @@ public class BasicTopicTests : TestApplicationFactory
     public BasicTopicTests()
     {
         httpClient = CreateClient();
-        leanPipeClient = new(
-            new("http://localhost/leanpipe"),
-            Program.LeanPipeTypes,
-            hco =>
-            {
-                hco.HttpMessageHandlerFactory = _ => Server.CreateHandler();
-            }
-        );
+        leanPipeClient = CreateLeanPipeTestClient(AuthenticatedAs.NotAuthenticated);
     }
 
     [Fact]

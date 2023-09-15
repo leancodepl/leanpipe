@@ -1,4 +1,5 @@
 using LeanCode.Components;
+using LeanCode.Contracts.Security;
 using LeanCode.CQRS.Security;
 using LeanCode.IntegrationTestHelpers;
 using LeanPipe;
@@ -13,6 +14,8 @@ var services = appBuilder.Services;
 services.AddLeanPipe(LeanPipeTypes, LeanPipeTypes);
 
 services.AddSingleton<IRoleRegistration, AppRoles>();
+services.AddSingleton<RoleRegistry>();
+services.AddScoped<IHasPermissions, DefaultPermissionAuthorizer>();
 
 services.AddRouting();
 

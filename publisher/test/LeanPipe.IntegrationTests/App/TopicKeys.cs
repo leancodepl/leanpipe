@@ -2,8 +2,7 @@ namespace LeanPipe.IntegrationTests.App;
 
 public class BasicTopicKeys : BasicTopicKeys<BasicTopic>
 {
-    public override IEnumerable<string> Get(BasicTopic topic) =>
-        new[] { topic.TopicId.ToString() };
+    public override IEnumerable<string> Get(BasicTopic topic) => new[] { topic.TopicId.ToString() };
 }
 
 public class AuthorizedTopicKeys : BasicTopicKeys<AuthorizedTopic>
