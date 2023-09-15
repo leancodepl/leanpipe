@@ -103,6 +103,13 @@ public class LeanPipeTestClient : IAsyncDisposable
     )
         where TTopic : ITopic
     {
+        var subscription = subscriptions.GetValueOrDefault(topic);
+
+        if (subscription?.SubscriptionId is not null)
+        {
+            throw new InvalidOperationException("Already subscribed to topic.");
+        }
+
         if (hubConnection.State != HubConnectionState.Connected)
         {
             await ConnectAsync(ct);
@@ -112,7 +119,7 @@ public class LeanPipeTestClient : IAsyncDisposable
 
         if (result?.Status == SubscriptionStatus.Success)
         {
-            if (subscriptions.GetValueOrDefault(topic) is { } subscription)
+            if (subscription is not null)
             {
                 subscription.Subscribe(result.SubscriptionId);
             }

@@ -74,7 +74,7 @@ public static class LeanPipeTestClientExtensions
             );
     }
 
-    public static IReadOnlyList<object> NotificationsOn<TTopic>(
+    public static IReadOnlyCollection<object> NotificationsOn<TTopic>(
         this LeanPipeTestClient client,
         TTopic topic
     )

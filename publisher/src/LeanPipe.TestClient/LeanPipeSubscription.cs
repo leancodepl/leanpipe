@@ -1,28 +1,27 @@
+using System.Collections.Concurrent;
 using LeanCode.Contracts;
 
 namespace LeanPipe.TestClient;
 
 public class LeanPipeSubscription
 {
-    private readonly List<object> receivedNotifications = new();
+    private TaskCompletionSource<object>? nextMessageAwaiter;
+    private readonly ConcurrentStack<object> receivedNotifications = new();
 
     public ITopic Topic { get; private init; }
     public Guid? SubscriptionId { get; private set; }
-    public TaskCompletionSource<object>? NextMessageAwaiter { get; private set; }
-    public IReadOnlyList<object> ReceivedNotifications => receivedNotifications;
+    public IReadOnlyCollection<object> ReceivedNotifications => receivedNotifications;
 
     public LeanPipeSubscription(ITopic topic, Guid? subscriptionId)
     {
         Topic = topic;
         SubscriptionId = subscriptionId;
-        NextMessageAwaiter = null;
+        nextMessageAwaiter = null;
     }
 
     public void Subscribe(Guid subscriptionId)
     {
         SubscriptionId = subscriptionId;
-
-        ClearMessageAwaiter();
     }
 
     public void Unsubscribe()
@@ -34,20 +33,20 @@ public class LeanPipeSubscription
 
     public void AddNotification(object notification)
     {
-        receivedNotifications.Add(notification);
-        NextMessageAwaiter?.TrySetResult(notification);
+        receivedNotifications.Push(notification);
+        nextMessageAwaiter?.TrySetResult(notification);
 
         ClearMessageAwaiter();
     }
 
     public Task<object> GetNextNotificationTask()
     {
-        NextMessageAwaiter = new();
-        return NextMessageAwaiter.Task;
+        nextMessageAwaiter ??= new();
+        return nextMessageAwaiter.Task;
     }
 
     private void ClearMessageAwaiter()
     {
-        NextMessageAwaiter = null;
+        nextMessageAwaiter = null;
     }
 }
