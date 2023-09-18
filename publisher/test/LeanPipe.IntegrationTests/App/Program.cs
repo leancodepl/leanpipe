@@ -38,7 +38,7 @@ app.MapPost(
     {
         var topic = new BasicTopic { TopicId = notificationData.TopicId };
 
-        await ApiHandlers.PublishGreetingOrFarewell(
+        await ApiHandlers.PublishGreetingOrFarewellAsync(
             publisher,
             topic,
             notificationData,
@@ -57,7 +57,7 @@ app.MapPost(
     {
         var topic = new AuthorizedTopic { TopicId = notificationData.TopicId };
 
-        await ApiHandlers.PublishGreetingOrFarewell(
+        await ApiHandlers.PublishGreetingOrFarewellAsync(
             publisher,
             topic,
             notificationData,

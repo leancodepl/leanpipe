@@ -4,7 +4,7 @@ namespace LeanPipe.IntegrationTests.App;
 
 public static class ApiHandlers
 {
-    public static async Task PublishGreetingOrFarewell<TTopic>(
+    public static async Task PublishGreetingOrFarewellAsync<TTopic>(
         LeanPipePublisher<TTopic> publisher,
         TTopic topic,
         NotificationDataDTO notificationData,
