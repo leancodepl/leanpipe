@@ -54,7 +54,7 @@ public static class LeanPipeTestClientExtensions
         }
     }
 
-    public static async Task<object> GetNextNotificationTaskOn<TTopic>(
+    public static async Task<object> WaitForNextNotificationOn<TTopic>(
         this LeanPipeTestClient client,
         TTopic topic,
         TimeSpan? timeout = null,
@@ -62,7 +62,7 @@ public static class LeanPipeTestClientExtensions
     )
         where TTopic : ITopic
     {
-        var notificationTask = client.Subscriptions[topic].GetNextNotificationTask();
+        var notificationTask = client.Subscriptions[topic].WaitForNextNotification();
 
         return await LeanPipeTestClient.AwaitWithTimeout(
                 notificationTask,

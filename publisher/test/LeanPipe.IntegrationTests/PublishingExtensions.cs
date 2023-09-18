@@ -82,7 +82,7 @@ public static class PublishingExtensions
     )
         where TTopic : ITopic
     {
-        var notificationTask = leanPipeClient.GetNextNotificationTaskOn(topic);
+        var notificationTask = leanPipeClient.WaitForNextNotificationOn(topic);
 
         await PostAsync(client, uri, payload);
 

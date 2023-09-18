@@ -35,7 +35,7 @@ public class LeanPipeSubscription
         nextMessageAwaiter = new();
     }
 
-    public Task<object> GetNextNotificationTask()
+    public Task<object> WaitForNextNotification()
     {
         return nextMessageAwaiter.Task;
     }
