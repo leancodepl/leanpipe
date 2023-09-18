@@ -39,21 +39,6 @@ public class LeanPipeTestClient : IAsyncDisposable
             })
             .Build();
 
-        hubConnection.Closed += e =>
-        {
-            foreach (var subscription in subscriptions.Values)
-            {
-                subscription.Unsubscribe();
-            }
-
-            if (e is not null)
-            {
-                throw e;
-            }
-
-            return Task.CompletedTask;
-        };
-
         notificationEnvelopeDeserializer = new(leanPipeTypes, serializerOptions);
 
         this.serializerOptions = serializerOptions;
@@ -103,6 +88,13 @@ public class LeanPipeTestClient : IAsyncDisposable
     )
         where TTopic : ITopic
     {
+        var subscription = subscriptions.GetValueOrDefault(topic);
+
+        if (subscription?.SubscriptionId is not null)
+        {
+            throw new InvalidOperationException("Already subscribed to topic.");
+        }
+
         if (hubConnection.State != HubConnectionState.Connected)
         {
             await ConnectAsync(ct);
@@ -112,7 +104,14 @@ public class LeanPipeTestClient : IAsyncDisposable
 
         if (result?.Status == SubscriptionStatus.Success)
         {
-            subscriptions.TryAdd(topic, new(topic, result.SubscriptionId));
+            if (subscription is not null)
+            {
+                subscription.Subscribe(result.SubscriptionId);
+            }
+            else
+            {
+                subscriptions[topic] = new(topic, result.SubscriptionId);
+            }
         }
 
         return result;
@@ -123,7 +122,15 @@ public class LeanPipeTestClient : IAsyncDisposable
     /// <remarks>
     /// Also clears all subscriptions.
     /// </remarks>
-    public Task DisconnectAsync(CancellationToken ct = default) => hubConnection.StopAsync(ct);
+    public Task DisconnectAsync(CancellationToken ct = default)
+    {
+        foreach (var subscription in subscriptions.Values)
+        {
+            subscription.Unsubscribe();
+        }
+
+        return hubConnection.StopAsync(ct);
+    }
 
     public async ValueTask DisposeAsync()
     {
@@ -178,21 +185,21 @@ public class LeanPipeTestClient : IAsyncDisposable
         );
 
         return await AwaitWithTimeout(
-            subscriptionCompletionSource,
+            subscriptionCompletionSource.Task,
             subscriptionCompletionTimeout,
             ct
         );
     }
 
-    private static async Task<TResult?> AwaitWithTimeout<TResult>(
-        TaskCompletionSource<TResult> tcs,
+    internal static async Task<TResult?> AwaitWithTimeout<TResult>(
+        Task<TResult> task,
         TimeSpan timeout,
         CancellationToken ct
     )
         where TResult : class
     {
-        return await Task.WhenAny(tcs.Task, Task.Delay(timeout, ct)) == tcs.Task
-            ? tcs.Task.Result
+        return await Task.WhenAny(task, Task.Delay(timeout, ct)) == task
+            ? task.GetAwaiter().GetResult()
             : null;
     }
 }

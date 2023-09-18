@@ -4,6 +4,8 @@ namespace LeanPipe.TestClient;
 
 public static class LeanPipeTestClientExtensions
 {
+    private static readonly TimeSpan DefaultNotificationAwaitTimeout = TimeSpan.FromSeconds(10);
+
     public static async Task<Guid> SubscribeSuccessAsync<TTopic>(
         this LeanPipeTestClient client,
         TTopic topic,
@@ -50,6 +52,26 @@ public static class LeanPipeTestClientExtensions
                 "LeanPipe test client did not manage to unsubscribe from topic with success."
             );
         }
+    }
+
+    public static async Task<object> WaitForNextNotificationOn<TTopic>(
+        this LeanPipeTestClient client,
+        TTopic topic,
+        TimeSpan? timeout = null,
+        CancellationToken ct = default
+    )
+        where TTopic : ITopic
+    {
+        var notificationTask = client.Subscriptions[topic].WaitForNextNotification();
+
+        return await LeanPipeTestClient.AwaitWithTimeout(
+                notificationTask,
+                timeout ?? DefaultNotificationAwaitTimeout,
+                ct
+            )
+            ?? throw new InvalidOperationException(
+                "LeanPipe test client did not receive any notification on topic."
+            );
     }
 
     public static IReadOnlyCollection<object> NotificationsOn<TTopic>(
