@@ -1,11 +1,14 @@
 using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using LeanCode.Contracts;
 
 namespace LeanPipe.TestClient;
 
 public class LeanPipeSubscription
 {
-    private TaskCompletionSource<object> nextMessageAwaiter = new();
+    private readonly object notificationMutex = new();
+    private TaskCompletionSource<object> nextMessageAwaiter =
+        new(TaskCreationOptions.RunContinuationsAsynchronously);
     private readonly ConcurrentStack<object> receivedNotifications = new();
 
     public ITopic Topic { get; private init; }
@@ -31,12 +34,19 @@ public class LeanPipeSubscription
     public void AddNotification(object notification)
     {
         receivedNotifications.Push(notification);
-        nextMessageAwaiter.TrySetResult(notification);
-        nextMessageAwaiter = new();
+
+        lock (notificationMutex)
+        {
+            nextMessageAwaiter.TrySetResult(notification);
+            nextMessageAwaiter = new(TaskCreationOptions.RunContinuationsAsynchronously);
+        }
     }
 
     public Task<object> WaitForNextNotification()
     {
-        return nextMessageAwaiter.Task;
+        lock (notificationMutex)
+        {
+            return nextMessageAwaiter.Task;
+        }
     }
 }
