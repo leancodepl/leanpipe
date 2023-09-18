@@ -88,7 +88,8 @@ public static class PublishingExtensions
 
         (await notificationTask)
             .Should()
-            .BeEquivalentTo(expectedNotification, opts => opts.RespectingRuntimeTypes());
+            .BeOfType<TNotification>()
+            .And.BeEquivalentTo(expectedNotification);
     }
 
     private static async Task PostToPublishAndAwaitNoNotificationsAsync<TPayload>(
