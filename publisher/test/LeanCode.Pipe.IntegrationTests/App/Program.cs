@@ -11,7 +11,10 @@ using Microsoft.Extensions.DependencyInjection;
 var appBuilder = WebApplication.CreateBuilder(args);
 var services = appBuilder.Services;
 
-services.AddLeanPipe(LeanCode.Pipe.IntegrationTests.App.Program.LeanPipeTypes, LeanCode.Pipe.IntegrationTests.App.Program.LeanPipeTypes);
+services.AddPipe(
+    LeanCode.Pipe.IntegrationTests.App.Program.PipeTypes,
+    LeanCode.Pipe.IntegrationTests.App.Program.PipeTypes
+);
 
 services.AddSingleton<IRoleRegistration, AppRoles>();
 services.AddSingleton<RoleRegistry>();
@@ -26,14 +29,14 @@ using var app = appBuilder.Build();
 app.UseRouting();
 app.UseAuthentication();
 
-app.MapLeanPipe("/leanpipe");
+app.MapPipe("/pipe");
 
 app.MapPost(
     "/publish_basic",
     async (
         HttpContext ctx,
         NotificationDataDTO notificationData,
-        LeanPipePublisher<BasicTopic> publisher
+        PipePublisher<BasicTopic> publisher
     ) =>
     {
         var topic = new BasicTopic { TopicId = notificationData.TopicId };
@@ -52,7 +55,7 @@ app.MapPost(
     async (
         HttpContext ctx,
         NotificationDataDTO notificationData,
-        LeanPipePublisher<AuthorizedTopic> publisher
+        PipePublisher<AuthorizedTopic> publisher
     ) =>
     {
         var topic = new AuthorizedTopic { TopicId = notificationData.TopicId };
@@ -72,6 +75,6 @@ namespace LeanCode.Pipe.IntegrationTests.App
 {
     public partial class Program
     {
-        public static readonly TypesCatalog LeanPipeTypes = TypesCatalog.Of<BasicTopic>();
+        public static readonly TypesCatalog PipeTypes = TypesCatalog.Of<BasicTopic>();
     }
 }

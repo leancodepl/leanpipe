@@ -2,12 +2,12 @@ using LeanCode.Contracts;
 
 namespace LeanCode.Pipe.TestClient;
 
-public static class LeanPipeTestClientExtensions
+public static class PipeTestClientExtensions
 {
     private static readonly TimeSpan DefaultNotificationAwaitTimeout = TimeSpan.FromSeconds(10);
 
     public static async Task<Guid> SubscribeSuccessAsync<TTopic>(
-        this LeanPipeTestClient client,
+        this PipeTestClient client,
         TTopic topic,
         CancellationToken ct = default
     )
@@ -31,7 +31,7 @@ public static class LeanPipeTestClientExtensions
     }
 
     public static async Task<Guid> UnsubscribeSuccessAsync<TTopic>(
-        this LeanPipeTestClient client,
+        this PipeTestClient client,
         TTopic topic,
         CancellationToken ct = default
     )
@@ -55,7 +55,7 @@ public static class LeanPipeTestClientExtensions
     }
 
     public static async Task<object> WaitForNextNotificationOn<TTopic>(
-        this LeanPipeTestClient client,
+        this PipeTestClient client,
         TTopic topic,
         TimeSpan? timeout = null,
         CancellationToken ct = default
@@ -64,7 +64,7 @@ public static class LeanPipeTestClientExtensions
     {
         var notificationTask = client.Subscriptions[topic].WaitForNextNotification();
 
-        return await LeanPipeTestClient.AwaitWithTimeout(
+        return await PipeTestClient.AwaitWithTimeout(
                 notificationTask,
                 timeout ?? DefaultNotificationAwaitTimeout,
                 ct
@@ -75,7 +75,7 @@ public static class LeanPipeTestClientExtensions
     }
 
     public static IReadOnlyCollection<object> NotificationsOn<TTopic>(
-        this LeanPipeTestClient client,
+        this PipeTestClient client,
         TTopic topic
     )
         where TTopic : ITopic

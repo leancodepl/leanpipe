@@ -5,8 +5,8 @@ namespace LeanCode.Pipe;
 public interface ISubscriptionHandler<in TTopic>
     where TTopic : ITopic
 {
-    ValueTask OnSubscribedAsync(TTopic topic, LeanPipeSubscriber pipe, LeanPipeContext context);
-    ValueTask OnUnsubscribedAsync(TTopic topic, LeanPipeSubscriber pipe, LeanPipeContext context);
+    ValueTask OnSubscribedAsync(TTopic topic, PipeSubscriber pipe, PipeContext context);
+    ValueTask OnUnsubscribedAsync(TTopic topic, PipeSubscriber pipe, PipeContext context);
 }
 
 public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
@@ -19,11 +19,7 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
         this.topicKeys = topicKeys;
     }
 
-    public async ValueTask OnSubscribedAsync(
-        TTopic topic,
-        LeanPipeSubscriber pipe,
-        LeanPipeContext context
-    )
+    public async ValueTask OnSubscribedAsync(TTopic topic, PipeSubscriber pipe, PipeContext context)
     {
         var keys = await topicKeys.GetForSubscribingAsync(topic, context);
         foreach (var key in keys)
@@ -38,8 +34,8 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
 
     public async ValueTask OnUnsubscribedAsync(
         TTopic topic,
-        LeanPipeSubscriber pipe,
-        LeanPipeContext context
+        PipeSubscriber pipe,
+        PipeContext context
     )
     {
         // with this implementation there is a problem of "higher level" groups:

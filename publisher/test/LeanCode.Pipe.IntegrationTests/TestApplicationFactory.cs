@@ -15,11 +15,11 @@ public class TestApplicationFactory : WebApplicationFactory<App.Program>
         return base.CreateHost(builder);
     }
 
-    protected LeanPipeTestClient CreateLeanPipeTestClient(AuthenticatedAs authenticatedAs)
+    protected PipeTestClient CreatePipeTestClient(AuthenticatedAs authenticatedAs)
     {
         return new(
-            new("http://localhost/leanpipe"),
-            App.Program.LeanPipeTypes,
+            new("http://localhost/pipe"),
+            App.Program.PipeTypes,
             hco =>
             {
                 hco.HttpMessageHandlerFactory = _ => Server.CreateHandler();

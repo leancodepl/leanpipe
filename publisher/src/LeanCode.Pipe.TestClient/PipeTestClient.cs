@@ -11,9 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LeanCode.Pipe.TestClient;
 
-public class LeanPipeTestClient : IAsyncDisposable
+public class PipeTestClient : IAsyncDisposable
 {
-    private readonly ConcurrentDictionary<ITopic, LeanPipeSubscription> subscriptions =
+    private readonly ConcurrentDictionary<ITopic, PipeSubscription> subscriptions =
         new(TopicDeepEqualityComparer.Instance);
 
     private readonly HubConnection hubConnection;
@@ -21,25 +21,25 @@ public class LeanPipeTestClient : IAsyncDisposable
     private readonly JsonSerializerOptions? serializerOptions;
     private readonly TimeSpan subscriptionCompletionTimeout;
 
-    public IReadOnlyDictionary<ITopic, LeanPipeSubscription> Subscriptions => subscriptions;
+    public IReadOnlyDictionary<ITopic, PipeSubscription> Subscriptions => subscriptions;
 
-    public LeanPipeTestClient(
-        Uri leanPipeUrl,
-        TypesCatalog leanPipeTypes,
+    public PipeTestClient(
+        Uri pipeUrl,
+        TypesCatalog pipeTypes,
         Action<HttpConnectionOptions>? config = null,
         JsonSerializerOptions? serializerOptions = null,
         TimeSpan? subscriptionCompletionTimeout = null
     )
     {
         hubConnection = new HubConnectionBuilder()
-            .WithUrl(leanPipeUrl, config!)
+            .WithUrl(pipeUrl, config!)
             .AddJsonProtocol(options =>
             {
                 options.PayloadSerializerOptions.PropertyNamingPolicy = null;
             })
             .Build();
 
-        notificationEnvelopeDeserializer = new(leanPipeTypes, serializerOptions);
+        notificationEnvelopeDeserializer = new(pipeTypes, serializerOptions);
 
         this.serializerOptions = serializerOptions;
         this.subscriptionCompletionTimeout =
@@ -171,8 +171,8 @@ public class LeanPipeTestClient : IAsyncDisposable
         await hubConnection.InvokeAsync(
             operationType switch
             {
-                OperationType.Subscribe => nameof(LeanPipeSubscriber.Subscribe),
-                OperationType.Unsubscribe => nameof(LeanPipeSubscriber.Unsubscribe),
+                OperationType.Subscribe => nameof(PipeSubscriber.Subscribe),
+                OperationType.Unsubscribe => nameof(PipeSubscriber.Unsubscribe),
                 _
                     => throw new ArgumentOutOfRangeException(
                         nameof(operationType),

@@ -8,12 +8,12 @@ namespace LeanCode.Pipe.IntegrationTests;
 public class BasicTopicTests : TestApplicationFactory
 {
     private readonly HttpClient httpClient;
-    private readonly LeanPipeTestClient leanPipeClient;
+    private readonly PipeTestClient pipeClient;
 
     public BasicTopicTests()
     {
         httpClient = CreateClient();
-        leanPipeClient = CreateLeanPipeTestClient(AuthenticatedAs.NotAuthenticated);
+        pipeClient = CreatePipeTestClient(AuthenticatedAs.NotAuthenticated);
     }
 
     [Fact]
@@ -21,8 +21,8 @@ public class BasicTopicTests : TestApplicationFactory
     {
         var topic = new BasicTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic);
-        leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
+        await pipeClient.SubscribeSuccessAsync(topic);
+        pipeClient.NotificationsOn(topic).Should().BeEmpty();
 
         await httpClient.PublishToBasicTopicAndAwaitNotificationAsync(
             new()
@@ -31,7 +31,7 @@ public class BasicTopicTests : TestApplicationFactory
                 Kind = NotificationKindDTO.Greeting,
                 Name = "Tester",
             },
-            leanPipeClient,
+            pipeClient,
             topic,
             new GreetingNotificationDTO { Greeting = "Hello Tester" }
         );
@@ -43,12 +43,12 @@ public class BasicTopicTests : TestApplicationFactory
                 Kind = NotificationKindDTO.Farewell,
                 Name = "Tester",
             },
-            leanPipeClient,
+            pipeClient,
             topic,
             new FarewellNotificationDTO { Farewell = "Goodbye Tester" }
         );
 
-        await leanPipeClient.UnsubscribeSuccessAsync(topic);
+        await pipeClient.UnsubscribeSuccessAsync(topic);
 
         await httpClient.PublishToBasicTopicAndAwaitNoNotificationsAsync(
             new()
@@ -59,7 +59,7 @@ public class BasicTopicTests : TestApplicationFactory
             }
         );
 
-        leanPipeClient.NotificationsOn(topic).Should().HaveCount(2);
+        pipeClient.NotificationsOn(topic).Should().HaveCount(2);
     }
 
     [Fact]
@@ -68,7 +68,7 @@ public class BasicTopicTests : TestApplicationFactory
         var topic = new BasicTopic { TopicId = Guid.NewGuid() };
         var otherTopic = new BasicTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic);
+        await pipeClient.SubscribeSuccessAsync(topic);
 
         await httpClient.PublishToBasicTopicAndAwaitNoNotificationsAsync(
             new()
@@ -79,10 +79,10 @@ public class BasicTopicTests : TestApplicationFactory
             }
         );
 
-        leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
-        leanPipeClient.NotificationsOn(otherTopic).Should().BeEmpty();
+        pipeClient.NotificationsOn(topic).Should().BeEmpty();
+        pipeClient.NotificationsOn(otherTopic).Should().BeEmpty();
 
-        await leanPipeClient.UnsubscribeSuccessAsync(topic);
+        await pipeClient.UnsubscribeSuccessAsync(topic);
     }
 
     [Fact]
@@ -90,8 +90,8 @@ public class BasicTopicTests : TestApplicationFactory
     {
         var topic = new BasicTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic);
-        leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
+        await pipeClient.SubscribeSuccessAsync(topic);
+        pipeClient.NotificationsOn(topic).Should().BeEmpty();
 
         await httpClient.PublishToBasicTopicAndAwaitNotificationAsync(
             new()
@@ -100,13 +100,13 @@ public class BasicTopicTests : TestApplicationFactory
                 Kind = NotificationKindDTO.Greeting,
                 Name = "Tester",
             },
-            leanPipeClient,
+            pipeClient,
             topic,
             new GreetingNotificationDTO { Greeting = "Hello Tester" }
         );
 
-        await leanPipeClient.DisconnectAsync();
-        await leanPipeClient.SubscribeSuccessAsync(topic);
+        await pipeClient.DisconnectAsync();
+        await pipeClient.SubscribeSuccessAsync(topic);
 
         await httpClient.PublishToBasicTopicAndAwaitNotificationAsync(
             new()
@@ -115,11 +115,11 @@ public class BasicTopicTests : TestApplicationFactory
                 Kind = NotificationKindDTO.Farewell,
                 Name = "Tester",
             },
-            leanPipeClient,
+            pipeClient,
             topic,
             new FarewellNotificationDTO { Farewell = "Goodbye Tester" }
         );
 
-        await leanPipeClient.UnsubscribeSuccessAsync(topic);
+        await pipeClient.UnsubscribeSuccessAsync(topic);
     }
 }

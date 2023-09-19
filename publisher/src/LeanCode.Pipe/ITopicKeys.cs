@@ -5,7 +5,7 @@ namespace LeanCode.Pipe;
 public interface ITopicKeys<in TTopic>
     where TTopic : ITopic
 {
-    ValueTask<IEnumerable<string>> GetForSubscribingAsync(TTopic topic, LeanPipeContext context);
+    ValueTask<IEnumerable<string>> GetForSubscribingAsync(TTopic topic, PipeContext context);
     ValueTask<IEnumerable<string>> GetForPublishingAsync(
         TTopic topic,
         CancellationToken ct = default
@@ -30,7 +30,7 @@ public abstract class BasicTopicKeys<TTopic> : ITopicKeys<TTopic>
 
     public ValueTask<IEnumerable<string>> GetForSubscribingAsync(
         TTopic topic,
-        LeanPipeContext context
+        PipeContext context
     ) => ValueTask.FromResult(Get(topic));
 
     public ValueTask<IEnumerable<string>> GetForPublishingAsync(

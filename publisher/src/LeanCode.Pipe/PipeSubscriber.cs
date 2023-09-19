@@ -4,15 +4,12 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace LeanCode.Pipe;
 
-public class LeanPipeSubscriber : Hub
+public class PipeSubscriber : Hub
 {
     private readonly SubscriptionHandlerResolver resolver;
     private readonly IEnvelopeDeserializer deserializer;
 
-    public LeanPipeSubscriber(
-        SubscriptionHandlerResolver resolver,
-        IEnvelopeDeserializer deserializer
-    )
+    public PipeSubscriber(SubscriptionHandlerResolver resolver, IEnvelopeDeserializer deserializer)
     {
         this.resolver = resolver;
         this.deserializer = deserializer;
@@ -52,7 +49,7 @@ public class LeanPipeSubscriber : Hub
             var topic =
                 deserializer.Deserialize(envelope)
                 ?? throw new InvalidOperationException("Cannot deserialize the topic.");
-            var authorized = await LeanPipeSecurity.CheckIfAuthorizedAsync(topic, httpContext);
+            var authorized = await PipeSecurity.CheckIfAuthorizedAsync(topic, httpContext);
 
             if (!authorized)
             {
@@ -60,7 +57,7 @@ public class LeanPipeSubscriber : Hub
                 return;
             }
 
-            var context = new LeanPipeContext(httpContext);
+            var context = new PipeContext(httpContext);
             var handler =
                 resolver.FindSubscriptionHandler(topic.GetType())
                 ?? throw new InvalidOperationException(

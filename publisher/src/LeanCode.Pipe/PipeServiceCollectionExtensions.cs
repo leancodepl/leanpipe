@@ -6,9 +6,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace LeanCode.Pipe;
 
-public static class LeanPipeServiceCollectionExtensions
+public static class PipeServiceCollectionExtensions
 {
-    public static LeanPipeServicesBuilder AddLeanPipe(
+    public static PipeServicesBuilder AddPipe(
         this IServiceCollection services,
         TypesCatalog topics,
         TypesCatalog handlers
@@ -21,21 +21,21 @@ public static class LeanPipeServiceCollectionExtensions
             );
 
         services.AddTransient(typeof(ISubscriptionHandler<>), typeof(KeyedSubscriptionHandler<>));
-        services.AddTransient(typeof(LeanPipePublisher<>), typeof(LeanPipePublisher<>));
+        services.AddTransient(typeof(PipePublisher<>), typeof(PipePublisher<>));
         services.AddTransient<SubscriptionHandlerResolver>();
 
-        return new LeanPipeServicesBuilder(services, topics).AddHandlers(handlers);
+        return new PipeServicesBuilder(services, topics).AddHandlers(handlers);
     }
 }
 
-public class LeanPipeServicesBuilder
+public class PipeServicesBuilder
 {
     public IServiceCollection Services { get; }
 
     private JsonSerializerOptions? options;
     private TypesCatalog topics;
 
-    public LeanPipeServicesBuilder(IServiceCollection services, TypesCatalog topics)
+    public PipeServicesBuilder(IServiceCollection services, TypesCatalog topics)
     {
         Services = services;
         this.topics = topics;
@@ -43,27 +43,27 @@ public class LeanPipeServicesBuilder
         Services.AddSingleton<IEnvelopeDeserializer>(new DefaultEnvelopeDeserializer(topics, null));
     }
 
-    public LeanPipeServicesBuilder WithEnvelopeDeserializerOptions(JsonSerializerOptions options)
+    public PipeServicesBuilder WithEnvelopeDeserializerOptions(JsonSerializerOptions options)
     {
         this.options = options;
         ReplaceDefaultEnvelopeDeserializer();
         return this;
     }
 
-    public LeanPipeServicesBuilder WithEnvelopeDeserializer(IEnvelopeDeserializer deserializer)
+    public PipeServicesBuilder WithEnvelopeDeserializer(IEnvelopeDeserializer deserializer)
     {
         Services.Replace(new ServiceDescriptor(typeof(IEnvelopeDeserializer), deserializer));
         return this;
     }
 
-    public LeanPipeServicesBuilder AddTopics(TypesCatalog newTopics)
+    public PipeServicesBuilder AddTopics(TypesCatalog newTopics)
     {
         topics = topics.Merge(newTopics);
         ReplaceDefaultEnvelopeDeserializer();
         return this;
     }
 
-    public LeanPipeServicesBuilder AddHandlers(TypesCatalog newHandlers)
+    public PipeServicesBuilder AddHandlers(TypesCatalog newHandlers)
     {
         Services.RegisterGenericTypes(
             newHandlers,

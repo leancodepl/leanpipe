@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace LeanCode.Pipe;
 
-internal static class LeanPipeSecurity
+internal static class PipeSecurity
 {
     public static async Task<bool> CheckIfAuthorizedAsync(ITopic topic, HttpContext context)
     {

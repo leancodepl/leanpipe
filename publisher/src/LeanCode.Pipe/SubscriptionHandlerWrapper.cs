@@ -4,8 +4,8 @@ namespace LeanCode.Pipe;
 
 public interface ISubscriptionHandlerWrapper
 {
-    ValueTask OnSubscribedAsync(object topic, LeanPipeSubscriber pipe, LeanPipeContext context);
-    ValueTask OnUnsubscribedAsync(object topic, LeanPipeSubscriber pipe, LeanPipeContext context);
+    ValueTask OnSubscribedAsync(object topic, PipeSubscriber pipe, PipeContext context);
+    ValueTask OnUnsubscribedAsync(object topic, PipeSubscriber pipe, PipeContext context);
 }
 
 public sealed class SubscriptionHandlerWrapper<TTopic> : ISubscriptionHandlerWrapper
@@ -18,15 +18,9 @@ public sealed class SubscriptionHandlerWrapper<TTopic> : ISubscriptionHandlerWra
         this.handler = handler;
     }
 
-    public ValueTask OnSubscribedAsync(
-        object topic,
-        LeanPipeSubscriber pipe,
-        LeanPipeContext context
-    ) => handler.OnSubscribedAsync((TTopic)topic, pipe, context);
+    public ValueTask OnSubscribedAsync(object topic, PipeSubscriber pipe, PipeContext context) =>
+        handler.OnSubscribedAsync((TTopic)topic, pipe, context);
 
-    public ValueTask OnUnsubscribedAsync(
-        object topic,
-        LeanPipeSubscriber pipe,
-        LeanPipeContext context
-    ) => handler.OnUnsubscribedAsync((TTopic)topic, pipe, context);
+    public ValueTask OnUnsubscribedAsync(object topic, PipeSubscriber pipe, PipeContext context) =>
+        handler.OnUnsubscribedAsync((TTopic)topic, pipe, context);
 }

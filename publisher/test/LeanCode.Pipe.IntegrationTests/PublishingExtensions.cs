@@ -11,7 +11,7 @@ public static class PublishingExtensions
     public static Task PublishToBasicTopicAndAwaitNotificationAsync<TNotification>(
         this HttpClient client,
         NotificationDataDTO notificationData,
-        LeanPipeTestClient leanPipeClient,
+        PipeTestClient pipeClient,
         BasicTopic topic,
         TNotification expectedNotification
     )
@@ -20,7 +20,7 @@ public static class PublishingExtensions
             client,
             "/publish_basic",
             notificationData,
-            leanPipeClient,
+            pipeClient,
             topic,
             expectedNotification
         );
@@ -41,7 +41,7 @@ public static class PublishingExtensions
     public static Task PublishToAuthorizedTopicAndAwaitNotificationAsync<TNotification>(
         this HttpClient client,
         NotificationDataDTO notificationData,
-        LeanPipeTestClient leanPipeClient,
+        PipeTestClient pipeClient,
         AuthorizedTopic topic,
         TNotification expectedNotification
     )
@@ -50,7 +50,7 @@ public static class PublishingExtensions
             client,
             "/publish_authorized",
             notificationData,
-            leanPipeClient,
+            pipeClient,
             topic,
             expectedNotification
         );
@@ -76,13 +76,13 @@ public static class PublishingExtensions
         HttpClient client,
         string uri,
         TPayload payload,
-        LeanPipeTestClient leanPipeClient,
+        PipeTestClient pipeClient,
         TTopic topic,
         TNotification expectedNotification
     )
         where TTopic : ITopic
     {
-        var notificationTask = leanPipeClient.WaitForNextNotificationOn(topic);
+        var notificationTask = pipeClient.WaitForNextNotificationOn(topic);
 
         await PostAsync(client, uri, payload);
 
