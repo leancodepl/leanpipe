@@ -1,9 +1,9 @@
-# LeanPipe Protocol
+# LeanCode Pipe Protocol
 
-The LeanPipe Protocol is a pub-sub messaging over the [SignalR Protocol](https://github.com/dotnet/aspnetcore/blob/main/src/SignalR/docs/specs/HubProtocol.md) connections.
+The LeanCode Pipe Protocol is a pub-sub messaging over the [SignalR Protocol](https://github.com/dotnet/aspnetcore/blob/main/src/SignalR/docs/specs/HubProtocol.md) connections.
 Clients may subscribe to various topics in order to receive notifications when the Publisher publishes them.
 Intended to be used in pair with the [Contracts Generator](https://github.com/leancodepl/contractsgenerator).
-
+****
 ## Terms
 * Publisher - The singular node that is handling Connections and `Subscribe`, `Unsubscribe` invocations and issuing `subscriptionResult`, `notify` invocations.
 * Client - The node that is issuing Connections and `Subscribe`, `Unsubscribe` invocations and handling `subscriptionResult`, `notify` invocations.
@@ -16,7 +16,7 @@ Intended to be used in pair with the [Contracts Generator](https://github.com/le
 * Notification - A message sent by the Publisher to the Clients subscribed to the particular Topic Instance.
 
 ## Transport
-The LeanPipe protocol uses the SignalR protocol as the duplex message protocol.
+The LeanCode Pipe protocol uses the SignalR protocol as the duplex message protocol.
 SignalR supports various transports underneath, each allowing for reliable, in-order, delivery of messages.
 The [supported transports](https://github.com/dotnet/aspnetcore/blob/main/src/SignalR/docs/specs/TransportProtocols.md) are:
 * WebSockets (Full Duplex),
@@ -31,7 +31,7 @@ The default transport that will be established the vast majority of times will b
 This document describes necessary steps to perform by the Client in order to receive Notifications related to the particular Topic Instance of interest, on the Topic specified by the Publisher Instance.
 The first step is always establishing a Connection and all other steps are performed as the SignalR invocations on the singular established Connection.
 
-In the LeanPipe protocol, the following types of invocations may be issued:
+In the LeanCode Pipe protocol, the following types of invocations may be issued:
 
 | Invocation name      | Issuer    | Description                                                                                                                |
 |----------------------|-----------|----------------------------------------------------------------------------------------------------------------------------|
@@ -61,7 +61,7 @@ In order for the Client to unsubscribe from the particular Topic Instance, the f
 
 ### Connection
 
-The LeanPipe protocol expects the Client to maintain a singular SignalR connection to subscribe, unsubscribe and receive notifications.
+The LeanCode Pipe protocol expects the Client to maintain a singular SignalR connection to subscribe, unsubscribe and receive notifications.
 Establishing the Connection is always the Clients responsibility.
 So is reconnecting in case when the connection is severed due to some random events (e.g. losing access to the network).
 
