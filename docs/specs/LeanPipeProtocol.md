@@ -94,7 +94,7 @@ The message payload should contain a [SubscriptionEnvelope](https://github.com/l
 The `Subscribe` message contains the following properties:
 
 * `Id` (`Guid`) - Subscription ID for response correlation purposes on the client. Must be generated on the client.
-* `TopicType` (`string`) - The topics [type descriptor](https://github.com/leancodepl/contractsgenerator/blob/209f8f4354fc4755879d1fd38d6e7293858ded42/contracts.proto#L162) from the generated contracts.
+* `TopicType` (`string`) - The topics [type descriptor name](https://github.com/leancodepl/contractsgenerator/blob/209f8f4354fc4755879d1fd38d6e7293858ded42/contracts.proto#L162) from the generated contracts.
 * `Topic` (`JsonDocument`) - The serialized Topic Instance the Client requests to subscribe to.
 
 Example:
@@ -152,7 +152,7 @@ The `Unsubscribe` message contains the following properties:
 
 * `Id` (`Guid`) - Subscription ID for response correlation purposes on the client.
   Must be the same as the Subscription ID used in the `Subscribe` request.
-* `TopicType` (`string`) - The topics [type descriptor](https://github.com/leancodepl/contractsgenerator/blob/209f8f4354fc4755879d1fd38d6e7293858ded42/contracts.proto#L162) from the generated contracts.
+* `TopicType` (`string`) - The topics [type descriptor name](https://github.com/leancodepl/contractsgenerator/blob/209f8f4354fc4755879d1fd38d6e7293858ded42/contracts.proto#L162) from the generated contracts.
 * `Topic` (`JsonDocument`) - The serialized Topic Instance the Client requests to unsubscribe from.
 
 Example:
@@ -179,8 +179,8 @@ The message payload will contain a [NotificationEnvelope](https://github.com/lea
 
 The `notify` message contains the following properties:
 
-* `Id` (`Giud`) - Notification ID. For debugging purposes.
-* `TopicType` (`string`) - The topics [type descriptor](https://github.com/leancodepl/contractsgenerator/blob/209f8f4354fc4755879d1fd38d6e7293858ded42/contracts.proto#L162) from the generated contracts the Client receives Notification from.
+* `Id` (`Guid`) - Notification ID. For debugging purposes.
+* `TopicType` (`string`) - The topics [type descriptor name](https://github.com/leancodepl/contractsgenerator/blob/209f8f4354fc4755879d1fd38d6e7293858ded42/contracts.proto#L162) from the generated contracts the Client receives Notification from.
 * `NotificationType` (`string`) - The notifications [tag](https://github.com/leancodepl/contractsgenerator/blob/209f8f4354fc4755879d1fd38d6e7293858ded42/contracts.proto#L77) from the generated contracts.
 * `Topic` (`object`) - The serialized Topic Instance the Client receives Notification from.
 * `Notification` (`object`) - Serialized Notification.
