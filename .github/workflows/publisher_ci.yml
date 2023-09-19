@@ -30,7 +30,7 @@ jobs:
         run: dotnet build --no-restore
       - name: Test Publisher
         run: >
-          dotnet test ./test/LeanPipe.Tests/LeanPipe.Tests.csproj
+          dotnet test ./test/LeanCode.Pipe.Tests/LeanCode.Pipe.Tests.csproj
           --no-build
           --collect "XPlat Code Coverage"
           --settings test/coverlet.runsettings
@@ -38,7 +38,7 @@ jobs:
           --results-directory TestResults
       - name: Test test client
         run: >
-          dotnet test ./test/LeanPipe.TestClient.Tests/LeanPipe.TestClient.Tests.csproj
+          dotnet test ./test/LeanCode.Pipe.TestClient.Tests/LeanCode.Pipe.TestClient.Tests.csproj
           --no-build
           --collect "XPlat Code Coverage"
           --settings test/coverlet.runsettings
@@ -46,7 +46,7 @@ jobs:
           --results-directory TestResults
       - name: Integration test
         run: >
-          dotnet test ./test/LeanPipe.IntegrationTests/LeanPipe.IntegrationTests.csproj
+          dotnet test ./test/LeanCode.Pipe.IntegrationTests/LeanCode.Pipe.IntegrationTests.csproj
           --no-build
           --collect "XPlat Code Coverage"
           --settings test/coverlet.runsettings
