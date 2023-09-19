@@ -11,10 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 var appBuilder = WebApplication.CreateBuilder(args);
 var services = appBuilder.Services;
 
-services.AddPipe(
-    LeanCode.Pipe.IntegrationTests.App.Program.PipeTypes,
-    LeanCode.Pipe.IntegrationTests.App.Program.PipeTypes
-);
+services.AddPipe(PipeTypes, PipeTypes);
 
 services.AddSingleton<IRoleRegistration, AppRoles>();
 services.AddSingleton<RoleRegistry>();
@@ -71,10 +68,7 @@ app.MapPost(
 
 app.Run();
 
-namespace LeanCode.Pipe.IntegrationTests.App
+public partial class Program
 {
-    public partial class Program
-    {
-        public static readonly TypesCatalog PipeTypes = TypesCatalog.Of<BasicTopic>();
-    }
+    public static readonly TypesCatalog PipeTypes = TypesCatalog.Of<BasicTopic>();
 }

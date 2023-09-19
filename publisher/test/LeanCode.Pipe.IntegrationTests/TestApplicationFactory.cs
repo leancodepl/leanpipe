@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace LeanCode.Pipe.IntegrationTests;
 
-public class TestApplicationFactory : WebApplicationFactory<App.Program>
+public class TestApplicationFactory : WebApplicationFactory<Program>
 {
     protected override IHost CreateHost(IHostBuilder builder)
     {
@@ -19,7 +19,7 @@ public class TestApplicationFactory : WebApplicationFactory<App.Program>
     {
         return new(
             new("http://localhost/pipe"),
-            App.Program.PipeTypes,
+            Program.PipeTypes,
             hco =>
             {
                 hco.HttpMessageHandlerFactory = _ => Server.CreateHandler();

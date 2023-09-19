@@ -177,7 +177,7 @@ public class PipeTestClient : IAsyncDisposable
                     => throw new ArgumentOutOfRangeException(
                         nameof(operationType),
                         operationType,
-                        "LeanCode.Pipe OperationType is out of range."
+                        "Pipe OperationType is out of range."
                     ),
             },
             subscriptionEnvelope,

@@ -3,7 +3,7 @@
 The LeanCode Pipe Protocol is a pub-sub messaging over the [SignalR Protocol](https://github.com/dotnet/aspnetcore/blob/main/src/SignalR/docs/specs/HubProtocol.md) connections.
 Clients may subscribe to various topics in order to receive notifications when the Publisher publishes them.
 Intended to be used in pair with the [Contracts Generator](https://github.com/leancodepl/contractsgenerator).
-****
+
 ## Terms
 * Publisher - The singular node that is handling Connections and `Subscribe`, `Unsubscribe` invocations and issuing `subscriptionResult`, `notify` invocations.
 * Client - The node that is issuing Connections and `Subscribe`, `Unsubscribe` invocations and handling `subscriptionResult`, `notify` invocations.

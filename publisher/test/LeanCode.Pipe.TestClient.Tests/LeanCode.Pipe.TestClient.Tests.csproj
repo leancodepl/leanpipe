@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\LeanCode.Pipe.TestClient\LeanCode.Pipe.TestClient.csproj" />
+    <ProjectReference Include="../../src/LeanCode.Pipe.TestClient/LeanCode.Pipe.TestClient.csproj" />
   </ItemGroup>
 
 </Project>

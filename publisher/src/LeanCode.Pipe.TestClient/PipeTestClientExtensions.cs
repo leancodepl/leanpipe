@@ -25,7 +25,7 @@ public static class PipeTestClientExtensions
         else
         {
             throw new InvalidOperationException(
-                "LeanCode.Pipe test client did not manage to subscribe to topic with success."
+                "Pipe test client did not manage to subscribe to topic with success."
             );
         }
     }
@@ -49,7 +49,7 @@ public static class PipeTestClientExtensions
         else
         {
             throw new InvalidOperationException(
-                "LeanCode.Pipe test client did not manage to unsubscribe from topic with success."
+                "Pipe test client did not manage to unsubscribe from topic with success."
             );
         }
     }
@@ -70,7 +70,7 @@ public static class PipeTestClientExtensions
                 ct
             )
             ?? throw new InvalidOperationException(
-                "LeanCode.Pipe test client did not receive any notification on topic."
+                "Pipe test client did not receive any notification on topic."
             );
     }
 
