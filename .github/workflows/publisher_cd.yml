@@ -40,17 +40,17 @@ jobs:
         env:
           BUILD_VERSION: ${{ steps.version.outputs.version }}
         run: dotnet pack --no-build -c Release
-        working-directory: ./publisher/src/LeanPipe
+        working-directory: ./publisher/src/LeanCode.Pipe
       - name: Pack Test Client
         env:
           BUILD_VERSION: ${{ steps.version.outputs.version }}
         run: dotnet pack --no-build -c Release
-        working-directory: ./publisher/src/LeanPipe.TestClient
+        working-directory: ./publisher/src/LeanCode.Pipe.TestClient
       - name: Publish to Feedz
         run: |
           dotnet nuget push \
-            "src/LeanPipe/bin/Release/LeanPipe.${BUILD_VERSION}.nupkg" \
-            "src/LeanPipe.TestClient/bin/Release/LeanPipe.TestClient.${BUILD_VERSION}.nupkg" \
+            "src/LeanCode.Pipe/bin/Release/LeanCode.Pipe.${BUILD_VERSION}.nupkg" \
+            "src/LeanCode.Pipe.TestClient/bin/Release/LeanCode.Pipe.TestClient.${BUILD_VERSION}.nupkg" \
             -k "$FEEDZ_API_KEY" \
             -s 'https://f.feedz.io/leancode/public/nuget/index.json' \
             -n
