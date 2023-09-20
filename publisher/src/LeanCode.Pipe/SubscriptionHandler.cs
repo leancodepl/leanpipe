@@ -5,8 +5,16 @@ namespace LeanCode.Pipe;
 public interface ISubscriptionHandler<in TTopic>
     where TTopic : ITopic
 {
-    ValueTask OnSubscribedAsync(TTopic topic, LeanPipeSubscriber leanPipeSubscriber, LeanPipeContext context);
-    ValueTask OnUnsubscribedAsync(TTopic topic, LeanPipeSubscriber leanPipeSubscriber, LeanPipeContext context);
+    ValueTask OnSubscribedAsync(
+        TTopic topic,
+        LeanPipeSubscriber leanPipeSubscriber,
+        LeanPipeContext context
+    );
+    ValueTask OnUnsubscribedAsync(
+        TTopic topic,
+        LeanPipeSubscriber leanPipeSubscriber,
+        LeanPipeContext context
+    );
 }
 
 public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
