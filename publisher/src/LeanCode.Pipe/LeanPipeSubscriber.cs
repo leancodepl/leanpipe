@@ -49,9 +49,11 @@ public class LeanPipeSubscriber : Hub
                 ?? throw new InvalidOperationException(
                     "Connection is not associated with an HTTP request."
                 );
+
             var topic =
                 deserializer.Deserialize(envelope)
                 ?? throw new InvalidOperationException("Cannot deserialize the topic.");
+
             var authorized = await LeanPipeSecurity.CheckIfAuthorizedAsync(topic, httpContext);
 
             if (!authorized)
@@ -66,15 +68,23 @@ public class LeanPipeSubscriber : Hub
                 ?? throw new InvalidOperationException(
                     $"The resolver for topic {topic.GetType()} cannot be found."
                 );
+
+            bool result;
+
             if (type == OperationType.Subscribe)
             {
-                await handler.OnSubscribedAsync(topic, this, context);
+                result = await handler.OnSubscribedAsync(topic, this, context);
             }
             else
             {
-                await handler.OnUnsubscribedAsync(topic, this, context);
+                result = await handler.OnUnsubscribedAsync(topic, this, context);
             }
-            await NotifyResultAsync(envelope.Id, SubscriptionStatus.Success, type);
+
+            await NotifyResultAsync(
+                envelope.Id,
+                result ? SubscriptionStatus.Success : SubscriptionStatus.Invalid,
+                type
+            );
         }
         catch (JsonException e)
         {
