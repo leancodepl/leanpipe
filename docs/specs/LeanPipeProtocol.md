@@ -127,7 +127,7 @@ The `subscriptionResult` message contains the following properties:
 * `Status` (`SubscriptionStatus`) - The subscription result enum. Its possible values are:
   * `Unauthorized` (`1`) - The connection may be not authenticated or have insufficient permissions for subscribing the authorized topic instance.
   * `Malformed` (`2`) - The `Subscribe`/`Unsubscribe` message was malformed. Discovered when deserializing the message.
-  * `Invalid` (`3`) - The `Subscribe`/`Unsubscribe` request message could not be interpreted properly within publisher state. (Never returned for now, may be interpreted same as `InternalServerError`)
+  * `Invalid` (`3`) - The `Subscribe`/`Unsubscribe` request message could not be interpreted properly within publisher state.
   * `InternalServerError` (`4`) - The Publisher encountered an unexpected state that prevents it from fulfilling the `Subscribe`/`Unsubscribe` request.
   * `Success` (`0`) - The Publisher successfully established/severed the subscription.
 
