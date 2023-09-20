@@ -21,6 +21,9 @@ public class AuthorizedTopic
     public Guid TopicId { get; set; }
 }
 
+[AllowUnauthorized]
+public class EmptyTopic : ITopic { }
+
 public class GreetingNotificationDTO
 {
     public string Greeting { get; set; } = default!;

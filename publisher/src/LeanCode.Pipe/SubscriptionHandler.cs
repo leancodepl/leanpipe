@@ -5,12 +5,15 @@ namespace LeanCode.Pipe;
 public interface ISubscriptionHandler<in TTopic>
     where TTopic : ITopic
 {
-    ValueTask OnSubscribedAsync(
+    /// <returns>Whether subscription was correctly established.</returns>
+    ValueTask<bool> OnSubscribedAsync(
         TTopic topic,
         LeanPipeSubscriber leanPipeSubscriber,
         LeanPipeContext context
     );
-    ValueTask OnUnsubscribedAsync(
+
+    /// <returns>Whether subscription was correctly established.</returns>
+    ValueTask<bool> OnUnsubscribedAsync(
         TTopic topic,
         LeanPipeSubscriber leanPipeSubscriber,
         LeanPipeContext context
@@ -27,24 +30,29 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
         this.topicKeys = topicKeys;
     }
 
-    public async ValueTask OnSubscribedAsync(
+    public async ValueTask<bool> OnSubscribedAsync(
         TTopic topic,
         LeanPipeSubscriber leanPipeSubscriber,
         LeanPipeContext context
     )
     {
         var keys = await topicKeys.GetForSubscribingAsync(topic, context);
-        foreach (var key in keys)
-        {
-            await leanPipeSubscriber.Groups.AddToGroupAsync(
-                leanPipeSubscriber.Context.ConnectionId,
-                key,
-                leanPipeSubscriber.Context.ConnectionAborted
-            );
-        }
+
+        var tasks = keys.Select(
+            key =>
+                leanPipeSubscriber.Groups.AddToGroupAsync(
+                    leanPipeSubscriber.Context.ConnectionId,
+                    key,
+                    leanPipeSubscriber.Context.ConnectionAborted
+                )
+        );
+
+        await Task.WhenAll(tasks);
+
+        return keys.Any();
     }
 
-    public async ValueTask OnUnsubscribedAsync(
+    public async ValueTask<bool> OnUnsubscribedAsync(
         TTopic topic,
         LeanPipeSubscriber leanPipeSubscriber,
         LeanPipeContext context
@@ -54,13 +62,18 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
         // if we subscribe to topic.something and topic.something.specific,
         // then we do not know when to unsubscribe from topic.something
         var keys = await topicKeys.GetForSubscribingAsync(topic, context);
-        foreach (var key in keys)
-        {
-            await leanPipeSubscriber.Groups.RemoveFromGroupAsync(
-                leanPipeSubscriber.Context.ConnectionId,
-                key,
-                leanPipeSubscriber.Context.ConnectionAborted
-            );
-        }
+
+        var tasks = keys.Select(
+            key =>
+                leanPipeSubscriber.Groups.RemoveFromGroupAsync(
+                    leanPipeSubscriber.Context.ConnectionId,
+                    key,
+                    leanPipeSubscriber.Context.ConnectionAborted
+                )
+        );
+
+        await Task.WhenAll(tasks);
+
+        return keys.Any();
     }
 }
