@@ -2,9 +2,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace LeanCode.Pipe;
 
-public class PipeContext
+public class LeanPipeContext
 {
-    public PipeContext(HttpContext httpContext)
+    public LeanPipeContext(HttpContext httpContext)
     {
         HttpContext = httpContext;
     }

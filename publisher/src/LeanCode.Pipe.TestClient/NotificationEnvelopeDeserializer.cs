@@ -9,7 +9,7 @@ internal class NotificationEnvelopeDeserializer
 {
     private readonly TypesCatalog types;
     private readonly JsonSerializerOptions? options;
-    private readonly Lazy<PipeTypes> typesCache;
+    private readonly Lazy<LeanPipeTypes> typesCache;
 
     public NotificationEnvelopeDeserializer(TypesCatalog types, JsonSerializerOptions? options)
     {
@@ -50,7 +50,7 @@ internal class NotificationEnvelopeDeserializer
         return null;
     }
 
-    private PipeTypes BuildTypesCache()
+    private LeanPipeTypes BuildTypesCache()
     {
         var topicType = typeof(ITopic);
         var topicTypes = types.Assemblies
@@ -76,7 +76,7 @@ internal class NotificationEnvelopeDeserializer
         return new(topicTypes, notificationTypes);
     }
 
-    private sealed record PipeTypes(
+    private sealed record LeanPipeTypes(
         ImmutableDictionary<string, Type> Topics,
         ImmutableDictionary<string, Type> Notifications
     );

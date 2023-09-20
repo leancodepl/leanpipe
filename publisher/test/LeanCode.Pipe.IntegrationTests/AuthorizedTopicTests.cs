@@ -18,10 +18,10 @@ public class AuthorizedTopicTests : TestApplicationFactory
     [Fact]
     public async Task Unauthenticated_user_subscribing_to_authorized_topic_gets_unauthorized_response_and_receives_no_notifications()
     {
-        var pipeClient = CreatePipeTestClient(AuthenticatedAs.NotAuthenticated);
+        var leanPipeClient = CreateLeanPipeTestClient(AuthenticatedAs.NotAuthenticated);
         var topic = new AuthorizedTopic { TopicId = Guid.NewGuid() };
 
-        var result = await pipeClient.SubscribeAsync(topic);
+        var result = await leanPipeClient.SubscribeAsync(topic);
         result.Should().BeEquivalentTo(new { Status = SubscriptionStatus.Unauthorized });
 
         await httpClient.PublishToAuthorizedTopicAndAwaitNoNotificationsAsync(
@@ -33,16 +33,16 @@ public class AuthorizedTopicTests : TestApplicationFactory
             }
         );
 
-        pipeClient.NotificationsOn(topic).Should().BeEmpty();
+        leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
     }
 
     [Fact]
     public async Task User_with_insufficient_role_subscribing_to_authorized_topic_gets_unauthorized_response_and_receives_no_notifications()
     {
-        var pipeClient = CreatePipeTestClient(AuthenticatedAs.UserWithoutRole);
+        var leanPipeClient = CreateLeanPipeTestClient(AuthenticatedAs.UserWithoutRole);
         var topic = new AuthorizedTopic { TopicId = Guid.NewGuid() };
 
-        var result = await pipeClient.SubscribeAsync(topic);
+        var result = await leanPipeClient.SubscribeAsync(topic);
         result.Should().BeEquivalentTo(new { Status = SubscriptionStatus.Unauthorized });
 
         await httpClient.PublishToAuthorizedTopicAndAwaitNoNotificationsAsync(
@@ -54,16 +54,16 @@ public class AuthorizedTopicTests : TestApplicationFactory
             }
         );
 
-        pipeClient.NotificationsOn(topic).Should().BeEmpty();
+        leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
     }
 
     [Fact]
     public async Task User_with_sufficient_role_subscribes_to_authorized_topic_and_receives_notifications()
     {
-        var pipeClient = CreatePipeTestClient(AuthenticatedAs.User);
+        var leanPipeClient = CreateLeanPipeTestClient(AuthenticatedAs.User);
         var topic = new AuthorizedTopic { TopicId = Guid.NewGuid() };
 
-        await pipeClient.SubscribeSuccessAsync(topic);
+        await leanPipeClient.SubscribeSuccessAsync(topic);
 
         await httpClient.PublishToAuthorizedTopicAndAwaitNotificationAsync(
             new()
@@ -72,7 +72,7 @@ public class AuthorizedTopicTests : TestApplicationFactory
                 Kind = NotificationKindDTO.Greeting,
                 Name = "Tester",
             },
-            pipeClient,
+            leanPipeClient,
             topic,
             new GreetingNotificationDTO { Greeting = "Hello Tester" }
         );

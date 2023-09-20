@@ -6,7 +6,7 @@ using Xunit;
 
 namespace LeanCode.Pipe.Tests;
 
-public class PipeServiceCollectionExtensionsTests
+public class LeanPipeServiceCollectionExtensionsTests
 {
     private static readonly TypesCatalog ThisCatalog = TypesCatalog.Of<Topic1>();
     private static readonly TypesCatalog ExternalCatalog = TypesCatalog.Of<ExternalTopic>();
@@ -15,7 +15,7 @@ public class PipeServiceCollectionExtensionsTests
     public void Registers_all_basic_types()
     {
         var collection = new ServiceCollection();
-        collection.AddPipe(ThisCatalog, ThisCatalog);
+        collection.AddLeanPipe(ThisCatalog, ThisCatalog);
         collection
             .Should()
             .ContainSingle(
@@ -30,7 +30,7 @@ public class PipeServiceCollectionExtensionsTests
             )
             .And.ContainSingle(
                 d =>
-                    d.ServiceType == typeof(PipePublisher<>)
+                    d.ServiceType == typeof(LeanPipePublisher<>)
                     && d.Lifetime == ServiceLifetime.Transient
             )
             .And.ContainSingle(
@@ -44,7 +44,7 @@ public class PipeServiceCollectionExtensionsTests
     public void Updates_deserializer_when_registering_additional_types()
     {
         var collection = new ServiceCollection();
-        collection.AddPipe(ThisCatalog, ThisCatalog).AddTopics(ExternalCatalog);
+        collection.AddLeanPipe(ThisCatalog, ThisCatalog).AddTopics(ExternalCatalog);
 
         var deserializer = collection
             .BuildServiceProvider()
@@ -58,7 +58,7 @@ public class PipeServiceCollectionExtensionsTests
     public void Registers_all_handlers_in_the_assembly()
     {
         var collection = new ServiceCollection();
-        collection.AddPipe(ThisCatalog, ThisCatalog);
+        collection.AddLeanPipe(ThisCatalog, ThisCatalog);
         var provider = collection.BuildServiceProvider();
 
         provider
@@ -71,7 +71,7 @@ public class PipeServiceCollectionExtensionsTests
     public void Does_not_register_handlers_that_cannot_be_instantiated()
     {
         var collection = new ServiceCollection();
-        collection.AddPipe(ThisCatalog, ThisCatalog);
+        collection.AddLeanPipe(ThisCatalog, ThisCatalog);
         collection.AddTransient<ITopicKeys<Topic2>, DummyKeys<Topic2>>();
         var provider = collection.BuildServiceProvider();
 
@@ -85,7 +85,7 @@ public class PipeServiceCollectionExtensionsTests
     public void Registers_topic_keys_if_provided()
     {
         var collection = new ServiceCollection();
-        collection.AddPipe(ThisCatalog, ThisCatalog);
+        collection.AddLeanPipe(ThisCatalog, ThisCatalog);
         var provider = collection.BuildServiceProvider();
 
         provider
@@ -98,7 +98,7 @@ public class PipeServiceCollectionExtensionsTests
     public void Registers_KeyedSubscriptionHandler_by_default()
     {
         var collection = new ServiceCollection();
-        collection.AddPipe(ThisCatalog, ThisCatalog);
+        collection.AddLeanPipe(ThisCatalog, ThisCatalog);
         var provider = collection.BuildServiceProvider();
 
         provider
@@ -111,7 +111,7 @@ public class PipeServiceCollectionExtensionsTests
     public void Registers_all_notification_keys()
     {
         var collection = new ServiceCollection();
-        collection.AddPipe(ThisCatalog, ThisCatalog);
+        collection.AddLeanPipe(ThisCatalog, ThisCatalog);
         var provider = collection.BuildServiceProvider();
 
         provider
@@ -128,7 +128,7 @@ public class PipeServiceCollectionExtensionsTests
     public void Throws_if_user_does_not_provide_all_notification_keys_implementation_but_provides_at_least_one()
     {
         var collection = new ServiceCollection();
-        var builder = collection.AddPipe(ThisCatalog, ThisCatalog);
+        var builder = collection.AddLeanPipe(ThisCatalog, ThisCatalog);
 
         var act = () => builder.AddHandlers(ExternalCatalog);
         act.Should().Throw<InvalidOperationException>();

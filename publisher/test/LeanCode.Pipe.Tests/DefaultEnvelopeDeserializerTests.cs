@@ -8,7 +8,7 @@ namespace LeanCode.Pipe.Tests;
 public class DefaultEnvelopeDeserializerTests
 {
     private static readonly TypesCatalog ThisCatalog =
-        TypesCatalog.Of<PipeServiceCollectionExtensionsTests>();
+        TypesCatalog.Of<LeanPipeServiceCollectionExtensionsTests>();
 
     [Fact]
     public void Deserializes_types_from_catalog()

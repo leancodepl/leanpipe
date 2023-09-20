@@ -17,7 +17,7 @@ public class TopicWithoutAllKeysKeys
 {
     public ValueTask<IEnumerable<string>> GetForSubscribingAsync(
         TopicWithoutAllKeys topic,
-        PipeContext context
+        LeanPipeContext context
     )
     {
         return new(Array.Empty<string>());

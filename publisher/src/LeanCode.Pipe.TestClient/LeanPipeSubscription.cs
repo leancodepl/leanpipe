@@ -3,7 +3,7 @@ using LeanCode.Contracts;
 
 namespace LeanCode.Pipe.TestClient;
 
-public class PipeSubscription
+public class LeanPipeSubscription
 {
     private readonly object notificationMutex = new();
     private TaskCompletionSource<object> nextMessageAwaiter =
@@ -14,7 +14,7 @@ public class PipeSubscription
     public Guid? SubscriptionId { get; private set; }
     public IReadOnlyCollection<object> ReceivedNotifications => receivedNotifications;
 
-    public PipeSubscription(ITopic topic, Guid? subscriptionId)
+    public LeanPipeSubscription(ITopic topic, Guid? subscriptionId)
     {
         Topic = topic;
         SubscriptionId = subscriptionId;

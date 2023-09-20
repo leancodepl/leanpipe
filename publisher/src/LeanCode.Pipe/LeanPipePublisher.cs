@@ -4,13 +4,16 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LeanCode.Pipe;
 
-public class PipePublisher<TTopic>
+public class LeanPipePublisher<TTopic>
     where TTopic : ITopic
 {
-    internal IHubContext<PipeSubscriber> HubContext { get; }
+    internal IHubContext<LeanPipeSubscriber> HubContext { get; }
     internal IServiceProvider ServiceProvider { get; }
 
-    public PipePublisher(IHubContext<PipeSubscriber> hubContext, IServiceProvider serviceProvider)
+    public LeanPipePublisher(
+        IHubContext<LeanPipeSubscriber> hubContext,
+        IServiceProvider serviceProvider
+    )
     {
         HubContext = hubContext;
         ServiceProvider = serviceProvider;
@@ -26,10 +29,10 @@ public class PipePublisher<TTopic>
     }
 }
 
-public static class PipePublisherExtensions
+public static class LeanPipePublisherExtensions
 {
     public static async Task PublishAsync<TTopic, TNotification>(
-        this PipePublisher<TTopic> publisher,
+        this LeanPipePublisher<TTopic> publisher,
         IEnumerable<string> keys,
         TTopic topic,
         TNotification notification,
@@ -44,7 +47,7 @@ public static class PipePublisherExtensions
     }
 
     public static async Task PublishAsync<TTopic, TNotification>(
-        this PipePublisher<TTopic> publisher,
+        this LeanPipePublisher<TTopic> publisher,
         TTopic topic,
         TNotification notification,
         CancellationToken ct = default
@@ -63,7 +66,7 @@ public static class PipePublisherExtensions
     }
 
     public static async Task PublishToTopicAsync<TTopic, TNotification>(
-        this PipePublisher<TTopic> publisher,
+        this LeanPipePublisher<TTopic> publisher,
         TTopic topic,
         TNotification notification,
         CancellationToken ct = default

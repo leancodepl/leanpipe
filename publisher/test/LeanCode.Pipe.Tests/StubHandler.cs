@@ -8,13 +8,13 @@ public class StubHandler<T> : ISubscriptionHandler<T>
     public bool SubscribedCalled { get; private set; }
     public bool UnsubscribedCalled { get; private set; }
 
-    public ValueTask OnSubscribedAsync(T topic, PipeSubscriber pipe, PipeContext context)
+    public ValueTask OnSubscribedAsync(T topic, LeanPipeSubscriber pipe, LeanPipeContext context)
     {
         SubscribedCalled = true;
         return new();
     }
 
-    public ValueTask OnUnsubscribedAsync(T topic, PipeSubscriber pipe, PipeContext context)
+    public ValueTask OnUnsubscribedAsync(T topic, LeanPipeSubscriber pipe, LeanPipeContext context)
     {
         UnsubscribedCalled = true;
         return new();
@@ -26,7 +26,7 @@ public class StubHandler : StubHandler<Topic1> { }
 public class DummyKeys<T> : ITopicKeys<T>
     where T : ITopic
 {
-    public ValueTask<IEnumerable<string>> GetForSubscribingAsync(T topic, PipeContext context)
+    public ValueTask<IEnumerable<string>> GetForSubscribingAsync(T topic, LeanPipeContext context)
     {
         return new(Enumerable.Empty<string>());
     }

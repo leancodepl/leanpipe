@@ -2,12 +2,12 @@ using LeanCode.Contracts;
 
 namespace LeanCode.Pipe.TestClient;
 
-public static class PipeTestClientExtensions
+public static class LeanPipeTestClientExtensions
 {
     private static readonly TimeSpan DefaultNotificationAwaitTimeout = TimeSpan.FromSeconds(10);
 
     public static async Task<Guid> SubscribeSuccessAsync<TTopic>(
-        this PipeTestClient client,
+        this LeanPipeTestClient client,
         TTopic topic,
         CancellationToken ct = default
     )
@@ -25,13 +25,13 @@ public static class PipeTestClientExtensions
         else
         {
             throw new InvalidOperationException(
-                "Pipe test client did not manage to subscribe to topic with success."
+                "LeanPipe test client did not manage to subscribe to topic with success."
             );
         }
     }
 
     public static async Task<Guid> UnsubscribeSuccessAsync<TTopic>(
-        this PipeTestClient client,
+        this LeanPipeTestClient client,
         TTopic topic,
         CancellationToken ct = default
     )
@@ -49,13 +49,13 @@ public static class PipeTestClientExtensions
         else
         {
             throw new InvalidOperationException(
-                "Pipe test client did not manage to unsubscribe from topic with success."
+                "LeanPipe test client did not manage to unsubscribe from topic with success."
             );
         }
     }
 
     public static async Task<object> WaitForNextNotificationOn<TTopic>(
-        this PipeTestClient client,
+        this LeanPipeTestClient client,
         TTopic topic,
         TimeSpan? timeout = null,
         CancellationToken ct = default
@@ -64,18 +64,18 @@ public static class PipeTestClientExtensions
     {
         var notificationTask = client.Subscriptions[topic].WaitForNextNotification();
 
-        return await PipeTestClient.AwaitWithTimeout(
+        return await LeanPipeTestClient.AwaitWithTimeout(
                 notificationTask,
                 timeout ?? DefaultNotificationAwaitTimeout,
                 ct
             )
             ?? throw new InvalidOperationException(
-                "Pipe test client did not receive any notification on topic."
+                "LeanPipe test client did not receive any notification on topic."
             );
     }
 
     public static IReadOnlyCollection<object> NotificationsOn<TTopic>(
-        this PipeTestClient client,
+        this LeanPipeTestClient client,
         TTopic topic
     )
         where TTopic : ITopic

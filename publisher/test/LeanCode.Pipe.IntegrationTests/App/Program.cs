@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 var appBuilder = WebApplication.CreateBuilder(args);
 var services = appBuilder.Services;
 
-services.AddPipe(PipeTypes, PipeTypes);
+services.AddLeanPipe(LeanPipeTypes, LeanPipeTypes);
 
 services.AddSingleton<IRoleRegistration, AppRoles>();
 services.AddSingleton<RoleRegistry>();
@@ -26,14 +26,14 @@ using var app = appBuilder.Build();
 app.UseRouting();
 app.UseAuthentication();
 
-app.MapPipe("/pipe");
+app.MapLeanPipe("/leanpipe");
 
 app.MapPost(
     "/publish_basic",
     async (
         HttpContext ctx,
         NotificationDataDTO notificationData,
-        PipePublisher<BasicTopic> publisher
+        LeanPipePublisher<BasicTopic> publisher
     ) =>
     {
         var topic = new BasicTopic { TopicId = notificationData.TopicId };
@@ -52,7 +52,7 @@ app.MapPost(
     async (
         HttpContext ctx,
         NotificationDataDTO notificationData,
-        PipePublisher<AuthorizedTopic> publisher
+        LeanPipePublisher<AuthorizedTopic> publisher
     ) =>
     {
         var topic = new AuthorizedTopic { TopicId = notificationData.TopicId };
@@ -70,5 +70,5 @@ app.Run();
 
 public partial class Program
 {
-    public static readonly TypesCatalog PipeTypes = TypesCatalog.Of<BasicTopic>();
+    public static readonly TypesCatalog LeanPipeTypes = TypesCatalog.Of<BasicTopic>();
 }

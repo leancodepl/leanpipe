@@ -4,22 +4,22 @@ using Microsoft.AspNetCore.Routing;
 
 namespace LeanCode.Pipe;
 
-public static class PipeEndpointRouteBuilderExtensions
+public static class LeanPipeEndpointRouteBuilderExtensions
 {
-    public static IHubEndpointConventionBuilder MapPipe(
+    public static IHubEndpointConventionBuilder MapLeanPipe(
         this IEndpointRouteBuilder endpoints,
         string pattern
     )
     {
-        return endpoints.MapHub<PipeSubscriber>(pattern);
+        return endpoints.MapHub<LeanPipeSubscriber>(pattern);
     }
 
-    public static IHubEndpointConventionBuilder MapPipe(
+    public static IHubEndpointConventionBuilder MapLeanPipe(
         this IEndpointRouteBuilder endpoints,
         string pattern,
         Action<HttpConnectionDispatcherOptions>? configureOptions
     )
     {
-        return endpoints.MapHub<PipeSubscriber>(pattern, configureOptions);
+        return endpoints.MapHub<LeanPipeSubscriber>(pattern, configureOptions);
     }
 }
