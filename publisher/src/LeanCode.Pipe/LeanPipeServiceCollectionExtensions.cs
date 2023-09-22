@@ -70,7 +70,11 @@ public class LeanPipeServicesBuilder
             typeof(ISubscriptionHandler<>),
             ServiceLifetime.Transient
         );
-        Services.RegisterGenericTypes(newHandlers, typeof(ISubscribingKeys<>), ServiceLifetime.Transient);
+        Services.RegisterGenericTypes(
+            newHandlers,
+            typeof(ISubscribingKeys<>),
+            ServiceLifetime.Transient
+        );
         Services.RegisterGenericTypes(
             newHandlers,
             typeof(IPublishingKeys<,>),
