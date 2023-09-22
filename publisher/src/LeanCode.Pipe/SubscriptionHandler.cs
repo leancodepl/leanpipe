@@ -23,11 +23,11 @@ public interface ISubscriptionHandler<in TTopic>
 public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
     where TTopic : ITopic
 {
-    private readonly ITopicKeys<TTopic> topicKeys;
+    private readonly ISubscribingKeys<TTopic> subscribingKeys;
 
-    public KeyedSubscriptionHandler(ITopicKeys<TTopic> topicKeys)
+    public KeyedSubscriptionHandler(ISubscribingKeys<TTopic> subscribingKeys)
     {
-        this.topicKeys = topicKeys;
+        this.subscribingKeys = subscribingKeys;
     }
 
     public async ValueTask<bool> OnSubscribedAsync(
@@ -36,7 +36,7 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
         LeanPipeContext context
     )
     {
-        var keys = await topicKeys.GetForSubscribingAsync(topic, context);
+        var keys = await subscribingKeys.GetForSubscribingAsync(topic, context);
 
         var tasks = keys.Select(
             key =>
@@ -61,7 +61,7 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
         // With this implementation there is a problem of "higher level" groups:
         // if we subscribe to topic.something and topic.something.specific,
         // then we do not know when to unsubscribe from topic.something
-        var keys = await topicKeys.GetForSubscribingAsync(topic, context);
+        var keys = await subscribingKeys.GetForSubscribingAsync(topic, context);
 
         var tasks = keys.Select(
             key =>

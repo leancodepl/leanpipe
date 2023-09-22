@@ -70,13 +70,17 @@ public class LeanPipeServicesBuilder
             typeof(ISubscriptionHandler<>),
             ServiceLifetime.Transient
         );
-        Services.RegisterGenericTypes(newHandlers, typeof(ITopicKeys<>), ServiceLifetime.Transient);
         Services.RegisterGenericTypes(
             newHandlers,
-            typeof(INotificationKeys<,>),
+            typeof(ISubscribingKeys<>),
             ServiceLifetime.Transient
         );
-        VerifyNotificationKeysImplementations();
+        Services.RegisterGenericTypes(
+            newHandlers,
+            typeof(IPublishingKeys<,>),
+            ServiceLifetime.Transient
+        );
+        VerifyPublishingKeysImplementations();
         return this;
     }
 
@@ -99,9 +103,9 @@ public class LeanPipeServicesBuilder
         }
     }
 
-    private void VerifyNotificationKeysImplementations()
+    private void VerifyPublishingKeysImplementations()
     {
-        var notificationKeysType = typeof(INotificationKeys<,>);
+        var notificationKeysType = typeof(IPublishingKeys<,>);
         var typesToCheck = new HashSet<(Type, Type)>();
 
         foreach (var service in Services)
@@ -120,18 +124,18 @@ public class LeanPipeServicesBuilder
 
         foreach (var (topicType, keysType) in typesToCheck)
         {
-            VerifyNotificationKeys(topicType, keysType);
+            VerifyPublishingKeys(topicType, keysType);
         }
     }
 
-    private static void VerifyNotificationKeys(Type topicType, Type keysType)
+    private static void VerifyPublishingKeys(Type topicType, Type keysType)
     {
         var producedNotifications = topicType
             .FindInterfaces(Filter, typeof(IProduceNotification<>))
             .Select(t => t.GenericTypeArguments[0])
             .ToHashSet();
         var implementedKeys = keysType
-            .FindInterfaces(Filter, typeof(INotificationKeys<,>))
+            .FindInterfaces(Filter, typeof(IPublishingKeys<,>))
             .Select(t => t.GenericTypeArguments[1])
             .ToHashSet();
 
@@ -140,9 +144,9 @@ public class LeanPipeServicesBuilder
         if (implementedKeys.Count > 0 && missing.Any())
         {
             var msg = $"""
-            If topic keys implements `INotificationKeys`, it needs to be implemented for all notification types.
+            Topic must have implemented `IPublishingKeys` for all notification types.
             The class `{keysType.FullName}` is missing following implementations:
-            {string.Join(", ", missing.Select(t => $"  - INotificationKeys<{topicType.Name}, {t.Name}>"))}
+            {string.Join(", ", missing.Select(t => $"  - IPublishingKeys<{topicType.Name}, {t.Name}>"))}
             """;
             throw new InvalidOperationException(msg);
         }

@@ -8,17 +8,17 @@ namespace LeanCode.Pipe.IntegrationTests;
 
 public static class PublishingExtensions
 {
-    public static Task PublishToBasicTopicAndAwaitNotificationAsync<TNotification>(
+    public static Task PublishToSimpleTopicAndAwaitNotificationAsync<TNotification>(
         this HttpClient client,
         NotificationDataDTO notificationData,
         LeanPipeTestClient leanPipeClient,
-        BasicTopic topic,
+        SimpleTopic topic,
         TNotification expectedNotification
     )
     {
         return PostToPublishAndCheckNotificationAsync(
             client,
-            "/publish_basic",
+            "/publish_simple",
             notificationData,
             leanPipeClient,
             topic,
@@ -26,14 +26,44 @@ public static class PublishingExtensions
         );
     }
 
-    public static Task PublishToBasicTopicAndAwaitNoNotificationsAsync(
+    public static Task PublishToSimpleTopicAndAwaitNoNotificationsAsync(
         this HttpClient client,
         NotificationDataDTO notificationData
     )
     {
         return PostToPublishAndAwaitNoNotificationsAsync(
             client,
-            "/publish_basic",
+            "/publish_simple",
+            notificationData
+        );
+    }
+
+    public static Task PublishToDynamicTopicAndAwaitNotificationAsync<TNotification>(
+        this HttpClient client,
+        ProjectNotificationDataDTO notificationData,
+        LeanPipeTestClient leanPipeClient,
+        MyFavouriteProjectsTopic topic,
+        TNotification expectedNotification
+    )
+    {
+        return PostToPublishAndCheckNotificationAsync(
+            client,
+            "/publish_dynamic",
+            notificationData,
+            leanPipeClient,
+            topic,
+            expectedNotification
+        );
+    }
+
+    public static Task PublishToDynamicTopicAndAwaitNoNotificationsAsync(
+        this HttpClient client,
+        ProjectNotificationDataDTO notificationData
+    )
+    {
+        return PostToPublishAndAwaitNoNotificationsAsync(
+            client,
+            "/publish_dynamic",
             notificationData
         );
     }

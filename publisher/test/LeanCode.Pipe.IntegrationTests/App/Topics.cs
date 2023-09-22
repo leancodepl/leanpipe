@@ -4,13 +4,19 @@ using LeanCode.Contracts.Security;
 namespace LeanCode.Pipe.IntegrationTests.App;
 
 [AllowUnauthorized]
-public class BasicTopic
+public class SimpleTopic
     : ITopic,
         IProduceNotification<GreetingNotificationDTO>,
         IProduceNotification<FarewellNotificationDTO>
 {
     public Guid TopicId { get; set; }
 }
+
+[AuthorizeWhenHasAnyOf(AuthConfig.Roles.User)]
+public class MyFavouriteProjectsTopic
+    : ITopic,
+        IProduceNotification<ProjectUpdatedNotificationDTO>,
+        IProduceNotification<ProjectDeletedNotificationDTO> { }
 
 [AuthorizeWhenHasAnyOf(AuthConfig.Roles.User)]
 public class AuthorizedTopic
@@ -32,4 +38,14 @@ public class GreetingNotificationDTO
 public class FarewellNotificationDTO
 {
     public string Farewell { get; set; } = default!;
+}
+
+public class ProjectUpdatedNotificationDTO
+{
+    public Guid ProjectId { get; set; }
+}
+
+public class ProjectDeletedNotificationDTO
+{
+    public Guid ProjectId { get; set; }
 }

@@ -29,16 +29,35 @@ app.UseAuthentication();
 app.MapLeanPipe("/leanpipe");
 
 app.MapPost(
-    "/publish_basic",
+    "/publish_simple",
     async (
         HttpContext ctx,
         NotificationDataDTO notificationData,
-        LeanPipePublisher<BasicTopic> publisher
+        LeanPipePublisher<SimpleTopic> publisher
     ) =>
     {
-        var topic = new BasicTopic { TopicId = notificationData.TopicId };
+        var topic = new SimpleTopic { TopicId = notificationData.TopicId };
 
         await ApiHandlers.PublishGreetingOrFarewellAsync(
+            publisher,
+            topic,
+            notificationData,
+            ctx.RequestAborted
+        );
+    }
+);
+
+app.MapPost(
+    "/publish_dynamic",
+    async (
+        HttpContext ctx,
+        ProjectNotificationDataDTO notificationData,
+        LeanPipePublisher<MyFavouriteProjectsTopic> publisher
+    ) =>
+    {
+        var topic = new MyFavouriteProjectsTopic();
+
+        await ApiHandlers.PublishProjectUpdatedOrDeletedAsync(
             publisher,
             topic,
             notificationData,
@@ -70,5 +89,5 @@ app.Run();
 
 public partial class Program
 {
-    public static readonly TypesCatalog LeanPipeTypes = TypesCatalog.Of<BasicTopic>();
+    public static readonly TypesCatalog LeanPipeTypes = TypesCatalog.Of<SimpleTopic>();
 }
