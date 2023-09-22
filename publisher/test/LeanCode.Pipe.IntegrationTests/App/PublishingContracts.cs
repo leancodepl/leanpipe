@@ -12,3 +12,15 @@ public enum NotificationKindDTO
     Greeting = 1,
     Farewell = 2,
 }
+
+public class ProjectNotificationDataDTO
+{
+    public Guid ProjectId { get; set; }
+    public ProjectNotificationKindDTO Kind { get; set; }
+}
+
+public enum ProjectNotificationKindDTO
+{
+    Updated = 1,
+    Deleted = 2,
+}

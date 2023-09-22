@@ -48,6 +48,25 @@ app.MapPost(
 );
 
 app.MapPost(
+    "/publish_dynamic",
+    async (
+        HttpContext ctx,
+        ProjectNotificationDataDTO notificationData,
+        LeanPipePublisher<MyFavouriteProjectsTopic> publisher
+    ) =>
+    {
+        var topic = new MyFavouriteProjectsTopic();
+
+        await ApiHandlers.PublishProjectUpdatedOrDeletedAsync(
+            publisher,
+            topic,
+            notificationData,
+            ctx.RequestAborted
+        );
+    }
+);
+
+app.MapPost(
     "/publish_authorized",
     async (
         HttpContext ctx,

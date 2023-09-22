@@ -38,6 +38,36 @@ public static class PublishingExtensions
         );
     }
 
+    public static Task PublishToDynamicTopicAndAwaitNotificationAsync<TNotification>(
+        this HttpClient client,
+        ProjectNotificationDataDTO notificationData,
+        LeanPipeTestClient leanPipeClient,
+        MyFavouriteProjectsTopic topic,
+        TNotification expectedNotification
+    )
+    {
+        return PostToPublishAndCheckNotificationAsync(
+            client,
+            "/publish_dynamic",
+            notificationData,
+            leanPipeClient,
+            topic,
+            expectedNotification
+        );
+    }
+
+    public static Task PublishToDynamicTopicAndAwaitNoNotificationsAsync(
+        this HttpClient client,
+        ProjectNotificationDataDTO notificationData
+    )
+    {
+        return PostToPublishAndAwaitNoNotificationsAsync(
+            client,
+            "/publish_dynamic",
+            notificationData
+        );
+    }
+
     public static Task PublishToAuthorizedTopicAndAwaitNotificationAsync<TNotification>(
         this HttpClient client,
         NotificationDataDTO notificationData,
