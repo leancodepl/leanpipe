@@ -2,17 +2,13 @@ using LeanCode.Contracts;
 
 namespace LeanCode.Pipe;
 
-public interface ITopicKeys<in TTopic>
+public interface ISubscribingKeys<in TTopic>
     where TTopic : ITopic
 {
     ValueTask<IEnumerable<string>> GetForSubscribingAsync(TTopic topic, LeanPipeContext context);
-    ValueTask<IEnumerable<string>> GetForPublishingAsync(
-        TTopic topic,
-        CancellationToken ct = default
-    );
 }
 
-public interface INotificationKeys<in TTopic, TNotification> : ITopicKeys<TTopic>
+public interface IPublishingKeys<in TTopic, TNotification> : ISubscribingKeys<TTopic>
     where TTopic : ITopic, IProduceNotification<TNotification>
     where TNotification : notnull
 {
@@ -21,20 +17,4 @@ public interface INotificationKeys<in TTopic, TNotification> : ITopicKeys<TTopic
         TNotification notification,
         CancellationToken ct = default
     );
-}
-
-public abstract class BasicTopicKeys<TTopic> : ITopicKeys<TTopic>
-    where TTopic : ITopic
-{
-    public abstract IEnumerable<string> Get(TTopic topic);
-
-    public ValueTask<IEnumerable<string>> GetForSubscribingAsync(
-        TTopic topic,
-        LeanPipeContext context
-    ) => ValueTask.FromResult(Get(topic));
-
-    public ValueTask<IEnumerable<string>> GetForPublishingAsync(
-        TTopic topic,
-        CancellationToken ct = default
-    ) => ValueTask.FromResult(Get(topic));
 }

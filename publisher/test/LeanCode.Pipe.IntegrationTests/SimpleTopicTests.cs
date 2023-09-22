@@ -5,12 +5,12 @@ using Xunit;
 
 namespace LeanCode.Pipe.IntegrationTests;
 
-public class BasicTopicTests : TestApplicationFactory
+public class SimpleTopicTests : TestApplicationFactory
 {
     private readonly HttpClient httpClient;
     private readonly LeanPipeTestClient leanPipeClient;
 
-    public BasicTopicTests()
+    public SimpleTopicTests()
     {
         httpClient = CreateClient();
         leanPipeClient = CreateLeanPipeTestClient(AuthenticatedAs.NotAuthenticated);
@@ -19,12 +19,12 @@ public class BasicTopicTests : TestApplicationFactory
     [Fact]
     public async Task Subscriber_receives_both_kinds_of_notifications_when_subscribed()
     {
-        var topic = new BasicTopic { TopicId = Guid.NewGuid() };
+        var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
         await leanPipeClient.SubscribeSuccessAsync(topic);
         leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
 
-        await httpClient.PublishToBasicTopicAndAwaitNotificationAsync(
+        await httpClient.PublishToSimpleTopicAndAwaitNotificationAsync(
             new()
             {
                 TopicId = topic.TopicId,
@@ -36,7 +36,7 @@ public class BasicTopicTests : TestApplicationFactory
             new GreetingNotificationDTO { Greeting = "Hello Tester" }
         );
 
-        await httpClient.PublishToBasicTopicAndAwaitNotificationAsync(
+        await httpClient.PublishToSimpleTopicAndAwaitNotificationAsync(
             new()
             {
                 TopicId = topic.TopicId,
@@ -50,7 +50,7 @@ public class BasicTopicTests : TestApplicationFactory
 
         await leanPipeClient.UnsubscribeSuccessAsync(topic);
 
-        await httpClient.PublishToBasicTopicAndAwaitNoNotificationsAsync(
+        await httpClient.PublishToSimpleTopicAndAwaitNoNotificationsAsync(
             new()
             {
                 TopicId = topic.TopicId,
@@ -65,12 +65,12 @@ public class BasicTopicTests : TestApplicationFactory
     [Fact]
     public async Task Subscriber_does_not_receive_messages_from_other_topic_instances()
     {
-        var topic = new BasicTopic { TopicId = Guid.NewGuid() };
-        var otherTopic = new BasicTopic { TopicId = Guid.NewGuid() };
+        var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
+        var otherTopic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
         await leanPipeClient.SubscribeSuccessAsync(topic);
 
-        await httpClient.PublishToBasicTopicAndAwaitNoNotificationsAsync(
+        await httpClient.PublishToSimpleTopicAndAwaitNoNotificationsAsync(
             new()
             {
                 TopicId = otherTopic.TopicId,
@@ -88,12 +88,12 @@ public class BasicTopicTests : TestApplicationFactory
     [Fact]
     public async Task Resubscribing_after_disconnect_works()
     {
-        var topic = new BasicTopic { TopicId = Guid.NewGuid() };
+        var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
         await leanPipeClient.SubscribeSuccessAsync(topic);
         leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
 
-        await httpClient.PublishToBasicTopicAndAwaitNotificationAsync(
+        await httpClient.PublishToSimpleTopicAndAwaitNotificationAsync(
             new()
             {
                 TopicId = topic.TopicId,
@@ -108,7 +108,7 @@ public class BasicTopicTests : TestApplicationFactory
         await leanPipeClient.DisconnectAsync();
         await leanPipeClient.SubscribeSuccessAsync(topic);
 
-        await httpClient.PublishToBasicTopicAndAwaitNotificationAsync(
+        await httpClient.PublishToSimpleTopicAndAwaitNotificationAsync(
             new()
             {
                 TopicId = topic.TopicId,

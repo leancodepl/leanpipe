@@ -72,7 +72,7 @@ public class LeanPipeServiceCollectionExtensionsTests
     {
         var collection = new ServiceCollection();
         collection.AddLeanPipe(ThisCatalog, ThisCatalog);
-        collection.AddTransient<ITopicKeys<Topic2>, DummyKeys<Topic2>>();
+        collection.AddTransient<ISubscribingKeys<Topic2>, DummyKeys<Topic2>>();
         var provider = collection.BuildServiceProvider();
 
         provider
@@ -89,7 +89,7 @@ public class LeanPipeServiceCollectionExtensionsTests
         var provider = collection.BuildServiceProvider();
 
         provider
-            .GetRequiredService<ITopicKeys<TopicWithAllKeys>>()
+            .GetRequiredService<ISubscribingKeys<TopicWithAllKeys>>()
             .Should()
             .BeOfType<TopicWithAllKeysKeys>();
     }
@@ -115,11 +115,11 @@ public class LeanPipeServiceCollectionExtensionsTests
         var provider = collection.BuildServiceProvider();
 
         provider
-            .GetRequiredService<INotificationKeys<TopicWithAllKeys, Notification1>>()
+            .GetRequiredService<IPublishingKeys<TopicWithAllKeys, Notification1>>()
             .Should()
             .BeOfType<TopicWithAllKeysKeys>();
         provider
-            .GetRequiredService<INotificationKeys<TopicWithAllKeys, Notification2>>()
+            .GetRequiredService<IPublishingKeys<TopicWithAllKeys, Notification2>>()
             .Should()
             .BeOfType<TopicWithAllKeysKeys>();
     }

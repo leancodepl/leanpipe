@@ -70,10 +70,10 @@ public class LeanPipeServicesBuilder
             typeof(ISubscriptionHandler<>),
             ServiceLifetime.Transient
         );
-        Services.RegisterGenericTypes(newHandlers, typeof(ITopicKeys<>), ServiceLifetime.Transient);
+        Services.RegisterGenericTypes(newHandlers, typeof(ISubscribingKeys<>), ServiceLifetime.Transient);
         Services.RegisterGenericTypes(
             newHandlers,
-            typeof(INotificationKeys<,>),
+            typeof(IPublishingKeys<,>),
             ServiceLifetime.Transient
         );
         VerifyNotificationKeysImplementations();
@@ -101,7 +101,7 @@ public class LeanPipeServicesBuilder
 
     private void VerifyNotificationKeysImplementations()
     {
-        var notificationKeysType = typeof(INotificationKeys<,>);
+        var notificationKeysType = typeof(IPublishingKeys<,>);
         var typesToCheck = new HashSet<(Type, Type)>();
 
         foreach (var service in Services)
@@ -131,7 +131,7 @@ public class LeanPipeServicesBuilder
             .Select(t => t.GenericTypeArguments[0])
             .ToHashSet();
         var implementedKeys = keysType
-            .FindInterfaces(Filter, typeof(INotificationKeys<,>))
+            .FindInterfaces(Filter, typeof(IPublishingKeys<,>))
             .Select(t => t.GenericTypeArguments[1])
             .ToHashSet();
 

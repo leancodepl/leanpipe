@@ -4,7 +4,7 @@ using LeanCode.Contracts.Security;
 namespace LeanCode.Pipe.IntegrationTests.App;
 
 [AllowUnauthorized]
-public class BasicTopic
+public class SimpleTopic
     : ITopic,
         IProduceNotification<GreetingNotificationDTO>,
         IProduceNotification<FarewellNotificationDTO>

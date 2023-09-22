@@ -56,26 +56,10 @@ public static class LeanPipePublisherExtensions
         where TNotification : notnull
     {
         var notificationKeys = publisher.ServiceProvider.GetRequiredService<
-            INotificationKeys<TTopic, TNotification>
+            IPublishingKeys<TTopic, TNotification>
         >();
 
         var keys = await notificationKeys.GetForPublishingAsync(topic, notification, ct);
-        var payload = NotificationEnvelope.Create(topic, notification);
-
-        await publisher.PublishAsync(keys, payload, ct);
-    }
-
-    public static async Task PublishToTopicAsync<TTopic, TNotification>(
-        this LeanPipePublisher<TTopic> publisher,
-        TTopic topic,
-        TNotification notification,
-        CancellationToken ct = default
-    )
-        where TTopic : ITopic, IProduceNotification<TNotification>
-        where TNotification : notnull
-    {
-        var topicKeys = publisher.ServiceProvider.GetRequiredService<ITopicKeys<TTopic>>();
-        var keys = await topicKeys.GetForPublishingAsync(topic, ct);
         var payload = NotificationEnvelope.Create(topic, notification);
 
         await publisher.PublishAsync(keys, payload, ct);

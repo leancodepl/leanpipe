@@ -11,9 +11,9 @@ public class Notification1 { }
 
 public class Notification2 { }
 
-public class TopicWithoutAllKeysKeys
-    : ITopicKeys<TopicWithoutAllKeys>,
-        INotificationKeys<TopicWithoutAllKeys, Notification1>
+public class SubscribingWithoutAllKeysKeys
+    : ISubscribingKeys<TopicWithoutAllKeys>,
+        IPublishingKeys<TopicWithoutAllKeys, Notification1>
 {
     public ValueTask<IEnumerable<string>> GetForSubscribingAsync(
         TopicWithoutAllKeys topic,

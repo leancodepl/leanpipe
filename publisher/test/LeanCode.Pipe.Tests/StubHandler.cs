@@ -31,7 +31,7 @@ public class StubHandler<T> : ISubscriptionHandler<T>
 
 public class StubHandler : StubHandler<Topic1> { }
 
-public class DummyKeys<T> : ITopicKeys<T>
+public class DummyKeys<T> : ISubscribingKeys<T>
     where T : ITopic
 {
     public ValueTask<IEnumerable<string>> GetForSubscribingAsync(T topic, LeanPipeContext context)
@@ -50,8 +50,8 @@ public class DummyKeys<T> : ITopicKeys<T>
 
 public class TopicWithAllKeysKeys
     : DummyKeys<TopicWithAllKeys>,
-        INotificationKeys<TopicWithAllKeys, Notification1>,
-        INotificationKeys<TopicWithAllKeys, Notification2>
+        IPublishingKeys<TopicWithAllKeys, Notification1>,
+        IPublishingKeys<TopicWithAllKeys, Notification2>
 {
     public ValueTask<IEnumerable<string>> GetForPublishingAsync(
         TopicWithAllKeys topic,
