@@ -1,0 +1,30 @@
+name: dart publish
+
+on:
+  push:
+    tags: ["dart-v*"]
+
+jobs:
+  publish:
+    name: Publish to pub.dev
+
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+
+    defaults:
+      run:
+        working-directory: dart
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: 3.1.2
+
+      - name: Publish
+        run: dart pub publish -f

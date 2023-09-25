@@ -1,0 +1,48 @@
+name: dart test
+
+on:
+  push:
+    branches: [main]
+    tags-ignore: ["dart-v*"]
+    paths:
+      - "dart/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "dart/**"
+
+jobs:
+  test:
+    name: Dart ${{ matrix.version }}
+
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        version: ["3.1.2"]
+
+    defaults:
+      run:
+        working-directory: dart
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.version }}
+
+      - name: Download pub dependencies
+        run: dart pub get
+
+      - name: Run analyzer
+        run: dart analyze
+
+      - name: Run tests
+        run: dart test
+
+      - name: Dry run pub publish
+        # We don't want it to fail the CI, it's just to see how would `pub publish` behave.
+        run: dart pub publish --dry-run || true
