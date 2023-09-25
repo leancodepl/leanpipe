@@ -1,5 +1,5 @@
 abstract interface class Topic<Notification extends Object> {
-  Notification? castNotification(String fullName, dynamic json);
+  Notification? castNotification(String tag, dynamic json);
 
   String getFullName();
 
