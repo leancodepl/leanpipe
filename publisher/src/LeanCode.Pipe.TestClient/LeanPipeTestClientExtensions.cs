@@ -74,6 +74,7 @@ public static class LeanPipeTestClientExtensions
             );
     }
 
+    /// <returns>A FIFO collection of received notifications on topic instance.</returns>
     public static IReadOnlyCollection<object> NotificationsOn<TTopic>(
         this LeanPipeTestClient client,
         TTopic topic

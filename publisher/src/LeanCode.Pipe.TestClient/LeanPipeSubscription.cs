@@ -8,10 +8,14 @@ public class LeanPipeSubscription
     private readonly object notificationMutex = new();
     private TaskCompletionSource<object> nextMessageAwaiter =
         new(TaskCreationOptions.RunContinuationsAsynchronously);
-    private readonly ConcurrentStack<object> receivedNotifications = new();
+    private readonly ConcurrentQueue<object> receivedNotifications = new();
 
     public ITopic Topic { get; private init; }
     public Guid? SubscriptionId { get; private set; }
+
+    /// <summary>
+    /// A FIFO collection of received notifications.
+    /// </summary>
     public IReadOnlyCollection<object> ReceivedNotifications => receivedNotifications;
 
     public LeanPipeSubscription(ITopic topic, Guid? subscriptionId)
@@ -32,7 +36,7 @@ public class LeanPipeSubscription
 
     public void AddNotification(object notification)
     {
-        receivedNotifications.Push(notification);
+        receivedNotifications.Enqueue(notification);
 
         lock (notificationMutex)
         {
