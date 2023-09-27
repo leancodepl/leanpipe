@@ -8,6 +8,11 @@ namespace LeanCode.Pipe;
 
 public static class LeanPipeServiceCollectionExtensions
 {
+    /// <summary>
+    /// Adds all classes required for LeanPipe to function to DI.
+    /// </summary>
+    /// <returns>Service builder allowing for overriding default LeanPipe implementations
+    /// and further configuration.</returns>
     public static LeanPipeServicesBuilder AddLeanPipe(
         this IServiceCollection services,
         TypesCatalog topics,
@@ -28,6 +33,10 @@ public static class LeanPipeServiceCollectionExtensions
     }
 }
 
+/// <summary>
+/// Allows for overriding default LeanPipe implementations
+/// and further configuration.
+/// </summary>
 public class LeanPipeServicesBuilder
 {
     public IServiceCollection Services { get; }
@@ -43,6 +52,9 @@ public class LeanPipeServicesBuilder
         Services.AddSingleton<IEnvelopeDeserializer>(new DefaultEnvelopeDeserializer(topics, null));
     }
 
+    /// <summary>
+    /// Overrides serializing options used in subscription envelope deserializer.
+    /// </summary>
     public LeanPipeServicesBuilder WithEnvelopeDeserializerOptions(JsonSerializerOptions options)
     {
         this.options = options;
@@ -50,12 +62,18 @@ public class LeanPipeServicesBuilder
         return this;
     }
 
+    /// <summary>
+    /// Overrides subscription envelope deserializer.
+    /// </summary>
     public LeanPipeServicesBuilder WithEnvelopeDeserializer(IEnvelopeDeserializer deserializer)
     {
         Services.Replace(new ServiceDescriptor(typeof(IEnvelopeDeserializer), deserializer));
         return this;
     }
 
+    /// <summary>
+    /// Adds topics from another <see cref="TypesCatalog"/>.
+    /// </summary>
     public LeanPipeServicesBuilder AddTopics(TypesCatalog newTopics)
     {
         topics = topics.Merge(newTopics);
@@ -63,6 +81,9 @@ public class LeanPipeServicesBuilder
         return this;
     }
 
+    /// <summary>
+    /// Adds subscription handlers and keys generators from another <see cref="TypesCatalog"/>.
+    /// </summary>
     public LeanPipeServicesBuilder AddHandlers(TypesCatalog newHandlers)
     {
         Services.RegisterGenericTypes(

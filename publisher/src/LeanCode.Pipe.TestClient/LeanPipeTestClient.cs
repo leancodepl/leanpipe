@@ -11,6 +11,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LeanCode.Pipe.TestClient;
 
+/// <summary>
+/// LeanPipe client designed to be used in the integration tests.
+/// </summary>
 public class LeanPipeTestClient : IAsyncDisposable
 {
     private readonly ConcurrentDictionary<ITopic, LeanPipeSubscription> subscriptions =
@@ -23,6 +26,11 @@ public class LeanPipeTestClient : IAsyncDisposable
 
     public IReadOnlyDictionary<ITopic, LeanPipeSubscription> Subscriptions => subscriptions;
 
+    /// <param name="leanPipeUrl">URL on which LeanPipe is exposed at.</param>
+    /// <param name="leanPipeTypes">Type catalog containing all topics and notifications.</param>
+    /// <param name="config">Underneath hub connection config.</param>
+    /// <param name="serializerOptions">Serializer options used for deserializing notifications.</param>
+    /// <param name="subscriptionCompletionTimeout">Time to wait for subscribe/unsubscribe response before considering failure.</param>
     public LeanPipeTestClient(
         Uri leanPipeUrl,
         TypesCatalog leanPipeTypes,
@@ -57,6 +65,7 @@ public class LeanPipeTestClient : IAsyncDisposable
         );
     }
 
+    /// <returns>Unsubscription result, if it doesn't time out.</returns>
     public async Task<SubscriptionResult?> UnsubscribeAsync<TTopic>(
         TTopic topic,
         CancellationToken ct = default
@@ -82,6 +91,8 @@ public class LeanPipeTestClient : IAsyncDisposable
         return result;
     }
 
+    /// <remarks>Connects if there is no active connection.</remarks>
+    /// <returns>Subscription result, if it doesn't time out.</returns>
     public async Task<SubscriptionResult?> SubscribeAsync<TTopic>(
         TTopic topic,
         CancellationToken ct = default
@@ -119,9 +130,7 @@ public class LeanPipeTestClient : IAsyncDisposable
 
     public Task ConnectAsync(CancellationToken ct = default) => hubConnection.StartAsync(ct);
 
-    /// <remarks>
-    /// Also clears all subscriptions.
-    /// </remarks>
+    /// <remarks>Also clears all subscriptions.</remarks>
     public Task DisconnectAsync(CancellationToken ct = default)
     {
         foreach (var subscription in subscriptions.Values)

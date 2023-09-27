@@ -9,6 +9,7 @@ public interface ISubscriptionHandlerWrapper
         LeanPipeSubscriber leanPipeSubscriber,
         LeanPipeContext context
     );
+
     ValueTask<bool> OnUnsubscribedAsync(
         object topic,
         LeanPipeSubscriber leanPipeSubscriber,

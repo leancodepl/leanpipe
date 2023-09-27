@@ -6,6 +6,12 @@ public static class LeanPipeTestClientExtensions
 {
     private static readonly TimeSpan DefaultNotificationAwaitTimeout = TimeSpan.FromSeconds(10);
 
+    /// <summary>
+    /// Subscribe to a topic instance or throw if it fails for any reason.
+    /// </summary>
+    /// <param name="topic">Topic instance to subscribe to.</param>
+    /// <returns>Subscription ID.</returns>
+    /// <exception cref="InvalidOperationException">The subscription failed for any reason.</exception>
     public static async Task<Guid> SubscribeSuccessAsync<TTopic>(
         this LeanPipeTestClient client,
         TTopic topic,
@@ -30,6 +36,12 @@ public static class LeanPipeTestClientExtensions
         }
     }
 
+    /// <summary>
+    /// Unsubscribe from a topic instance or throw if it fails for any reason.
+    /// </summary>
+    /// <param name="topic">Topic instance to unsubscribe from.</param>
+    /// <returns>Subscription ID.</returns>
+    /// <exception cref="InvalidOperationException">The unsubscription failed for any reason.</exception>
     public static async Task<Guid> UnsubscribeSuccessAsync<TTopic>(
         this LeanPipeTestClient client,
         TTopic topic,
@@ -54,6 +66,17 @@ public static class LeanPipeTestClientExtensions
         }
     }
 
+    /// <summary>
+    /// Returns a task, which completes when the next notification on the topic is received.
+    /// </summary>
+    /// <remarks>
+    /// The task should be collected before the action which triggers notification publish
+    /// and awaited after the trigger.
+    /// Otherwise there is a possibility that the notification after the expected one is awaited.</remarks>
+    /// <param name="topic">Topic instance on which notification is to be awaited.</param>
+    /// <param name="timeout">Timeout after which the notification is assumed to be not delivered.</param>
+    /// <returns>Task containing received notification.</returns>
+    /// <exception cref="InvalidOperationException">The topic instance received no notifications during the timeout.</exception>
     public static async Task<object> WaitForNextNotificationOn<TTopic>(
         this LeanPipeTestClient client,
         TTopic topic,

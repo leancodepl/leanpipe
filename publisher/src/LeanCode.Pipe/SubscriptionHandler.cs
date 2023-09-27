@@ -12,7 +12,7 @@ public interface ISubscriptionHandler<in TTopic>
         LeanPipeContext context
     );
 
-    /// <returns>Whether subscription was correctly established.</returns>
+    /// <returns>Whether subscription was correctly severed.</returns>
     ValueTask<bool> OnUnsubscribedAsync(
         TTopic topic,
         LeanPipeSubscriber leanPipeSubscriber,
