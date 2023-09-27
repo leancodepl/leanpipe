@@ -18,9 +18,7 @@ public static class LeanPipeEndpointRouteBuilderExtensions
         return endpoints.MapHub<LeanPipeSubscriber>(pattern);
     }
 
-    /// <summary>
-    /// Maps LeanPipe SignalR hub on the specified endpoint.
-    /// </summary>
+    /// <inheritdoc cref="MapLeanPipe(IEndpointRouteBuilder, string)"/>
     public static IHubEndpointConventionBuilder MapLeanPipe(
         this IEndpointRouteBuilder endpoints,
         [StringSyntax("Route")] string pattern,
