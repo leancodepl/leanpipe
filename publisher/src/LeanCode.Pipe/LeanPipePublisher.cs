@@ -4,6 +4,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LeanCode.Pipe;
 
+/// <summary>
+/// Allows publishing notifications to instances of <see cref="TTopic"/>.
+/// Conveniently used with extension methods from <see cref="LeanPipePublisherExtensions"/>.
+/// </summary>
 public class LeanPipePublisher<TTopic>
     where TTopic : ITopic
 {
@@ -31,6 +35,10 @@ public class LeanPipePublisher<TTopic>
 
 public static class LeanPipePublisherExtensions
 {
+    /// <summary>
+    /// Publishes to topic instance using provided SignalR groups keys.
+    /// Omits publishing keys implemented in <see cref="IPublishingKeys{TTopic,TNotification}"/>.
+    /// </summary>
     public static async Task PublishAsync<TTopic, TNotification>(
         this LeanPipePublisher<TTopic> publisher,
         IEnumerable<string> keys,
@@ -46,6 +54,10 @@ public static class LeanPipePublisherExtensions
         await publisher.PublishAsync(keys, payload, ct);
     }
 
+    /// <summary>
+    /// Publishes to topic instance using SignalR groups keys generated via implementation of
+    /// <see cref="IPublishingKeys{TTopic,TNotification}"/>.
+    /// </summary>
     public static async Task PublishAsync<TTopic, TNotification>(
         this LeanPipePublisher<TTopic> publisher,
         TTopic topic,
