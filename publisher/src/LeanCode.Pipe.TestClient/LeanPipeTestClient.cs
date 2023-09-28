@@ -65,7 +65,7 @@ public class LeanPipeTestClient : IAsyncDisposable
         );
     }
 
-    /// <returns>Unsubscription result, otherwise null if it times out.</returns>
+    /// <returns>Unsubscription result or null if the request times out.</returns>
     public async Task<SubscriptionResult?> UnsubscribeAsync<TTopic>(
         TTopic topic,
         CancellationToken ct = default
@@ -92,7 +92,7 @@ public class LeanPipeTestClient : IAsyncDisposable
     }
 
     /// <remarks>Connects if there is no active connection.</remarks>
-    /// <returns>Subscription result, otherwise null if it times out.</returns>
+    /// <returns>Subscription result or null if the request times out.</returns>
     public async Task<SubscriptionResult?> SubscribeAsync<TTopic>(
         TTopic topic,
         CancellationToken ct = default
