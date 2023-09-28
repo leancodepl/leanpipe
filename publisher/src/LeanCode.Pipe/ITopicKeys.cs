@@ -4,7 +4,7 @@ namespace LeanCode.Pipe;
 
 /// <remarks>
 /// Should be implemented in a single class per topic with <see cref="IPublishingKeys{TTopic,TNotification}"/>
-/// for all topics notifications.
+/// for each of the notifications of the topic.
 /// </remarks>
 public interface ISubscribingKeys<in TTopic>
     where TTopic : ITopic
@@ -20,7 +20,7 @@ public interface IPublishingKeys<in TTopic, TNotification> : ISubscribingKeys<TT
     where TNotification : notnull
 {
     /// <summary>
-    /// Used to generate SignalR groups keys to which send message to.
+    /// Used to generate SignalR groups keys when publishing notifications.
     /// </summary>
     ValueTask<IEnumerable<string>> GetForPublishingAsync(
         TTopic topic,

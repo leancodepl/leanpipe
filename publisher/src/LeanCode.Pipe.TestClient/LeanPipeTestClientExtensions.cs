@@ -70,13 +70,14 @@ public static class LeanPipeTestClientExtensions
     /// Returns a task, which completes when the next notification on the topic is received.
     /// </summary>
     /// <remarks>
-    /// The task should be collected before the action which triggers notification publish
-    /// and awaited after the trigger.
-    /// Otherwise there is a possibility that the notification after the expected one is awaited.</remarks>
-    /// <param name="topic">Topic instance on which notification is to be awaited.</param>
-    /// <param name="timeout">Timeout after which the notification is assumed to be not delivered.</param>
-    /// <returns>Task containing received notification.</returns>
-    /// <exception cref="InvalidOperationException">The topic instance received no notifications during the timeout.</exception>
+    /// The task should be collected before the action that triggers the notification to be published
+    /// and it should be awaited after the triggering event. Otherwise there is a possibility that
+    /// the awaited notification is a notification subsequent to the expected one.
+    /// </remarks>
+    /// <param name="topic">Topic instance, on which notification is to be awaited.</param>
+    /// <param name="timeout">Timeout, after which the notification is assumed to be not delivered.</param>
+    /// <returns>Task containing the received notification.</returns>
+    /// <exception cref="InvalidOperationException">The topic instance received no notifications before the timeout.</exception>
     public static async Task<object> WaitForNextNotificationOn<TTopic>(
         this LeanPipeTestClient client,
         TTopic topic,

@@ -28,7 +28,7 @@ public class LeanPipeTestClient : IAsyncDisposable
 
     /// <param name="leanPipeUrl">URL on which LeanPipe is exposed at.</param>
     /// <param name="leanPipeTypes">Type catalog containing all topics and notifications.</param>
-    /// <param name="config">Underneath hub connection config.</param>
+    /// <param name="config">Underlying hub connection config.</param>
     /// <param name="serializerOptions">Serializer options used for deserializing notifications.</param>
     /// <param name="subscriptionCompletionTimeout">Time to wait for subscribe/unsubscribe response before considering failure.</param>
     public LeanPipeTestClient(
@@ -65,7 +65,7 @@ public class LeanPipeTestClient : IAsyncDisposable
         );
     }
 
-    /// <returns>Unsubscription result, if it doesn't time out.</returns>
+    /// <returns>Unsubscription result or null if the request times out.</returns>
     public async Task<SubscriptionResult?> UnsubscribeAsync<TTopic>(
         TTopic topic,
         CancellationToken ct = default
@@ -92,7 +92,7 @@ public class LeanPipeTestClient : IAsyncDisposable
     }
 
     /// <remarks>Connects if there is no active connection.</remarks>
-    /// <returns>Subscription result, if it doesn't time out.</returns>
+    /// <returns>Subscription result or null if the request times out.</returns>
     public async Task<SubscriptionResult?> SubscribeAsync<TTopic>(
         TTopic topic,
         CancellationToken ct = default
