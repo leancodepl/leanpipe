@@ -12,7 +12,6 @@ public static class LeanPipeTestClientExtensions
     /// <param name="topic">Topic instance to subscribe to.</param>
     /// <returns>Subscription ID.</returns>
     /// <exception cref="InvalidOperationException">The subscription failed for any reason.</exception>
-    /// <exception cref="TimeoutException">No result was received within set timeout.</exception>
     public static async Task<Guid> SubscribeSuccessAsync<TTopic>(
         this LeanPipeTestClient client,
         TTopic topic,
@@ -43,7 +42,6 @@ public static class LeanPipeTestClientExtensions
     /// <param name="topic">Topic instance to unsubscribe from.</param>
     /// <returns>Subscription ID.</returns>
     /// <exception cref="InvalidOperationException">The unsubscription failed for any reason.</exception>
-    /// <exception cref="TimeoutException">No result was received within set timeout.</exception>
     public static async Task<Guid> UnsubscribeSuccessAsync<TTopic>(
         this LeanPipeTestClient client,
         TTopic topic,
@@ -80,7 +78,6 @@ public static class LeanPipeTestClientExtensions
     /// <param name="notificationPredicate">Specifies notification to wait for.</param>
     /// <param name="timeout">Timeout, after which the notification is assumed to be not delivered.</param>
     /// <returns>Task containing the received notification.</returns>
-    /// <exception cref="TimeoutException">The topic instance received no notifications before the timeout.</exception>
     public static Task<object> WaitForNextNotificationOn<TTopic>(
         this LeanPipeTestClient client,
         TTopic topic,
@@ -123,7 +120,7 @@ public static class LeanPipeTestClientExtensions
         TimeSpan? timeout = null,
         CancellationToken ct = default
     )
-        where TTopic : ITopic, IProduceNotification<TNotification>
+        where TTopic : ITopic
         where TNotification : notnull
     {
         notificationPredicate ??= _ => true;
