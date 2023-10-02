@@ -45,10 +45,22 @@ public class LeanPipeSubscription
         }
     }
 
-    public Task<object> WaitForNextNotification()
+    public Task<object> WaitForNextNotification(CancellationToken ct = default)
     {
         lock (notificationMutex)
         {
+            if (ct.CanBeCanceled)
+            {
+                if (ct.IsCancellationRequested)
+                {
+                    nextMessageAwaiter.TrySetCanceled(ct);
+                }
+                else
+                {
+                    ct.Register(() => nextMessageAwaiter.TrySetCanceled(ct));
+                }
+            }
+
             return nextMessageAwaiter.Task;
         }
     }
