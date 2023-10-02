@@ -78,7 +78,7 @@ public static class LeanPipeTestClientExtensions
     /// <param name="notificationPredicate">Specifies notification to wait for.</param>
     /// <param name="timeout">Timeout, after which the notification is assumed to be not delivered.</param>
     /// <returns>Task containing the received notification.</returns>
-    public static Task<object> WaitForNextNotificationOn<TTopic>(
+    public static async Task<object> WaitForNextNotificationOn<TTopic>(
         this LeanPipeTestClient client,
         TTopic topic,
         Func<object, bool>? notificationPredicate = null,
@@ -89,23 +89,18 @@ public static class LeanPipeTestClientExtensions
     {
         notificationPredicate ??= _ => true;
 
-        return WaitAsync();
+        object notification;
 
-        async Task<object> WaitAsync()
-        {
-            object msg;
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        cts.CancelAfter(timeout ?? DefaultNotificationAwaitTimeout);
 
-            using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-            cts.CancelAfter(timeout ?? DefaultNotificationAwaitTimeout);
+        while (
+            !notificationPredicate(
+                notification = await client.Subscriptions[topic].WaitForNextNotification(cts.Token)
+            )
+        ) { }
 
-            while (
-                !notificationPredicate(
-                    msg = await client.Subscriptions[topic].WaitForNextNotification(cts.Token)
-                )
-            ) { }
-
-            return msg;
-        }
+        return notification;
     }
 
     /// <inheritdoc cref="WaitForNextNotificationOn{TTopic}"/>

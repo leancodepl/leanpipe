@@ -47,7 +47,7 @@ public class LeanPipeSubscription
 
     public Task<object> WaitForNextNotification(CancellationToken ct = default)
     {
-        var nextMessageTask = GetNextMessageTask();
+        var nextNotificationTask = GetNextNotificationTask();
 
         if (ct.CanBeCanceled)
         {
@@ -60,14 +60,14 @@ public class LeanPipeSubscription
                 TaskCreationOptions.RunContinuationsAsynchronously
             );
 
-            return Task.WhenAny(tcs.Task, nextMessageTask).Unwrap();
+            return Task.WhenAny(tcs.Task, nextNotificationTask).Unwrap();
         }
         else
         {
-            return nextMessageTask;
+            return nextNotificationTask;
         }
 
-        Task<object> GetNextMessageTask()
+        Task<object> GetNextNotificationTask()
         {
             lock (nextMessageAwaiter)
             {
