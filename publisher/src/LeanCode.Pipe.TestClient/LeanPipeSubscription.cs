@@ -47,21 +47,32 @@ public class LeanPipeSubscription
 
     public Task<object> WaitForNextNotification(CancellationToken ct = default)
     {
-        lock (notificationMutex)
+        var nextMessageTask = GetNextMessageTask();
+
+        if (ct.CanBeCanceled)
         {
-            if (ct.CanBeCanceled)
+            if (ct.IsCancellationRequested)
             {
-                if (ct.IsCancellationRequested)
-                {
-                    nextMessageAwaiter.TrySetCanceled(ct);
-                }
-                else
-                {
-                    ct.Register(() => nextMessageAwaiter.TrySetCanceled(ct));
-                }
+                return Task.FromException<object>(new TaskCanceledException());
             }
 
-            return nextMessageAwaiter.Task;
+            var tcs = new TaskCompletionSource<object>(
+                TaskCreationOptions.RunContinuationsAsynchronously
+            );
+
+            return Task.WhenAny(tcs.Task, nextMessageTask).Unwrap();
+        }
+        else
+        {
+            return nextMessageTask;
+        }
+
+        Task<object> GetNextMessageTask()
+        {
+            lock (nextMessageAwaiter)
+            {
+                return nextMessageAwaiter.Task;
+            }
         }
     }
 }
