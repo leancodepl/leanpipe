@@ -69,7 +69,7 @@ public class LeanPipeSubscription
 
         Task<object> GetNextNotificationTask()
         {
-            lock (nextMessageAwaiter)
+            lock (notificationMutex)
             {
                 return nextMessageAwaiter.Task;
             }
