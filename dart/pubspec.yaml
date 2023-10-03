@@ -1,0 +1,30 @@
+name: leancode_pipe
+description: A Dart client for LeanCode's LeanPipe.
+homepage: https://github.com/leancodepl/leanpipe/tree/main/dart
+repository: https://github.com/leancodepl/leanpipe/tree/main/dart
+publish_to: none # TODO: remove once publishable
+
+version: 0.1.0
+
+environment:
+  sdk: ">=3.1.0 <=4.0.0"
+
+dependencies:
+  collection: ^1.17.1
+  json_annotation: ^4.8.1
+  logging: ^1.2.0
+  meta: ^1.9.1
+  rxdart: ^0.27.7
+  # TODO: bring back pub version once merged and published
+  signalr_core:
+    git:
+      url: https://github.com/RCSandberg/signalr_core.git
+      ref: feature/bump-dart-and-package-versions
+  uuid: ^3.0.7
+
+dev_dependencies:
+  build_runner: ^2.4.6
+  json_serializable: ^6.7.1
+  leancode_lint: ^6.0.0
+  mocktail: ^1.0.0
+  test: ^1.24.6
