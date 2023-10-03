@@ -35,7 +35,7 @@ jobs:
           sdk: ${{ matrix.version }}
 
       - name: Download pub dependencies
-        run: dart pub get
+        run: dart pub get --no-example
 
       - name: Run analyzer
         run: dart analyze
