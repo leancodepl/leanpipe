@@ -65,8 +65,7 @@ public class LeanPipeTestClient : IAsyncDisposable
         );
     }
 
-    /// <returns>Unsubscription result or null if the request times out.</returns>
-    public async Task<SubscriptionResult?> UnsubscribeAsync<TTopic>(
+    public async Task<SubscriptionResult> UnsubscribeAsync<TTopic>(
         TTopic topic,
         CancellationToken ct = default
     )
@@ -83,7 +82,7 @@ public class LeanPipeTestClient : IAsyncDisposable
             result = await ManageSubscriptionCoreAsync(topic, OperationType.Unsubscribe, ct);
         }
 
-        if (result?.Status == SubscriptionStatus.Success)
+        if (result.Status == SubscriptionStatus.Success)
         {
             subscriptions.GetValueOrDefault(topic)?.Unsubscribe();
         }
@@ -92,8 +91,8 @@ public class LeanPipeTestClient : IAsyncDisposable
     }
 
     /// <remarks>Connects if there is no active connection.</remarks>
-    /// <returns>Subscription result or null if the request times out.</returns>
-    public async Task<SubscriptionResult?> SubscribeAsync<TTopic>(
+    /// <exception cref="InvalidOperationException">Already subscribed to the topic instance.</exception>
+    public async Task<SubscriptionResult> SubscribeAsync<TTopic>(
         TTopic topic,
         CancellationToken ct = default
     )
@@ -103,7 +102,7 @@ public class LeanPipeTestClient : IAsyncDisposable
 
         if (subscription?.SubscriptionId is not null)
         {
-            throw new InvalidOperationException("Already subscribed to topic.");
+            throw new InvalidOperationException("Already subscribed to topic instance.");
         }
 
         if (hubConnection.State != HubConnectionState.Connected)
@@ -113,7 +112,7 @@ public class LeanPipeTestClient : IAsyncDisposable
 
         var result = await ManageSubscriptionCoreAsync(topic, OperationType.Subscribe, ct);
 
-        if (result?.Status == SubscriptionStatus.Success)
+        if (result.Status == SubscriptionStatus.Success)
         {
             if (subscription is not null)
             {
@@ -148,7 +147,7 @@ public class LeanPipeTestClient : IAsyncDisposable
         GC.SuppressFinalize(this);
     }
 
-    private async Task<SubscriptionResult?> ManageSubscriptionCoreAsync<TTopic>(
+    private async Task<SubscriptionResult> ManageSubscriptionCoreAsync<TTopic>(
         TTopic topic,
         OperationType operationType,
         CancellationToken ct
@@ -165,6 +164,13 @@ public class LeanPipeTestClient : IAsyncDisposable
         };
 
         var subscriptionCompletionSource = new TaskCompletionSource<SubscriptionResult>();
+
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        cts.CancelAfter(subscriptionCompletionTimeout);
+
+        await using var ctRegistration = cts.Token.Register(
+            () => subscriptionCompletionSource.TrySetCanceled()
+        );
 
         using var subscriptionResponseCallback = hubConnection.On<SubscriptionResult>(
             "subscriptionResult",
@@ -193,22 +199,6 @@ public class LeanPipeTestClient : IAsyncDisposable
             ct
         );
 
-        return await AwaitWithTimeout(
-            subscriptionCompletionSource.Task,
-            subscriptionCompletionTimeout,
-            ct
-        );
-    }
-
-    internal static async Task<TResult?> AwaitWithTimeout<TResult>(
-        Task<TResult> task,
-        TimeSpan timeout,
-        CancellationToken ct
-    )
-        where TResult : class
-    {
-        return await Task.WhenAny(task, Task.Delay(timeout, ct)) == task
-            ? task.GetAwaiter().GetResult()
-            : null;
+        return await subscriptionCompletionSource.Task;
     }
 }

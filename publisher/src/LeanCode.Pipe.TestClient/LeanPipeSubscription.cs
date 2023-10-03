@@ -45,11 +45,34 @@ public class LeanPipeSubscription
         }
     }
 
-    public Task<object> WaitForNextNotification()
+    public Task<object> WaitForNextNotification(CancellationToken ct = default)
     {
-        lock (notificationMutex)
+        var nextNotificationTask = GetNextNotificationTask();
+
+        if (ct.CanBeCanceled)
         {
-            return nextMessageAwaiter.Task;
+            if (ct.IsCancellationRequested)
+            {
+                return Task.FromException<object>(new TaskCanceledException());
+            }
+
+            var tcs = new TaskCompletionSource<object>(
+                TaskCreationOptions.RunContinuationsAsynchronously
+            );
+
+            return Task.WhenAny(tcs.Task, nextNotificationTask).Unwrap();
+        }
+        else
+        {
+            return nextNotificationTask;
+        }
+
+        Task<object> GetNextNotificationTask()
+        {
+            lock (notificationMutex)
+            {
+                return nextMessageAwaiter.Task;
+            }
         }
     }
 }

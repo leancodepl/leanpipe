@@ -39,6 +39,7 @@ public static class LeanPipePublisherExtensions
     /// Publishes to topic instance using provided SignalR groups keys.
     /// Ignores publishing keys implemented in <see cref="IPublishingKeys{TTopic,TNotification}"/>.
     /// </summary>
+    /// <remarks>Does not wait for a response from the receivers.</remarks>
     public static async Task PublishAsync<TTopic, TNotification>(
         this LeanPipePublisher<TTopic> publisher,
         IEnumerable<string> keys,
@@ -58,6 +59,7 @@ public static class LeanPipePublisherExtensions
     /// Publishes to topic instance using SignalR groups keys generated via implementation of
     /// <see cref="IPublishingKeys{TTopic,TNotification}"/>.
     /// </summary>
+    /// <remarks>Does not wait for a response from the receivers.</remarks>
     public static async Task PublishAsync<TTopic, TNotification>(
         this LeanPipePublisher<TTopic> publisher,
         TTopic topic,

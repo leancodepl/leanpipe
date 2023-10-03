@@ -8,6 +8,10 @@ namespace LeanCode.Pipe.IntegrationTests;
 
 public static class PublishingExtensions
 {
+    public const string SimpleTopicPublishEndpoint = "/publish_simple";
+    public const string DynamicTopicPublishEndpoint = "/publish_dynamic";
+    public const string AuthorizedTopicPublishEndpoint = "/publish_authorized";
+
     public static Task PublishToSimpleTopicAndAwaitNotificationAsync<TNotification>(
         this HttpClient client,
         NotificationDataDTO notificationData,
@@ -15,10 +19,11 @@ public static class PublishingExtensions
         SimpleTopic topic,
         TNotification expectedNotification
     )
+        where TNotification : notnull
     {
         return PostToPublishAndCheckNotificationAsync(
             client,
-            "/publish_simple",
+            SimpleTopicPublishEndpoint,
             notificationData,
             leanPipeClient,
             topic,
@@ -33,7 +38,7 @@ public static class PublishingExtensions
     {
         return PostToPublishAndAwaitNoNotificationsAsync(
             client,
-            "/publish_simple",
+            SimpleTopicPublishEndpoint,
             notificationData
         );
     }
@@ -45,10 +50,11 @@ public static class PublishingExtensions
         MyFavouriteProjectsTopic topic,
         TNotification expectedNotification
     )
+        where TNotification : notnull
     {
         return PostToPublishAndCheckNotificationAsync(
             client,
-            "/publish_dynamic",
+            DynamicTopicPublishEndpoint,
             notificationData,
             leanPipeClient,
             topic,
@@ -63,7 +69,7 @@ public static class PublishingExtensions
     {
         return PostToPublishAndAwaitNoNotificationsAsync(
             client,
-            "/publish_dynamic",
+            DynamicTopicPublishEndpoint,
             notificationData
         );
     }
@@ -75,10 +81,11 @@ public static class PublishingExtensions
         AuthorizedTopic topic,
         TNotification expectedNotification
     )
+        where TNotification : notnull
     {
         return PostToPublishAndCheckNotificationAsync(
             client,
-            "/publish_authorized",
+            AuthorizedTopicPublishEndpoint,
             notificationData,
             leanPipeClient,
             topic,
@@ -93,7 +100,7 @@ public static class PublishingExtensions
     {
         return PostToPublishAndAwaitNoNotificationsAsync(
             client,
-            "/publish_authorized",
+            AuthorizedTopicPublishEndpoint,
             notificationData
         );
     }
@@ -111,15 +118,15 @@ public static class PublishingExtensions
         TNotification expectedNotification
     )
         where TTopic : ITopic
+        where TNotification : notnull
     {
-        var notificationTask = leanPipeClient.WaitForNextNotificationOn(topic);
+        var notificationTask = leanPipeClient.WaitForNextNotificationOn<TTopic, TNotification>(
+            topic
+        );
 
-        await PostAsync(client, uri, payload);
+        await PostAndEnsureSuccessAsync(client, uri, payload);
 
-        (await notificationTask)
-            .Should()
-            .BeOfType<TNotification>()
-            .And.BeEquivalentTo(expectedNotification);
+        (await notificationTask).Should().BeEquivalentTo(expectedNotification);
     }
 
     private static async Task PostToPublishAndAwaitNoNotificationsAsync<TPayload>(
@@ -129,12 +136,16 @@ public static class PublishingExtensions
         TimeSpan? awaitTime = null
     )
     {
-        await PostAsync(client, uri, payload);
+        await PostAndEnsureSuccessAsync(client, uri, payload);
 
         await Task.Delay(awaitTime ?? TimeSpan.FromSeconds(1));
     }
 
-    private static async Task PostAsync<TPayload>(HttpClient client, string uri, TPayload payload)
+    public static async Task PostAndEnsureSuccessAsync<TPayload>(
+        this HttpClient client,
+        string uri,
+        TPayload payload
+    )
     {
         using var response = await client.PostAsJsonAsync(uri, payload);
 

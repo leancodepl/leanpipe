@@ -22,7 +22,7 @@ public static class LeanPipeTestClientExtensions
         var subscriptionResult = await client.SubscribeAsync(topic, ct);
 
         if (
-            subscriptionResult?.Type == OperationType.Subscribe
+            subscriptionResult.Type == OperationType.Subscribe
             && subscriptionResult.Status == SubscriptionStatus.Success
         )
         {
@@ -52,7 +52,7 @@ public static class LeanPipeTestClientExtensions
         var subscriptionResult = await client.UnsubscribeAsync(topic, ct);
 
         if (
-            subscriptionResult?.Type == OperationType.Unsubscribe
+            subscriptionResult.Type == OperationType.Unsubscribe
             && subscriptionResult.Status == SubscriptionStatus.Success
         )
         {
@@ -67,7 +67,7 @@ public static class LeanPipeTestClientExtensions
     }
 
     /// <summary>
-    /// Returns a task, which completes when the next notification on the topic is received.
+    /// Returns a task, which completes when subscription on the topic receives next notification satisfying the predicate.
     /// </summary>
     /// <remarks>
     /// The task should be collected before the action that triggers the notification to be published
@@ -75,27 +75,62 @@ public static class LeanPipeTestClientExtensions
     /// the awaited notification is a notification subsequent to the expected one.
     /// </remarks>
     /// <param name="topic">Topic instance, on which notification is to be awaited.</param>
+    /// <param name="notificationPredicate">Specifies notification to wait for.</param>
     /// <param name="timeout">Timeout, after which the notification is assumed to be not delivered.</param>
     /// <returns>Task containing the received notification.</returns>
-    /// <exception cref="InvalidOperationException">The topic instance received no notifications before the timeout.</exception>
     public static async Task<object> WaitForNextNotificationOn<TTopic>(
         this LeanPipeTestClient client,
         TTopic topic,
+        Func<object, bool>? notificationPredicate = null,
         TimeSpan? timeout = null,
         CancellationToken ct = default
     )
         where TTopic : ITopic
     {
-        var notificationTask = client.Subscriptions[topic].WaitForNextNotification();
+        notificationPredicate ??= _ => true;
 
-        return await LeanPipeTestClient.AwaitWithTimeout(
-                notificationTask,
-                timeout ?? DefaultNotificationAwaitTimeout,
-                ct
+        object notification;
+
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        cts.CancelAfter(timeout ?? DefaultNotificationAwaitTimeout);
+
+        while (
+            !notificationPredicate(
+                notification = await client.Subscriptions[topic].WaitForNextNotification(cts.Token)
             )
-            ?? throw new InvalidOperationException(
-                "LeanPipe test client did not receive any notification on topic."
+        ) { }
+
+        return notification;
+    }
+
+    /// <inheritdoc cref="WaitForNextNotificationOn{TTopic}"/>
+    /// <summary>
+    /// Returns a task, which completes when subscription on the topic receives next notification of the specified type,
+    /// satisfying the predicate.
+    /// </summary>
+    public static async Task<TNotification> WaitForNextNotificationOn<TTopic, TNotification>(
+        this LeanPipeTestClient client,
+        TTopic topic,
+        Func<TNotification, bool>? notificationPredicate = null,
+        TimeSpan? timeout = null,
+        CancellationToken ct = default
+    )
+        where TTopic : ITopic
+        where TNotification : notnull
+    {
+        notificationPredicate ??= _ => true;
+
+        return (TNotification)
+            await WaitForNextNotificationOn(
+                client,
+                topic,
+                NotificationAndTypePredicate,
+                timeout,
+                ct
             );
+
+        bool NotificationAndTypePredicate(object n) =>
+            n is TNotification tn && notificationPredicate(tn);
     }
 
     /// <returns>A FIFO collection of received notifications on topic instance.</returns>
