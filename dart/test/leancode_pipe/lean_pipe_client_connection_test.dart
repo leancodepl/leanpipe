@@ -154,7 +154,7 @@ void main() {
         var isSubscriptionDone = false;
         var isSubscriptionCanceled = false;
         final sub = subscription
-            .doOnCancel(() => isSubscriptionDone = true)
+            .doOnDone(() => isSubscriptionDone = true)
             .doOnCancel(() => isSubscriptionCanceled = true)
             .listen((_) {});
 

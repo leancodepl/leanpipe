@@ -704,8 +704,3 @@ void main() {
     });
   });
 }
-/*
-*reconnect*
-- success scenario
-- failed scenario
- */

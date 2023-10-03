@@ -94,7 +94,6 @@ class PipeClient {
         })
         ..on('subscriptionResult', _onSubscriptionResult)
         ..on('notify', _onNotify);
-      // FIXME: Verify what does it throw if authorization does not pass through (can be bugged on backend)
       await _hubConnection.start();
     } catch (err, st) {
       _logger.shout('Could not connect to LeanCode pipe service', err, st);
@@ -215,6 +214,7 @@ class PipeClient {
     required void Function()? onReconnect,
   }) {
     final controller = StreamController<N>.broadcast();
+    // v1 is used for easier mocking in tests to differentiate between the internal IDs and server IDs
     final id = _uuid.v1();
     final subscription = RegisteredSubscription(
       id: id,

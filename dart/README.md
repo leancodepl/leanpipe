@@ -10,3 +10,5 @@ Add these into your AndroidManifest.xml on the manifest level
 <uses-permission android:name="android.permission.INTERNET" />
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
+
+TODO: docs
