@@ -25,8 +25,10 @@ public static class LeanPipeServiceCollectionExtensions
                 options => options.PayloadSerializerOptions.PropertyNamingPolicy = null
             );
 
+        services.AddTransient<LeanPipeSecurity>();
+        services.AddTransient(typeof(ISubscriptionExecutor), typeof(SubscriptionExecutor));
         services.AddTransient(typeof(ISubscriptionHandler<>), typeof(KeyedSubscriptionHandler<>));
-        services.AddTransient(typeof(LeanPipePublisher<>), typeof(LeanPipePublisher<>));
+        services.AddTransient(typeof(ILeanPipePublisher<>), typeof(LeanPipePublisher<>));
         services.AddTransient<SubscriptionHandlerResolver>();
 
         return new LeanPipeServicesBuilder(services, topics).AddHandlers(handlers);

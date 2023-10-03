@@ -6,14 +6,16 @@ public interface ISubscriptionHandlerWrapper
 {
     ValueTask<bool> OnSubscribedAsync(
         object topic,
-        LeanPipeSubscriber leanPipeSubscriber,
-        LeanPipeContext context
+        ISubscribeContext subscribeContext,
+        LeanPipeContext context,
+        CancellationToken ct
     );
 
     ValueTask<bool> OnUnsubscribedAsync(
         object topic,
-        LeanPipeSubscriber leanPipeSubscriber,
-        LeanPipeContext context
+        ISubscribeContext subscribeContext,
+        LeanPipeContext context,
+        CancellationToken ct
     );
 }
 
@@ -29,13 +31,15 @@ public sealed class SubscriptionHandlerWrapper<TTopic> : ISubscriptionHandlerWra
 
     public ValueTask<bool> OnSubscribedAsync(
         object topic,
-        LeanPipeSubscriber leanPipeSubscriber,
-        LeanPipeContext context
-    ) => handler.OnSubscribedAsync((TTopic)topic, leanPipeSubscriber, context);
+        ISubscribeContext subscribeContext,
+        LeanPipeContext context,
+        CancellationToken ct
+    ) => handler.OnSubscribedAsync((TTopic)topic, subscribeContext, context, ct);
 
     public ValueTask<bool> OnUnsubscribedAsync(
         object topic,
-        LeanPipeSubscriber leanPipeSubscriber,
-        LeanPipeContext context
-    ) => handler.OnUnsubscribedAsync((TTopic)topic, leanPipeSubscriber, context);
+        ISubscribeContext subscribeContext,
+        LeanPipeContext context,
+        CancellationToken ct
+    ) => handler.OnUnsubscribedAsync((TTopic)topic, subscribeContext, context, ct);
 }

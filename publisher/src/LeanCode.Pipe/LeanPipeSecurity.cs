@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using LeanCode.Contracts;
 using LeanCode.Contracts.Security;
 using LeanCode.CQRS.Security;
@@ -5,15 +6,21 @@ using Microsoft.AspNetCore.Http;
 
 namespace LeanCode.Pipe;
 
-internal static class LeanPipeSecurity
+public class LeanPipeSecurity
 {
-    public static async Task<bool> CheckIfAuthorizedAsync(ITopic topic, HttpContext context)
+    private readonly IServiceProvider serviceProvider;
+
+    public LeanPipeSecurity(IServiceProvider serviceProvider)
+    {
+        this.serviceProvider = serviceProvider;
+    }
+
+    public async Task<bool> CheckIfAuthorizedAsync(ITopic topic, ClaimsPrincipal user)
     {
         var topicType = topic.GetType();
         var customAuthorizers = AuthorizeWhenAttribute.GetCustomAuthorizers(topicType);
-        var user = context.User;
 
-        if (customAuthorizers.Count > 0 && !(user?.Identity?.IsAuthenticated ?? false))
+        if (customAuthorizers.Count > 0 && !(user.Identity?.IsAuthenticated ?? false))
         {
             return false;
         }
@@ -21,12 +28,12 @@ internal static class LeanPipeSecurity
         foreach (var customAuthorizerDefinition in customAuthorizers)
         {
             var authorizerType = customAuthorizerDefinition.Authorizer;
-            var customAuthorizer = context.RequestServices.GetService(authorizerType);
+            var customAuthorizer = serviceProvider.GetService(authorizerType);
 
             if (customAuthorizer is ICustomAuthorizer authorizer)
             {
                 var authorized = await authorizer.CheckIfAuthorizedAsync(
-                    context,
+                    user,
                     topic,
                     customAuthorizerDefinition.CustomData
                 );

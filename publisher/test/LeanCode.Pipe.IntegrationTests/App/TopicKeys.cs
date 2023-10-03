@@ -23,7 +23,7 @@ public class MyFavouriteProjectsTopicKeys
         LeanPipeContext context
     ) =>
         (
-            await favouriteProjectsProvider.GetUsersFavouriteProjectsAsync(context.HttpContext.User)
+            await favouriteProjectsProvider.GetUsersFavouriteProjectsAsync(context.User)
         ).Select(ToTopicKey);
 
     public ValueTask<IEnumerable<string>> GetForPublishingAsync(

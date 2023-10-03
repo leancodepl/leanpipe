@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace LeanCode.Pipe;
 
@@ -7,10 +7,10 @@ namespace LeanCode.Pipe;
 /// </summary>
 public class LeanPipeContext
 {
-    public LeanPipeContext(HttpContext httpContext)
-    {
-        HttpContext = httpContext;
-    }
+    public ClaimsPrincipal User { get; private init; }
 
-    public HttpContext HttpContext { get; private init; }
+    public LeanPipeContext(ClaimsPrincipal user)
+    {
+        User = user;
+    }
 }

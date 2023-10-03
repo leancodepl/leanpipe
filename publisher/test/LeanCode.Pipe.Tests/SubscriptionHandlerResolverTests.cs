@@ -16,8 +16,8 @@ public class SubscriptionHandlerResolverTests
 
         wrapper.Should().NotBeNull();
 
-        await wrapper!.OnSubscribedAsync(new Topic1(), null!, null!);
-        await wrapper.OnUnsubscribedAsync(new Topic1(), null!, null!);
+        await wrapper!.OnSubscribedAsync(new Topic1(), null!, null!, default);
+        await wrapper.OnUnsubscribedAsync(new Topic1(), null!, null!, default);
 
         handler.SubscribedCalled.Should().BeTrue();
         handler.UnsubscribedCalled.Should().BeTrue();
@@ -46,11 +46,11 @@ public class SubscriptionHandlerResolverTests
         var wrapper1 = resolver.FindSubscriptionHandler(typeof(Topic1));
         var wrapper2 = resolver.FindSubscriptionHandler(typeof(Topic2));
 
-        await wrapper1!.OnSubscribedAsync(new Topic1(), null!, null!);
+        await wrapper1!.OnSubscribedAsync(new Topic1(), null!, null!, default);
         handler1.SubscribedCalled.Should().BeTrue();
         handler2.SubscribedCalled.Should().BeFalse();
 
-        await wrapper2!.OnSubscribedAsync(new Topic2(), null!, null!);
+        await wrapper2!.OnSubscribedAsync(new Topic2(), null!, null!, default);
         handler1.SubscribedCalled.Should().BeTrue();
         handler2.SubscribedCalled.Should().BeTrue();
     }

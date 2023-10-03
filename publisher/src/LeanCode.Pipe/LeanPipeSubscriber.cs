@@ -1,21 +1,21 @@
-using System.Text.Json;
 using LeanCode.Contracts;
 using Microsoft.AspNetCore.SignalR;
 
 namespace LeanCode.Pipe;
 
-public class LeanPipeSubscriber : Hub
+public interface ISubscribeContext
 {
-    private readonly SubscriptionHandlerResolver resolver;
-    private readonly IEnvelopeDeserializer deserializer;
+    Task AddToGroupsAsync(IEnumerable<string> groupKeys, CancellationToken ct);
+    Task RemoveFromGroupsAsync(IEnumerable<string> groupKeys, CancellationToken ct);
+}
 
-    public LeanPipeSubscriber(
-        SubscriptionHandlerResolver resolver,
-        IEnvelopeDeserializer deserializer
-    )
+public class LeanPipeSubscriber : Hub, ISubscribeContext
+{
+    private readonly ISubscriptionExecutor subscriptionExecutor;
+
+    public LeanPipeSubscriber(ISubscriptionExecutor subscriptionExecutor)
     {
-        this.resolver = resolver;
-        this.deserializer = deserializer;
+        this.subscriptionExecutor = subscriptionExecutor;
     }
 
     public async Task Subscribe(SubscriptionEnvelope envelope)
@@ -28,79 +28,45 @@ public class LeanPipeSubscriber : Hub
         await ExecuteAsync(envelope, OperationType.Unsubscribe);
     }
 
-    private async Task NotifyResultAsync(
-        Guid subscriptionId,
-        SubscriptionStatus status,
-        OperationType type
-    )
+    private async Task NotifyResultAsync(SubscriptionResult result)
     {
-        await Clients.Caller.SendAsync(
-            "subscriptionResult",
-            new SubscriptionResult(subscriptionId, status, type)
-        );
+        await Clients.Caller.SendAsync("subscriptionResult", result, Context.ConnectionAborted);
     }
 
     private async Task ExecuteAsync(SubscriptionEnvelope envelope, OperationType type)
     {
-        try
-        {
-            var httpContext =
-                Context.GetHttpContext()
-                ?? throw new InvalidOperationException(
-                    "Connection is not associated with an HTTP request."
-                );
-
-            var topic =
-                deserializer.Deserialize(envelope)
-                ?? throw new InvalidOperationException("Cannot deserialize the topic.");
-
-            var authorized = await LeanPipeSecurity.CheckIfAuthorizedAsync(topic, httpContext);
-
-            if (!authorized)
-            {
-                await NotifyResultAsync(envelope.Id, SubscriptionStatus.Unauthorized, type);
-                return;
-            }
-
-            var context = new LeanPipeContext(httpContext);
-            var handler =
-                resolver.FindSubscriptionHandler(topic.GetType())
-                ?? throw new InvalidOperationException(
-                    $"The resolver for topic {topic.GetType()} cannot be found."
-                );
-
-            bool result;
-
-            if (type == OperationType.Subscribe)
-            {
-                result = await handler.OnSubscribedAsync(topic, this, context);
-            }
-            else
-            {
-                result = await handler.OnUnsubscribedAsync(topic, this, context);
-            }
-
-            await NotifyResultAsync(
-                envelope.Id,
-                result ? SubscriptionStatus.Success : SubscriptionStatus.Invalid,
-                type
+        var httpContext =
+            Context.GetHttpContext()
+            ?? throw new InvalidOperationException(
+                "Connection is not associated with an HTTP request."
             );
-        }
-        catch (JsonException e)
-        {
-            await NotifyResultAsync(envelope.Id, SubscriptionStatus.Malformed, type);
-            throw new InvalidOperationException(
-                $"Cannot deserialize topic {envelope.Topic.RootElement.GetRawText()} of type {envelope.TopicType}.",
-                e
-            );
-        }
-        catch (Exception e)
-        {
-            await NotifyResultAsync(envelope.Id, SubscriptionStatus.InternalServerError, type);
-            throw new InvalidOperationException(
-                $"Error on subscribing to topic {envelope.TopicType}.",
-                e
-            );
-        }
+
+        var context = new LeanPipeContext(httpContext.User);
+
+        var subscriptionStatus = await subscriptionExecutor.ExecuteAsync(
+            envelope,
+            type,
+            this,
+            context,
+            Context.ConnectionAborted
+        );
+
+        await NotifyResultAsync(new(envelope.Id, subscriptionStatus, type));
+    }
+
+    public Task AddToGroupsAsync(IEnumerable<string> groupKeys, CancellationToken ct)
+    {
+        var tasks = groupKeys.Select(key => Groups.AddToGroupAsync(Context.ConnectionId, key, ct));
+
+        return Task.WhenAll(tasks);
+    }
+
+    public Task RemoveFromGroupsAsync(IEnumerable<string> groupKeys, CancellationToken ct)
+    {
+        var tasks = groupKeys.Select(
+            key => Groups.RemoveFromGroupAsync(Context.ConnectionId, key, ct)
+        );
+
+        return Task.WhenAll(tasks);
     }
 }

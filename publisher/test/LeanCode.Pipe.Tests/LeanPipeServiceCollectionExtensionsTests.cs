@@ -25,12 +25,22 @@ public class LeanPipeServiceCollectionExtensionsTests
             )
             .And.ContainSingle(
                 d =>
+                    d.ServiceType == typeof(LeanPipeSecurity)
+                    && d.Lifetime == ServiceLifetime.Transient
+            )
+            .And.ContainSingle(
+                d =>
+                    d.ServiceType == typeof(ISubscriptionExecutor)
+                    && d.Lifetime == ServiceLifetime.Transient
+            )
+            .And.ContainSingle(
+                d =>
                     d.ServiceType == typeof(SubscriptionHandlerResolver)
                     && d.Lifetime == ServiceLifetime.Transient
             )
             .And.ContainSingle(
                 d =>
-                    d.ServiceType == typeof(LeanPipePublisher<>)
+                    d.ServiceType == typeof(ILeanPipePublisher<>)
                     && d.Lifetime == ServiceLifetime.Transient
             )
             .And.ContainSingle(

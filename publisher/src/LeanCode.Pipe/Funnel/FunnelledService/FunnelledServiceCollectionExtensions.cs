@@ -1,0 +1,22 @@
+using LeanCode.Components;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace LeanCode.Pipe.Funnel.FunnelledService;
+
+public static class FunnelledServiceCollectionExtensions
+{
+    public static LeanPipeServicesBuilder AddFunnelledLeanPipe(
+        this IServiceCollection services,
+        TypesCatalog topics,
+        TypesCatalog handlers
+    )
+    {
+        services.AddTransient<LeanPipeSecurity>();
+        services.AddTransient(typeof(ISubscriptionExecutor), typeof(SubscriptionExecutor));
+        services.AddTransient(typeof(ISubscriptionHandler<>), typeof(KeyedSubscriptionHandler<>));
+        services.AddTransient(typeof(ILeanPipePublisher<>), typeof(FunnelledLeanPipePublisher<>));
+        services.AddTransient<SubscriptionHandlerResolver>();
+
+        return new LeanPipeServicesBuilder(services, topics).AddHandlers(handlers);
+    }
+}

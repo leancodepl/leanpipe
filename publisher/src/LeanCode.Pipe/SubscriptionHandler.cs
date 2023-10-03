@@ -8,15 +8,17 @@ public interface ISubscriptionHandler<in TTopic>
     /// <returns>Whether subscription was correctly established.</returns>
     ValueTask<bool> OnSubscribedAsync(
         TTopic topic,
-        LeanPipeSubscriber leanPipeSubscriber,
-        LeanPipeContext context
+        ISubscribeContext subscribeContext,
+        LeanPipeContext context,
+        CancellationToken ct
     );
 
     /// <returns>Whether subscription was correctly severed.</returns>
     ValueTask<bool> OnUnsubscribedAsync(
         TTopic topic,
-        LeanPipeSubscriber leanPipeSubscriber,
-        LeanPipeContext context
+        ISubscribeContext subscribeContext,
+        LeanPipeContext context,
+        CancellationToken ct
     );
 }
 
@@ -32,30 +34,23 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
 
     public async ValueTask<bool> OnSubscribedAsync(
         TTopic topic,
-        LeanPipeSubscriber leanPipeSubscriber,
-        LeanPipeContext context
+        ISubscribeContext subscribeContext,
+        LeanPipeContext context,
+        CancellationToken ct
     )
     {
         var keys = await subscribingKeys.GetForSubscribingAsync(topic, context);
 
-        var tasks = keys.Select(
-            key =>
-                leanPipeSubscriber.Groups.AddToGroupAsync(
-                    leanPipeSubscriber.Context.ConnectionId,
-                    key,
-                    leanPipeSubscriber.Context.ConnectionAborted
-                )
-        );
-
-        await Task.WhenAll(tasks);
+        await subscribeContext.AddToGroupsAsync(keys, ct);
 
         return keys.Any();
     }
 
     public async ValueTask<bool> OnUnsubscribedAsync(
         TTopic topic,
-        LeanPipeSubscriber leanPipeSubscriber,
-        LeanPipeContext context
+        ISubscribeContext subscribeContext,
+        LeanPipeContext context,
+        CancellationToken ct
     )
     {
         // With this implementation there is a problem of "higher level" groups:
@@ -63,16 +58,7 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
         // then we do not know when to unsubscribe from topic.something
         var keys = await subscribingKeys.GetForSubscribingAsync(topic, context);
 
-        var tasks = keys.Select(
-            key =>
-                leanPipeSubscriber.Groups.RemoveFromGroupAsync(
-                    leanPipeSubscriber.Context.ConnectionId,
-                    key,
-                    leanPipeSubscriber.Context.ConnectionAborted
-                )
-        );
-
-        await Task.WhenAll(tasks);
+        await subscribeContext.RemoveFromGroupsAsync(keys, ct);
 
         return keys.Any();
     }

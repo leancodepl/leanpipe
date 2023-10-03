@@ -8,11 +8,23 @@ namespace LeanCode.Pipe;
 /// Allows publishing notifications to instances of TTopic.
 /// Conveniently used with extension methods from <see cref="LeanPipePublisherExtensions"/>.
 /// </summary>
-public class LeanPipePublisher<TTopic>
+public interface ILeanPipePublisher<TTopic>
     where TTopic : ITopic
 {
-    internal IHubContext<LeanPipeSubscriber> HubContext { get; }
-    internal IServiceProvider ServiceProvider { get; }
+    IServiceProvider ServiceProvider { get; }
+
+    Task PublishAsync(
+        IEnumerable<string> keys,
+        NotificationEnvelope payload,
+        CancellationToken cancellationToken = default
+    );
+}
+
+internal class LeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
+    where TTopic : ITopic
+{
+    private IHubContext<LeanPipeSubscriber> HubContext { get; }
+    public IServiceProvider ServiceProvider { get; }
 
     public LeanPipePublisher(
         IHubContext<LeanPipeSubscriber> hubContext,
@@ -23,7 +35,7 @@ public class LeanPipePublisher<TTopic>
         ServiceProvider = serviceProvider;
     }
 
-    internal async Task PublishAsync(
+    public async Task PublishAsync(
         IEnumerable<string> keys,
         NotificationEnvelope payload,
         CancellationToken cancellationToken = default
@@ -41,7 +53,7 @@ public static class LeanPipePublisherExtensions
     /// </summary>
     /// <remarks>Does not wait for a response from the receivers.</remarks>
     public static async Task PublishAsync<TTopic, TNotification>(
-        this LeanPipePublisher<TTopic> publisher,
+        this ILeanPipePublisher<TTopic> publisher,
         IEnumerable<string> keys,
         TTopic topic,
         TNotification notification,
@@ -61,7 +73,7 @@ public static class LeanPipePublisherExtensions
     /// </summary>
     /// <remarks>Does not wait for a response from the receivers.</remarks>
     public static async Task PublishAsync<TTopic, TNotification>(
-        this LeanPipePublisher<TTopic> publisher,
+        this ILeanPipePublisher<TTopic> publisher,
         TTopic topic,
         TNotification notification,
         CancellationToken ct = default
