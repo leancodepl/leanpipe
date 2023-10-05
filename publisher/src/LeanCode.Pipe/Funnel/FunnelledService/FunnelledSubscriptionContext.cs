@@ -20,7 +20,7 @@ internal class FunnelledSubscribeContext : ISubscribeContext
 
     private void PopulateGroupKeys(IEnumerable<string> groupKeys)
     {
-        if (GroupKeys is not null)
+        if (GroupKeys is null)
         {
             GroupKeys = groupKeys;
         }

@@ -3,14 +3,6 @@ using MassTransit;
 
 namespace LeanCode.Pipe.Funnel.FunnelledService;
 
-public record ExecuteTopicsSubscriptionPipeline(
-    SubscriptionEnvelope Envelope,
-    OperationType OperationType,
-    LeanPipeContext Context
-);
-
-public record SubscriptionPipelineResult(SubscriptionStatus Status, List<string> GroupKeys);
-
 public class FunnelledSubscriber<TTopic> : IConsumer<ExecuteTopicsSubscriptionPipeline>
     where TTopic : ITopic
 {
@@ -35,10 +27,8 @@ public class FunnelledSubscriber<TTopic> : IConsumer<ExecuteTopicsSubscriptionPi
             context.CancellationToken
         );
 
-        var groupKeys = subscribeContext.GroupKeys!;
-
         await context.RespondAsync<SubscriptionPipelineResult>(
-            new(subscriptionStatus, groupKeys.ToList())
+            new(subscriptionStatus, subscribeContext.GroupKeys?.ToList() ?? new())
         );
     }
 }
@@ -46,15 +36,8 @@ public class FunnelledSubscriber<TTopic> : IConsumer<ExecuteTopicsSubscriptionPi
 public class FunnelledSubscriberDefinition<TTopic> : ConsumerDefinition<FunnelledSubscriber<TTopic>>
     where TTopic : ITopic
 {
-    protected override void ConfigureConsumer(
-        IReceiveEndpointConfigurator endpointConfigurator,
-        IConsumerConfigurator<FunnelledSubscriber<TTopic>> consumerConfigurator,
-        IRegistrationContext context
-    )
+    public FunnelledSubscriberDefinition()
     {
-        Endpoint(cfg =>
-        {
-            cfg.Name = FunnelledSubscriberEndpointNameProvider.GetName<TTopic>();
-        });
+        EndpointName = FunnelledSubscriberEndpointNameProvider.GetName<TTopic>();
     }
 }

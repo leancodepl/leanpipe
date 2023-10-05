@@ -54,14 +54,17 @@ public class LeanPipeSubscriber : Hub, ISubscribeContext
         await NotifyResultAsync(new(envelope.Id, subscriptionStatus, type));
     }
 
-    public Task AddToGroupsAsync(IEnumerable<string> groupKeys, CancellationToken ct)
+    Task ISubscribeContext.AddToGroupsAsync(IEnumerable<string> groupKeys, CancellationToken ct)
     {
         var tasks = groupKeys.Select(key => Groups.AddToGroupAsync(Context.ConnectionId, key, ct));
 
         return Task.WhenAll(tasks);
     }
 
-    public Task RemoveFromGroupsAsync(IEnumerable<string> groupKeys, CancellationToken ct)
+    Task ISubscribeContext.RemoveFromGroupsAsync(
+        IEnumerable<string> groupKeys,
+        CancellationToken ct
+    )
     {
         var tasks = groupKeys.Select(
             key => Groups.RemoveFromGroupAsync(Context.ConnectionId, key, ct)

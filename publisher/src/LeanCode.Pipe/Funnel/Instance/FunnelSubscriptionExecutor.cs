@@ -1,11 +1,12 @@
 using LeanCode.Contracts;
-using LeanCode.Pipe.Funnel.FunnelledService;
 using MassTransit;
 
 namespace LeanCode.Pipe.Funnel.Instance;
 
 public class FunnelSubscriptionExecutor : ISubscriptionExecutor
 {
+    private readonly Serilog.ILogger logger = Serilog.Log.ForContext<FunnelSubscriptionExecutor>();
+
     private readonly IEndpointNameFormatter endpointNameFormatter;
     private readonly IBus bus;
 
@@ -23,11 +24,13 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
         CancellationToken ct
     )
     {
-        var endpointUri = new Uri(
-            endpointNameFormatter.SanitizeName(
-                FunnelledSubscriberEndpointNameProvider.GetName(envelope.TopicType)
-            )
+        var endpoint = endpointNameFormatter.SanitizeName(
+            FunnelledSubscriberEndpointNameProvider.GetName(envelope.TopicType)
         );
+
+        var endpointPrefix = bus.Topology is IRabbitMqBusTopology ? "exchange" : "topic";
+
+        var endpointUri = new Uri($"{endpointPrefix}:{endpoint}");
 
         var subscriberRequestClient = bus.CreateRequestClient<ExecuteTopicsSubscriptionPipeline>(
             endpointUri
@@ -37,6 +40,16 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
         {
             var response = await subscriberRequestClient.GetResponse<SubscriptionPipelineResult>(
                 new(envelope, type, context),
+                rpc =>
+                {
+                    rpc.UseExecute(ctx =>
+                    {
+                        if (ctx is RabbitMqSendContext rctx)
+                        {
+                            rctx.Mandatory = true;
+                        }
+                    });
+                },
                 ct
             );
 
@@ -58,7 +71,7 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
         }
         catch (Exception e)
         {
-            // TODO: Log error
+            logger.Error(e, "LeanPipe subscription executor failed");
             return SubscriptionStatus.InternalServerError;
         }
     }

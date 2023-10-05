@@ -12,7 +12,7 @@ public static class FunnelledServiceCollectionExtensions
     )
     {
         services.AddTransient<LeanPipeSecurity>();
-        services.AddTransient(typeof(ISubscriptionExecutor), typeof(SubscriptionExecutor));
+        services.AddTransient<SubscriptionExecutor>();
         services.AddTransient(typeof(ISubscriptionHandler<>), typeof(KeyedSubscriptionHandler<>));
         services.AddTransient(typeof(ILeanPipePublisher<>), typeof(FunnelledLeanPipePublisher<>));
         services.AddTransient<SubscriptionHandlerResolver>();
