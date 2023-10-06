@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using LeanCode.Contracts;
 using MassTransit;
 using MassTransit.SignalR.Contracts;
@@ -9,6 +10,9 @@ namespace LeanCode.Pipe.Funnel.FunnelledService;
 internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
     where TTopic : ITopic
 {
+    private static readonly ImmutableArray<IHubProtocol> LeanPipeHubProtocols =
+        ImmutableArray.Create<IHubProtocol>(new JsonHubProtocol());
+
     private IPublishEndpoint PublishEndpoint { get; }
     public IServiceProvider ServiceProvider { get; }
 
@@ -27,8 +31,7 @@ internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
         CancellationToken cancellationToken = default
     )
     {
-        // TODO: Pass JSON options here
-        var protocolDictionary = new[] { new JsonHubProtocol() }.ToProtocolDictionary(
+        var protocolDictionary = LeanPipeHubProtocols.ToProtocolDictionary(
             "notify",
             new object[] { payload }
         );
