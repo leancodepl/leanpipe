@@ -16,6 +16,8 @@ public interface ISubscriptionExecutor
 
 public class SubscriptionExecutor : ISubscriptionExecutor
 {
+    private readonly Serilog.ILogger logger = Serilog.Log.ForContext<SubscriptionExecutor>();
+
     private readonly SubscriptionHandlerResolver resolver;
     private readonly IEnvelopeDeserializer deserializer;
     private readonly LeanPipeSecurity security;
@@ -41,21 +43,30 @@ public class SubscriptionExecutor : ISubscriptionExecutor
     {
         try
         {
-            var topic =
-                deserializer.Deserialize(envelope)
-                ?? throw new InvalidOperationException("Cannot deserialize the topic.");
+            var topic = deserializer.Deserialize(envelope);
+
+            if (topic is null)
+            {
+                logger.Error("The topic type {TopicType} is unknown", envelope.TopicType);
+                return SubscriptionStatus.Malformed;
+            }
 
             var authorized = await security.CheckIfAuthorizedAsync(topic, context.User);
 
             if (!authorized)
             {
+                logger.Warning(
+                    "Connection is not authorized for {SubscriptionOperation} to topic {TopicType}",
+                    type,
+                    envelope.TopicType
+                );
                 return SubscriptionStatus.Unauthorized;
             }
 
             var handler =
                 resolver.FindSubscriptionHandler(topic.GetType())
                 ?? throw new InvalidOperationException(
-                    $"The resolver for topic {topic.GetType()} cannot be found."
+                    $"The resolver for topic {envelope.TopicType} cannot be found."
                 );
 
             bool result;
@@ -69,27 +80,43 @@ public class SubscriptionExecutor : ISubscriptionExecutor
                 result = await handler.OnUnsubscribedAsync(topic, subscribeContext, context, ct);
             }
 
-            return result ? SubscriptionStatus.Success : SubscriptionStatus.Invalid;
+            if (result)
+            {
+                logger.Debug(
+                    "Subscription operation {SubscriptionOperation} on topic {TopicType} completed successfully",
+                    type,
+                    envelope.TopicType
+                );
+                return SubscriptionStatus.Success;
+            }
+            else
+            {
+                logger.Warning(
+                    "Subscription operation {SubscriptionOperation} on topic {TopicType} completed successfully",
+                    type,
+                    envelope.TopicType
+                );
+                return SubscriptionStatus.Invalid;
+            }
         }
         catch (JsonException e)
         {
+            logger.Error(
+                e,
+                "The topic payload of type {TopicType} was malformed",
+                envelope.TopicType
+            );
             return SubscriptionStatus.Malformed;
-
-            // TODO: Log error
-            // throw new InvalidOperationException(
-            //     $"Cannot deserialize topic {envelope.Topic.RootElement.GetRawText()} of type {envelope.TopicType}.",
-            //     e
-            // );
         }
         catch (Exception e)
         {
-            return SubscriptionStatus.InternalServerError;
-
-            // TODO: Log error
-            throw new InvalidOperationException(
-                $"Error on subscribing to topic {envelope.TopicType}.",
-                e
+            logger.Error(
+                e,
+                "{SubscriptionOperation} on topic {TopicType} failed",
+                type,
+                envelope.TopicType
             );
+            return SubscriptionStatus.InternalServerError;
         }
     }
 }
