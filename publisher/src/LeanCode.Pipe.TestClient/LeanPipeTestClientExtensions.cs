@@ -133,6 +133,16 @@ public static class LeanPipeTestClientExtensions
             ?? new List<object>();
     }
 
+    /// <summary>
+    /// Returns an infinite stream of future notifications on the topic instance.
+    /// </summary>
+    /// <remarks>
+    /// Since the stream is infinite, it should be materialized with some finite collector like
+    /// <see cref="AsyncEnumerable.FirstAsync{TSource}(IAsyncEnumerable{TSource}, Func{TSource, bool}, CancellationToken)"/>
+    /// or <see cref="AsyncEnumerable.ToListAsync{TSource}"/> combined with `Take` and possibly `Where`.
+    /// It is also very important to pass a sane CancellationToken so that the test won't hang.
+    /// </remarks>
+    /// <returns>An infinite stream of notifications if the topic was ever subscribed to, empty stream otherwise.</returns>
     public static IAsyncEnumerable<object> FutureNotificationsOnAsync<TTopic>(
         this LeanPipeTestClient client,
         TTopic topic
@@ -143,6 +153,10 @@ public static class LeanPipeTestClientExtensions
             ?? AsyncEnumerable.Empty<object>();
     }
 
+    /// <inheritdoc cref="FutureNotificationsOnAsync{TTopic}"/>
+    /// <summary>
+    /// Returns an infinite stream of past and future notifications on the topic instance.
+    /// </summary>
     public static IAsyncEnumerable<object> AllNotificationsOnAsync<TTopic>(
         this LeanPipeTestClient client,
         TTopic topic
