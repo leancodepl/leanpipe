@@ -1,14 +1,17 @@
 using System.Collections.Concurrent;
+using System.Threading.Channels;
 using LeanCode.Contracts;
 
 namespace LeanCode.Pipe.TestClient;
 
 public class LeanPipeSubscription
 {
+    private static readonly TimeSpan DefaultNotificationAwaitTimeout = TimeSpan.FromSeconds(10);
+
     private readonly object notificationMutex = new();
-    private TaskCompletionSource<object> nextMessageAwaiter =
-        new(TaskCreationOptions.RunContinuationsAsynchronously);
+
     private readonly ConcurrentQueue<object> receivedNotifications = new();
+    private Action<object> onNotification = _ => { };
 
     public ITopic Topic { get; private init; }
     public Guid? SubscriptionId { get; private set; }
@@ -36,43 +39,45 @@ public class LeanPipeSubscription
 
     public void AddNotification(object notification)
     {
-        receivedNotifications.Enqueue(notification);
-
         lock (notificationMutex)
         {
-            nextMessageAwaiter.TrySetResult(notification);
-            nextMessageAwaiter = new(TaskCreationOptions.RunContinuationsAsynchronously);
+            receivedNotifications.Enqueue(notification);
+            onNotification(notification);
         }
     }
 
-    public Task<object> WaitForNextNotification(CancellationToken ct = default)
+    public async ValueTask<object> WaitForNextNotification(
+        Func<object, bool>? notificationPredicate = null,
+        TimeSpan? timeout = null,
+        CancellationToken ct = default
+    )
     {
-        var nextNotificationTask = GetNextNotificationTask();
+        notificationPredicate ??= _ => true;
 
-        if (ct.CanBeCanceled)
-        {
-            if (ct.IsCancellationRequested)
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        cts.CancelAfter(timeout ?? DefaultNotificationAwaitTimeout);
+
+        return await NotificationStreamAsync(cts.Token)
+            .FirstAsync(notificationPredicate, cts.Token);
+    }
+
+    public IAsyncEnumerable<object> NotificationStreamAsync(CancellationToken ct = default)
+    {
+        var channel = Channel.CreateUnbounded<object>(
+            new()
             {
-                return Task.FromException<object>(new TaskCanceledException());
+                SingleWriter = true,
+                SingleReader = false,
+                AllowSynchronousContinuations = false,
             }
+        );
 
-            var tcs = new TaskCompletionSource<object>(
-                TaskCreationOptions.RunContinuationsAsynchronously
-            );
+        onNotification += WriteNotificationToChannel;
+        ct.Register(() => onNotification -= WriteNotificationToChannel);
 
-            return Task.WhenAny(tcs.Task, nextNotificationTask).Unwrap();
-        }
-        else
-        {
-            return nextNotificationTask;
-        }
+        return channel.Reader.ReadAllAsync(ct);
 
-        Task<object> GetNextNotificationTask()
-        {
-            lock (notificationMutex)
-            {
-                return nextMessageAwaiter.Task;
-            }
-        }
+        void WriteNotificationToChannel(object notification) =>
+            channel.Writer.TryWrite(notification);
     }
 }
