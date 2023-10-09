@@ -39,6 +39,6 @@ public class LeanPipeSubscriptionTests
 
     private class Notification
     {
-        public string Message { get; set; }
+        public string Message { get; set; } = default!;
     }
 }

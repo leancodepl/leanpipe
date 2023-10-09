@@ -6,7 +6,7 @@ namespace LeanCode.Pipe.TestClient;
 
 public class LeanPipeSubscription
 {
-    private static readonly TimeSpan DefaultNotificationAwaitTimeout = TimeSpan.FromSeconds(10);
+    public static readonly TimeSpan DefaultNotificationAwaitTimeout = TimeSpan.FromSeconds(10);
 
     private readonly object notificationMutex = new();
 
@@ -57,11 +57,10 @@ public class LeanPipeSubscription
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         cts.CancelAfter(timeout ?? DefaultNotificationAwaitTimeout);
 
-        return await NotificationStreamAsync(cts.Token)
-            .FirstAsync(notificationPredicate, cts.Token);
+        return await NotificationStreamAsync().FirstAsync(notificationPredicate, cts.Token);
     }
 
-    public IAsyncEnumerable<object> NotificationStreamAsync(CancellationToken ct = default)
+    public IAsyncEnumerable<object> NotificationStreamAsync()
     {
         var channel = Channel.CreateUnbounded<object>(
             new()
@@ -72,12 +71,12 @@ public class LeanPipeSubscription
             }
         );
 
-        onNotification += WriteNotificationToChannel;
-        ct.Register(() => onNotification -= WriteNotificationToChannel);
+        var act = WriteNotificationToChannel(channel);
+        onNotification += act;
 
-        return channel.Reader.ReadAllAsync(ct);
+        return channel.Reader.ReadAllAsync();
 
-        void WriteNotificationToChannel(object notification) =>
-            channel.Writer.TryWrite(notification);
+        static Action<object> WriteNotificationToChannel(Channel<object> c) =>
+            n => c.Writer.TryWrite(n);
     }
 }

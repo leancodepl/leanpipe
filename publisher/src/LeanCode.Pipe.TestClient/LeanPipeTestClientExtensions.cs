@@ -135,27 +135,26 @@ public static class LeanPipeTestClientExtensions
 
     public static IAsyncEnumerable<object> FutureNotificationsOnAsync<TTopic>(
         this LeanPipeTestClient client,
-        TTopic topic,
-        CancellationToken ct = default
+        TTopic topic
     )
         where TTopic : ITopic
     {
-        return client.Subscriptions.GetValueOrDefault(topic)?.NotificationStreamAsync(ct)
+        return client.Subscriptions.GetValueOrDefault(topic)?.NotificationStreamAsync()
             ?? AsyncEnumerable.Empty<object>();
     }
 
     public static IAsyncEnumerable<object> AllNotificationsOnAsync<TTopic>(
         this LeanPipeTestClient client,
-        TTopic topic,
-        CancellationToken ct = default
+        TTopic topic
     )
         where TTopic : ITopic
     {
         if (client.Subscriptions.TryGetValue(topic, out var subscription))
         {
             return subscription.ReceivedNotifications
+                .ToList()
                 .ToAsyncEnumerable()
-                .Concat(subscription.NotificationStreamAsync(ct));
+                .Concat(subscription.NotificationStreamAsync());
         }
         else
         {
