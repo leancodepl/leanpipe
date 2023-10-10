@@ -60,6 +60,20 @@ public class LeanPipeSubscription
         return await NotificationStreamAsync().FirstAsync(notificationPredicate, cts.Token);
     }
 
+    public IAsyncEnumerable<object> NotificationStreamWithPreviousNotificationsAsync()
+    {
+        List<object> previousNotifications;
+        IAsyncEnumerable<object> futureNotificationsStream;
+
+        lock (notificationMutex)
+        {
+            previousNotifications = receivedNotifications.ToList();
+            futureNotificationsStream = NotificationStreamAsync();
+        }
+
+        return previousNotifications.ToAsyncEnumerable().Concat(futureNotificationsStream);
+    }
+
     public IAsyncEnumerable<object> NotificationStreamAsync()
     {
         var channel = Channel.CreateUnbounded<object>(

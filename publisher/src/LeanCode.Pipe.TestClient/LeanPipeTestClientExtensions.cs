@@ -163,16 +163,9 @@ public static class LeanPipeTestClientExtensions
     )
         where TTopic : ITopic
     {
-        if (client.Subscriptions.TryGetValue(topic, out var subscription))
-        {
-            return subscription.ReceivedNotifications
-                .ToList()
-                .ToAsyncEnumerable()
-                .Concat(subscription.NotificationStreamAsync());
-        }
-        else
-        {
-            return AsyncEnumerable.Empty<object>();
-        }
+        return client.Subscriptions
+                .GetValueOrDefault(topic)
+                ?.NotificationStreamWithPreviousNotificationsAsync()
+            ?? AsyncEnumerable.Empty<object>();
     }
 }
