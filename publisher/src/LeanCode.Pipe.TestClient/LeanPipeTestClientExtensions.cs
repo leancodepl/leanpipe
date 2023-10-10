@@ -137,12 +137,14 @@ public static class LeanPipeTestClientExtensions
     /// Returns an infinite stream of future notifications on the topic instance.
     /// </summary>
     /// <remarks>
-    /// Since the stream is infinite, it should be materialized with some finite collector like
-    /// <see cref="AsyncEnumerable.FirstAsync{TSource}(IAsyncEnumerable{TSource}, Func{TSource, bool}, CancellationToken)"/>
-    /// or <see cref="AsyncEnumerable.ToListAsync{TSource}"/> combined with `Take` and possibly `Where`.
-    /// It is also very important to pass a sane CancellationToken so that the test won't hang.
+    /// Since the stream is infinite, it is very important to pass a sane <c>CancellationToken</c>
+    /// so that the test won't hang when no notifications come.
+    /// The stream should be materialized with some finite collector like
+    /// <c>FirstAsync()</c> or <c>ToListAsync()</c> combined with <c>Take()</c> and possibly <c>Where()</c>.
     /// </remarks>
-    /// <returns>An infinite stream of notifications if the topic was ever subscribed to, empty stream otherwise.</returns>
+    /// <returns>
+    /// An infinite stream of notifications if the topic was ever subscribed to, empty stream otherwise.
+    /// </returns>
     public static IAsyncEnumerable<object> FutureNotificationsOnAsync<TTopic>(
         this LeanPipeTestClient client,
         TTopic topic
@@ -150,7 +152,7 @@ public static class LeanPipeTestClientExtensions
         where TTopic : ITopic
     {
         return client.Subscriptions.GetValueOrDefault(topic)?.NotificationStreamAsync()
-            ?? AsyncEnumerable.Empty<object>();
+            ?? EmptyNotificationsStream();
     }
 
     /// <inheritdoc cref="FutureNotificationsOnAsync{TTopic}"/>
@@ -165,7 +167,12 @@ public static class LeanPipeTestClientExtensions
     {
         return client.Subscriptions
                 .GetValueOrDefault(topic)
-                ?.NotificationStreamWithPreviousNotificationsAsync()
-            ?? AsyncEnumerable.Empty<object>();
+                ?.NotificationStreamWithPreviousNotificationsAsync() ?? EmptyNotificationsStream();
+    }
+
+    private static async IAsyncEnumerable<object> EmptyNotificationsStream()
+    {
+        await Task.CompletedTask;
+        yield break;
     }
 }

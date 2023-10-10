@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Threading.Channels;
 using LeanCode.Contracts;
 
@@ -57,10 +58,24 @@ public class LeanPipeSubscription
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         cts.CancelAfter(timeout ?? DefaultNotificationAwaitTimeout);
 
-        return await NotificationStreamAsync().FirstAsync(notificationPredicate, cts.Token);
+        await foreach (
+            var n in NotificationStreamAsync().ConfigureAwait(false).WithCancellation(cts.Token)
+        )
+        {
+            if (notificationPredicate(n))
+            {
+                return n;
+            }
+        }
+
+        throw new InvalidOperationException(
+            "No notification satisfies the condition in the predicate."
+        );
     }
 
-    public IAsyncEnumerable<object> NotificationStreamWithPreviousNotificationsAsync()
+    public async IAsyncEnumerable<object> NotificationStreamWithPreviousNotificationsAsync(
+        [EnumeratorCancellation] CancellationToken ct = default
+    )
     {
         List<object> previousNotifications;
         IAsyncEnumerable<object> futureNotificationsStream;
@@ -71,7 +86,17 @@ public class LeanPipeSubscription
             futureNotificationsStream = NotificationStreamAsync();
         }
 
-        return previousNotifications.ToAsyncEnumerable().Concat(futureNotificationsStream);
+        foreach (var n in previousNotifications)
+        {
+            yield return n;
+        }
+
+        await foreach (
+            var n in futureNotificationsStream.ConfigureAwait(false).WithCancellation(ct)
+        )
+        {
+            yield return n;
+        }
     }
 
     public IAsyncEnumerable<object> NotificationStreamAsync()
@@ -85,8 +110,7 @@ public class LeanPipeSubscription
             }
         );
 
-        var act = WriteNotificationToChannel(channel);
-        onNotification += act;
+        onNotification += WriteNotificationToChannel(channel);
 
         return channel.Reader.ReadAllAsync();
 
