@@ -28,6 +28,8 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
             FunnelledSubscriberEndpointNameProvider.GetName(envelope.TopicType)
         );
 
+        // Only RabbitMQ uses `exchange`s, other brokers use `topic`s.
+        // https://masstransit.io/documentation/concepts/producers#supported-address-schemes
         var endpointPrefix = bus.Topology is IRabbitMqBusTopology ? "exchange" : "topic";
 
         var endpointUri = new Uri($"{endpointPrefix}:{endpoint}");
@@ -46,6 +48,7 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
                     {
                         if (ctx is RabbitMqSendContext rctx)
                         {
+                            // Don't create the exchange - it's responsibility of the service.
                             rctx.Mandatory = true;
                         }
                     });

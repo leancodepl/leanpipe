@@ -13,10 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../../../corelibrary/src/CQRS/LeanCode.CQRS.Security/LeanCode.CQRS.Security.csproj" />
     <PackageReference Include="LeanCode.Components" />
     <PackageReference Include="LeanCode.Contracts" />
-<!--    <PackageReference Include="LeanCode.CQRS.Security" />-->
+    <PackageReference Include="LeanCode.CQRS.Security" />
     <PackageReference Include="LeanCode.Logging" />
 
     <PackageReference Include="MassTransit.RabbitMQ" />
