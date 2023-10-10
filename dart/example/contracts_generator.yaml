@@ -1,0 +1,8 @@
+input:
+  project:
+    - /Users/jakublange/desktop/exampleapp/backend/src/core/ExampleApp.Core.Contracts/ExampleApp.Core.Contracts.csproj
+name: contracts
+include: .*
+output: lib/data
+directives: ""
+extra: ""

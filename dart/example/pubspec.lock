@@ -77,10 +77,10 @@ packages:
     dependency: transitive
     description:
       name: build_resolvers
-      sha256: d912852cce27c9e80a93603db721c267716894462e7033165178b91138587972
+      sha256: "64e12b0521812d1684b1917bc80945625391cb9bdd4312536b1d69dcb6133ed8"
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.2"
+    version: "2.4.1"
   build_runner:
     dependency: "direct dev"
     description:
@@ -161,6 +161,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.1"
+  cqrs:
+    dependency: "direct main"
+    description:
+      name: cqrs
+      sha256: "3c1831144293ad90ef9fcc24cacb33470f44d594d26969ac83b899b228b155b7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.0.1"
   crypto:
     dependency: transitive
     description:
@@ -355,6 +363,23 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.7.1"
+  leancode_contracts:
+    dependency: "direct main"
+    description:
+      name: leancode_contracts
+      sha256: bb41f0a00f3a97d227bd45be14d4a9286caa78b8a49f343ef5cd937f653345fd
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.0"
+  leancode_contracts_generator:
+    dependency: "direct dev"
+    description:
+      path: "packages/leancode_contracts_generator"
+      ref: "feat/leancode_pipe"
+      resolved-ref: "5e00962971812531f97be08cf7294f5986b0587e"
+      url: "git@github.com:leancodepl/contractsgenerator-dart.git"
+    source: git
+    version: "0.12.0"
   leancode_pipe:
     dependency: "direct main"
     description:
@@ -442,6 +467,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.1"
+  protobuf:
+    dependency: transitive
+    description:
+      name: protobuf
+      sha256: "68645b24e0716782e58948f8467fd42a880f255096a821f9e7d0ec625b00c84d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.0"
   provider:
     dependency: transitive
     description:
@@ -466,6 +499,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.3"
+  recase:
+    dependency: transitive
+    description:
+      name: recase
+      sha256: e4eb4ec2dcdee52dcf99cb4ceabaffc631d7424ee55e56f280bc039737f89213
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   rxdart:
     dependency: transitive
     description:
