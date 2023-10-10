@@ -10,7 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../LeanCode.Pipe/LeanCode.Pipe.csproj" />
-      
+
     <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" />
   </ItemGroup>
 

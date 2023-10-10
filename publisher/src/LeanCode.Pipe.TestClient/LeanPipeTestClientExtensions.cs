@@ -4,8 +4,6 @@ namespace LeanCode.Pipe.TestClient;
 
 public static class LeanPipeTestClientExtensions
 {
-    private static readonly TimeSpan DefaultNotificationAwaitTimeout = TimeSpan.FromSeconds(10);
-
     /// <summary>
     /// Subscribe to a topic instance or throw if it fails for any reason.
     /// </summary>
@@ -78,7 +76,7 @@ public static class LeanPipeTestClientExtensions
     /// <param name="notificationPredicate">Specifies notification to wait for.</param>
     /// <param name="timeout">Timeout, after which the notification is assumed to be not delivered.</param>
     /// <returns>Task containing the received notification.</returns>
-    public static async Task<object> WaitForNextNotificationOn<TTopic>(
+    public static ValueTask<object> WaitForNextNotificationOn<TTopic>(
         this LeanPipeTestClient client,
         TTopic topic,
         Func<object, bool>? notificationPredicate = null,
@@ -87,20 +85,11 @@ public static class LeanPipeTestClientExtensions
     )
         where TTopic : ITopic
     {
-        notificationPredicate ??= _ => true;
-
-        object notification;
-
-        using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-        cts.CancelAfter(timeout ?? DefaultNotificationAwaitTimeout);
-
-        while (
-            !notificationPredicate(
-                notification = await client.Subscriptions[topic].WaitForNextNotification(cts.Token)
-            )
-        ) { }
-
-        return notification;
+        return client.Subscriptions[topic].WaitForNextNotification(
+            notificationPredicate,
+            timeout,
+            ct
+        );
     }
 
     /// <inheritdoc cref="WaitForNextNotificationOn{TTopic}"/>
@@ -142,5 +131,48 @@ public static class LeanPipeTestClientExtensions
     {
         return client.Subscriptions.GetValueOrDefault(topic)?.ReceivedNotifications
             ?? new List<object>();
+    }
+
+    /// <summary>
+    /// Returns an infinite stream of future notifications on the topic instance.
+    /// </summary>
+    /// <remarks>
+    /// Since the stream is infinite, it is very important to pass a sane <c>CancellationToken</c>
+    /// so that the test won't hang when no notifications come.
+    /// The stream should be materialized with some finite collector like
+    /// <c>FirstAsync()</c> or <c>ToListAsync()</c> combined with <c>Take()</c> and possibly <c>Where()</c>.
+    /// </remarks>
+    /// <returns>
+    /// An infinite stream of notifications if the topic was ever subscribed to, empty stream otherwise.
+    /// </returns>
+    public static IAsyncEnumerable<object> FutureNotificationsOnAsync<TTopic>(
+        this LeanPipeTestClient client,
+        TTopic topic
+    )
+        where TTopic : ITopic
+    {
+        return client.Subscriptions.GetValueOrDefault(topic)?.NotificationStreamAsync()
+            ?? EmptyNotificationsStream();
+    }
+
+    /// <inheritdoc cref="FutureNotificationsOnAsync{TTopic}"/>
+    /// <summary>
+    /// Returns an infinite stream of past and future notifications on the topic instance.
+    /// </summary>
+    public static IAsyncEnumerable<object> AllNotificationsOnAsync<TTopic>(
+        this LeanPipeTestClient client,
+        TTopic topic
+    )
+        where TTopic : ITopic
+    {
+        return client.Subscriptions
+                .GetValueOrDefault(topic)
+                ?.NotificationStreamWithPreviousNotificationsAsync() ?? EmptyNotificationsStream();
+    }
+
+    private static async IAsyncEnumerable<object> EmptyNotificationsStream()
+    {
+        await Task.CompletedTask;
+        yield break;
     }
 }

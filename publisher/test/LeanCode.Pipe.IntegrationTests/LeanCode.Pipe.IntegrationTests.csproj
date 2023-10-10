@@ -16,6 +16,7 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="System.Linq.Async" />
 
     <PackageReference Include="LeanCode.IntegrationTestHelpers" />
   </ItemGroup>
