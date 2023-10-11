@@ -10,7 +10,8 @@ public static class RegistrationConfiguratorExtensions
 {
     public static void AddFunnelledLeanPipeConsumers(
         this IRegistrationConfigurator configurator,
-        IEnumerable<Assembly> assembliesWithTopics
+        IEnumerable<Assembly> assembliesWithTopics,
+        Type? funnelledSubscriberDefinitionOverride = null
     )
     {
         var result = AssemblyTypeCache
@@ -22,22 +23,31 @@ public static class RegistrationConfiguratorExtensions
             .FindTypes(TypeClassification.Closed | TypeClassification.Concrete)
             .ToArray();
 
-        configurator.AddFunnelledLeanPipeConsumers(types);
+        configurator.AddFunnelledLeanPipeConsumers(types, funnelledSubscriberDefinitionOverride);
     }
 
     public static void AddFunnelledLeanPipeConsumers(
         this IRegistrationConfigurator configurator,
-        Type[] topicTypes
+        Type[] topicTypes,
+        Type? funnelledSubscriberDefinitionOverride
     )
     {
+        var definitionType =
+            funnelledSubscriberDefinitionOverride ?? typeof(FunnelledSubscriberDefinition<>);
+
+        if (definitionType is not { IsGenericTypeDefinition: true, GenericTypeArguments.Length: 1 })
+        {
+            throw new ArgumentException(
+                "LeanPipe funnelled subscriber definition override is not compatible",
+                nameof(funnelledSubscriberDefinitionOverride)
+            );
+        }
+
         foreach (var topicType in topicTypes)
         {
             var consumerType = typeof(FunnelledSubscriber<>).MakeGenericType(topicType);
 
-            // TODO: Make this overridable if other consumer definition exists in some assemblies
-            var consumerDefinitionType = typeof(FunnelledSubscriberDefinition<>).MakeGenericType(
-                topicType
-            );
+            var consumerDefinitionType = definitionType.MakeGenericType(topicType);
 
             configurator.AddConsumer(consumerType, consumerDefinitionType);
         }
