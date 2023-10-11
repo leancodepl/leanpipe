@@ -2,7 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LeanCode.Pipe.Funnel.Instance;
 
-public static class FunnelServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static void AddLeanPipeFunnel(this IServiceCollection services)
     {
