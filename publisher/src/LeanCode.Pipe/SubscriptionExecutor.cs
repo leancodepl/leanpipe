@@ -43,70 +43,23 @@ public class SubscriptionExecutor : ISubscriptionExecutor
     {
         try
         {
-            var topic = deserializer.Deserialize(envelope);
+            var topic = Deserialize(envelope);
 
             if (topic is null)
             {
-                logger.Error("The topic type {TopicType} is unknown", envelope.TopicType);
                 return SubscriptionStatus.Malformed;
             }
 
-            var authorized = await security.CheckIfAuthorizedAsync(topic, context.User);
+            var authorized = await AuthorizeAsync(topic, envelope, type, context);
 
             if (!authorized)
             {
-                logger.Warning(
-                    "Connection is not authorized for {SubscriptionOperation} to topic {TopicType}",
-                    type,
-                    envelope.TopicType
-                );
                 return SubscriptionStatus.Unauthorized;
             }
 
-            var handler =
-                resolver.FindSubscriptionHandler(topic.GetType())
-                ?? throw new InvalidOperationException(
-                    $"The resolver for topic {envelope.TopicType} cannot be found."
-                );
+            var result = await HandleAsync(topic, envelope, type, context, subscribeContext, ct);
 
-            bool result;
-
-            if (type == OperationType.Subscribe)
-            {
-                result = await handler.OnSubscribedAsync(topic, subscribeContext, context, ct);
-            }
-            else
-            {
-                result = await handler.OnUnsubscribedAsync(topic, subscribeContext, context, ct);
-            }
-
-            if (result)
-            {
-                logger.Debug(
-                    "Subscription operation {SubscriptionOperation} on topic {TopicType} completed successfully",
-                    type,
-                    envelope.TopicType
-                );
-                return SubscriptionStatus.Success;
-            }
-            else
-            {
-                logger.Warning(
-                    "Subscription operation {SubscriptionOperation} on topic {TopicType} completed successfully",
-                    type,
-                    envelope.TopicType
-                );
-                return SubscriptionStatus.Invalid;
-            }
-        }
-        catch (JsonException e)
-        {
-            logger.Error(
-                e,
-                "The topic payload of type {TopicType} was malformed",
-                envelope.TopicType
-            );
-            return SubscriptionStatus.Malformed;
+            return result ? SubscriptionStatus.Success : SubscriptionStatus.Invalid;
         }
         catch (Exception e)
         {
@@ -117,6 +70,96 @@ public class SubscriptionExecutor : ISubscriptionExecutor
                 envelope.TopicType
             );
             return SubscriptionStatus.InternalServerError;
+        }
+    }
+
+    private ITopic? Deserialize(SubscriptionEnvelope envelope)
+    {
+        try
+        {
+            var topic = deserializer.Deserialize(envelope);
+
+            if (topic is null)
+            {
+                logger.Error("The topic type {TopicType} is unknown", envelope.TopicType);
+            }
+
+            return topic;
+        }
+        catch (JsonException e)
+        {
+            logger.Error(
+                e,
+                "The topic payload of type {TopicType} was malformed",
+                envelope.TopicType
+            );
+
+            return null;
+        }
+    }
+
+    private async Task<bool> AuthorizeAsync(
+        ITopic topic,
+        SubscriptionEnvelope envelope,
+        OperationType type,
+        LeanPipeContext context
+    )
+    {
+        var authorized = await security.CheckIfAuthorizedAsync(topic, context.User);
+
+        if (!authorized)
+        {
+            logger.Warning(
+                "Connection is not authorized for {SubscriptionOperation} to topic {TopicType}",
+                type,
+                envelope.TopicType
+            );
+        }
+
+        return authorized;
+    }
+
+    private async Task<bool> HandleAsync(
+        ITopic topic,
+        SubscriptionEnvelope envelope,
+        OperationType type,
+        LeanPipeContext context,
+        ISubscribeContext subscribeContext,
+        CancellationToken ct
+    )
+    {
+        var handler =
+            resolver.FindSubscriptionHandler(topic.GetType())
+            ?? throw new InvalidOperationException(
+                $"The resolver for topic {envelope.TopicType} cannot be found."
+            );
+
+        var result = await HandleSubscriptionOperationAsync();
+
+        if (result)
+        {
+            logger.Debug(
+                "Subscription operation {SubscriptionOperation} on topic {TopicType} completed successfully",
+                type,
+                envelope.TopicType
+            );
+        }
+        else
+        {
+            logger.Warning(
+                "Subscription operation {SubscriptionOperation} on topic {TopicType} completed successfully",
+                type,
+                envelope.TopicType
+            );
+        }
+
+        return result;
+
+        ValueTask<bool> HandleSubscriptionOperationAsync()
+        {
+            return type == OperationType.Subscribe
+                ? handler.OnSubscribedAsync(topic, subscribeContext, context, ct)
+                : handler.OnUnsubscribedAsync(topic, subscribeContext, context, ct);
         }
     }
 }
