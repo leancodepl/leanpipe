@@ -7,13 +7,18 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
 {
     private readonly Serilog.ILogger logger = Serilog.Log.ForContext<FunnelSubscriptionExecutor>();
 
-    private readonly IEndpointNameFormatter endpointNameFormatter;
     private readonly IBus bus;
+    private readonly IEndpointNameFormatter? endpointNameFormatter;
 
-    public FunnelSubscriptionExecutor(IEndpointNameFormatter endpointNameFormatter, IBus bus)
+    public FunnelSubscriptionExecutor(IBus bus)
     {
-        this.endpointNameFormatter = endpointNameFormatter;
         this.bus = bus;
+    }
+
+    public FunnelSubscriptionExecutor(IBus bus, IEndpointNameFormatter endpointNameFormatter)
+    {
+        this.bus = bus;
+        this.endpointNameFormatter = endpointNameFormatter;
     }
 
     public async Task<SubscriptionStatus> ExecuteAsync(
@@ -24,9 +29,12 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
         CancellationToken ct
     )
     {
-        var endpoint = endpointNameFormatter.SanitizeName(
-            FunnelledSubscriberEndpointNameProvider.GetName(envelope.TopicType)
-        );
+        var endpoint = FunnelledSubscriberEndpointNameProvider.GetName(envelope.TopicType);
+
+        if (endpointNameFormatter is not null)
+        {
+            endpoint = endpointNameFormatter.SanitizeName(endpoint);
+        }
 
         // Only RabbitMQ uses `exchange`s, other brokers use `topic`s.
         // https://masstransit.io/documentation/concepts/producers#supported-address-schemes
