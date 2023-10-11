@@ -11,7 +11,9 @@ namespace LeanCode.Pipe;
 public interface ILeanPipePublisher<TTopic>
     where TTopic : ITopic
 {
-    IServiceProvider ServiceProvider { get; }
+    IPublishingKeys<T, TNotification> GetPublishingKeysProvider<T, TNotification>()
+        where T : ITopic, IProduceNotification<TNotification>
+        where TNotification : notnull;
 
     Task PublishAsync(
         IEnumerable<string> keys,
@@ -24,7 +26,7 @@ internal class LeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
     where TTopic : ITopic
 {
     private IHubContext<LeanPipeSubscriber> HubContext { get; }
-    public IServiceProvider ServiceProvider { get; }
+    private IServiceProvider ServiceProvider { get; }
 
     public LeanPipePublisher(
         IHubContext<LeanPipeSubscriber> hubContext,
@@ -33,6 +35,13 @@ internal class LeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
     {
         HubContext = hubContext;
         ServiceProvider = serviceProvider;
+    }
+
+    public IPublishingKeys<T, TNotification> GetPublishingKeysProvider<T, TNotification>()
+        where T : ITopic, IProduceNotification<TNotification>
+        where TNotification : notnull
+    {
+        return ServiceProvider.GetRequiredService<IPublishingKeys<T, TNotification>>();
     }
 
     public async Task PublishAsync(
@@ -81,11 +90,9 @@ public static class LeanPipePublisherExtensions
         where TTopic : ITopic, IProduceNotification<TNotification>
         where TNotification : notnull
     {
-        var notificationKeys = publisher.ServiceProvider.GetRequiredService<
-            IPublishingKeys<TTopic, TNotification>
-        >();
+        var publishingKeysProvider = publisher.GetPublishingKeysProvider<TTopic, TNotification>();
 
-        var keys = await notificationKeys.GetForPublishingAsync(topic, notification, ct);
+        var keys = await publishingKeysProvider.GetForPublishingAsync(topic, notification, ct);
         var payload = NotificationEnvelope.Create(topic, notification);
 
         await publisher.PublishAsync(keys, payload, ct);

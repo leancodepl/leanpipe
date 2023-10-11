@@ -4,6 +4,7 @@ using MassTransit;
 using MassTransit.SignalR.Contracts;
 using MassTransit.SignalR.Utils;
 using Microsoft.AspNetCore.SignalR.Protocol;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace LeanCode.Pipe.Funnel.FunnelledService;
 
@@ -14,7 +15,7 @@ internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
         ImmutableArray.Create<IHubProtocol>(new JsonHubProtocol());
 
     private IPublishEndpoint PublishEndpoint { get; }
-    public IServiceProvider ServiceProvider { get; }
+    private IServiceProvider ServiceProvider { get; }
 
     public FunnelledLeanPipePublisher(
         IPublishEndpoint publishEndpoint,
@@ -23,6 +24,13 @@ internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
     {
         PublishEndpoint = publishEndpoint;
         ServiceProvider = serviceProvider;
+    }
+
+    public IPublishingKeys<T, TNotification> GetPublishingKeysProvider<T, TNotification>()
+        where T : ITopic, IProduceNotification<TNotification>
+        where TNotification : notnull
+    {
+        return ServiceProvider.GetRequiredService<IPublishingKeys<T, TNotification>>();
     }
 
     public Task PublishAsync(
