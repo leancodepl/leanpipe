@@ -4,10 +4,8 @@ using System.Text.Json.Serialization;
 
 namespace LeanCode.Pipe.Funnel;
 
-public class ClaimsPrincipalJsonConverter : JsonConverter<ClaimsPrincipal>
+internal class ClaimsPrincipalJsonConverter : JsonConverter<ClaimsPrincipal>
 {
-    public static ClaimsPrincipalJsonConverter Instance = new();
-
     public override ClaimsPrincipal? Read(
         ref Utf8JsonReader reader,
         Type typeToConvert,
@@ -37,6 +35,7 @@ public class ClaimsPrincipalJsonConverter : JsonConverter<ClaimsPrincipal>
         using var binaryWriter = new BinaryWriter(ms);
 
         value.WriteTo(binaryWriter);
-        writer.WriteStringValue(Convert.ToBase64String(ms.ToArray()));
+
+        writer.WriteBase64StringValue(ms.ToArray());
     }
 }

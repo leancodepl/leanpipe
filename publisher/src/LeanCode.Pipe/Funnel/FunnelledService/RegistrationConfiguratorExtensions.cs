@@ -35,7 +35,10 @@ public static class RegistrationConfiguratorExtensions
         var definitionType =
             funnelledSubscriberDefinitionOverride ?? typeof(FunnelledSubscriberDefinition<>);
 
-        if (definitionType is not { IsGenericTypeDefinition: true, GenericTypeArguments.Length: 1 })
+        if (
+            !definitionType.IsGenericTypeDefinition
+            || definitionType.GetGenericArguments().Length != 1
+        )
         {
             throw new ArgumentException(
                 "LeanPipe funnelled subscriber definition override is not compatible",
