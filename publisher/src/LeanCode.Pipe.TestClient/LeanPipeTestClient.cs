@@ -7,8 +7,6 @@ using Microsoft.AspNetCore.Http.Connections.Client;
 using Microsoft.AspNetCore.SignalR.Client;
 using Microsoft.Extensions.DependencyInjection;
 
-[assembly: InternalsVisibleTo("LeanCode.Pipe.TestClient.Tests")]
-
 namespace LeanCode.Pipe.TestClient;
 
 /// <summary>

@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace LeanCode.Pipe.Funnel.FunnelledService;
 
-public static class FunnelledServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     public static LeanPipeServicesBuilder AddFunnelledLeanPipe(
         this IServiceCollection services,

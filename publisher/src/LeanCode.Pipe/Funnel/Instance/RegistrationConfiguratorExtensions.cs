@@ -9,35 +9,33 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace LeanCode.Pipe.Funnel.Instance;
 
-public static class BusRegistrationConfiguratorExtensions
+public static class RegistrationConfiguratorExtensions
 {
     public static void ConfigureLeanPipeFunnelConsumers(
-        this IBusRegistrationConfigurator busConfigurator,
+        this IRegistrationConfigurator configurator,
         Action<IHubLifetimeManagerOptions<LeanPipeSubscriber>>? configureHubLifetimeOptions = null
     )
     {
         var options = new HubLifetimeManagerOptions<LeanPipeSubscriber>();
         configureHubLifetimeOptions?.Invoke(options);
 
-        busConfigurator.TryAddSingleton<
+        configurator.TryAddSingleton<
             IHubLifetimeScopeProvider,
             DependencyInjectionHubLifetimeScopeProvider
         >();
 
-        busConfigurator.AddSingleton(
-            provider => GetMassTransitHubLifetimeManager(provider, options)
-        );
-        busConfigurator.AddSingleton<HubLifetimeManager<LeanPipeSubscriber>>(
+        configurator.AddSingleton(provider => GetMassTransitHubLifetimeManager(provider, options));
+        configurator.AddSingleton<HubLifetimeManager<LeanPipeSubscriber>>(
             sp => sp.GetRequiredService<MassTransitHubLifetimeManager<LeanPipeSubscriber>>()
         );
 
-        busConfigurator.AddSingleton<HubConsumerDefinition<LeanPipeSubscriber>>();
+        configurator.AddSingleton<HubConsumerDefinition<LeanPipeSubscriber>>();
 
-        busConfigurator.TryAddSingleton<
+        configurator.TryAddSingleton<
             IConsumerDefinition<GroupConsumer<LeanPipeSubscriber>>,
             GroupConsumerDefinition<LeanPipeSubscriber>
         >();
-        busConfigurator.AddConsumer<GroupConsumer<LeanPipeSubscriber>>();
+        configurator.AddConsumer<GroupConsumer<LeanPipeSubscriber>>();
     }
 
     private static MassTransitHubLifetimeManager<LeanPipeSubscriber> GetMassTransitHubLifetimeManager(
