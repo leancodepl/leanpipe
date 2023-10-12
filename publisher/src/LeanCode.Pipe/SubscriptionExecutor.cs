@@ -148,7 +148,7 @@ public class SubscriptionExecutor : ISubscriptionExecutor
         else
         {
             logger.Warning(
-                "Subscription operation {SubscriptionOperation} on topic {TopicType} completed successfully",
+                "Subscription operation {SubscriptionOperation} on topic {TopicType} was invalid",
                 type,
                 envelope.TopicType
             );
