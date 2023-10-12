@@ -1,5 +1,50 @@
 include: package:leancode_lint/analysis_options.yaml
 
+custom_lint:
+  rules:
+    - use_design_system_item:
+      AppTextField:
+        - instead_of: TextField
+          from_package: flutter
+      "AppColors or AppTextStyles":
+        - instead_of: Theme
+          from_package: flutter
+      AppColor:
+        - instead_of: Color
+          from_package: flutter
+      AppColors:
+        - instead_of: Colors
+          from_package: flutter
+        - instead_of: ColorScheme
+          from_package: flutter
+      AppColorTween:
+        - instead_of: ColorTween
+          from_package: flutter
+      AppText:
+        - instead_of: Text
+          from_package: flutter
+      AppTextStyle:
+        - instead_of: TextStyle
+          from_package: flutter
+      AppTextSpan:
+        - instead_of: TextSpan
+          from_package: flutter
+      AppWidgetSpan:
+        - instead_of: WidgetSpan
+          from_package: flutter
+      AppDefaultTextStyle:
+        - instead_of: DefaultTextStyle
+          from_package: flutter
+    - prefix_widgets_returning_slivers:
+      application_prefix: App
+
 analyzer:
+  plugins:
+    - custom_lint
+  errors:
+    todo: ignore
   exclude:
-    - "**/*.g.dart"
+    - "**.g.dart"
+    - lib/resources/l10n/*
+    - lib/design_system_old/**
+    - generator/**
