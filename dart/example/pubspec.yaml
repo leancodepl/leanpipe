@@ -39,6 +39,7 @@ dependencies:
       ref: 99409688d249396a8dafb45d9595ac1105d52066
       path: dart
   logging: ^1.0.2
+  oauth2: ^2.0.2
   package_info_plus: ^4.1.0
   provider: ^6.0.3
   shared_preferences: ^2.2.2

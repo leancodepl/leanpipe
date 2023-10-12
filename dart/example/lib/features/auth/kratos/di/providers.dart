@@ -24,9 +24,7 @@ List<SingleChildWidget> useKratosProviders({
     const [],
   );
 
-  final kratosSecureStorage = useMemoized(
-    FlutterSecureCredentialsStorage.new,
-  );
+  final kratosSecureStorage = useMemoized(FlutterSecureCredentialsStorage.new);
 
   final authCubit = useMemoized(
     () => AuthCubit(
