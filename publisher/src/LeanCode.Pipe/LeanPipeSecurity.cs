@@ -15,7 +15,11 @@ public class LeanPipeSecurity
         this.serviceProvider = serviceProvider;
     }
 
-    public async Task<bool> CheckIfAuthorizedAsync(ITopic topic, ClaimsPrincipal user)
+    public async Task<bool> CheckIfAuthorizedAsync(
+        ITopic topic,
+        ClaimsPrincipal user,
+        CancellationToken ct
+    )
     {
         var topicType = topic.GetType();
         var customAuthorizers = AuthorizeWhenAttribute.GetCustomAuthorizers(topicType);
@@ -35,7 +39,8 @@ public class LeanPipeSecurity
                 var authorized = await authorizer.CheckIfAuthorizedAsync(
                     user,
                     topic,
-                    customAuthorizerDefinition.CustomData
+                    customAuthorizerDefinition.CustomData,
+                    ct
                 );
 
                 if (!authorized)

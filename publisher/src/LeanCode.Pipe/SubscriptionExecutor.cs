@@ -50,7 +50,7 @@ public class SubscriptionExecutor : ISubscriptionExecutor
                 return SubscriptionStatus.Malformed;
             }
 
-            var authorized = await AuthorizeAsync(topic, envelope, type, context);
+            var authorized = await AuthorizeAsync(topic, envelope, type, context, ct);
 
             if (!authorized)
             {
@@ -102,10 +102,11 @@ public class SubscriptionExecutor : ISubscriptionExecutor
         ITopic topic,
         SubscriptionEnvelope envelope,
         OperationType type,
-        LeanPipeContext context
+        LeanPipeContext context,
+        CancellationToken ct
     )
     {
-        var authorized = await security.CheckIfAuthorizedAsync(topic, context.User);
+        var authorized = await security.CheckIfAuthorizedAsync(topic, context.User, ct);
 
         if (!authorized)
         {
