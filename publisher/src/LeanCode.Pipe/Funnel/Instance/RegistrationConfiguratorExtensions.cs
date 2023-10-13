@@ -11,6 +11,11 @@ namespace LeanCode.Pipe.Funnel.Instance;
 
 public static class RegistrationConfiguratorExtensions
 {
+    /// <summary>
+    /// Adds special MassTransit SignalR hub lifetime manager and configures required consumer.
+    /// </summary>
+    /// <param name="configurator">MassTransit bus registration configurator.</param>
+    /// <param name="configureHubLifetimeOptions">Configures hub lifetime.</param>
     public static void ConfigureLeanPipeFunnelConsumers(
         this IRegistrationConfigurator configurator,
         Action<IHubLifetimeManagerOptions<LeanPipeSubscriber>>? configureHubLifetimeOptions = null

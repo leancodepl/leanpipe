@@ -8,6 +8,16 @@ namespace LeanCode.Pipe.Funnel.FunnelledService;
 
 public static class RegistrationConfiguratorExtensions
 {
+    /// <summary>
+    /// Configures a consumer for each topic in the provided assemblies that will handle subscriptions
+    /// in the LeanPipe with Funnel model.
+    /// </summary>
+    /// <param name="configurator">MassTransit bus registration configurator.</param>
+    /// <param name="assembliesWithTopics">Assemblies that contain all topics exposed by the service.</param>
+    /// <param name="funnelledSubscriberDefinitionOverride">
+    /// Optional definition override for subscriber consumers.
+    /// Should inherit <see cref="FunnelledSubscriber{TTopic}"/> and be generic of the topics.
+    /// </param>
     public static void AddFunnelledLeanPipeConsumers(
         this IRegistrationConfigurator configurator,
         IEnumerable<Assembly> assembliesWithTopics,

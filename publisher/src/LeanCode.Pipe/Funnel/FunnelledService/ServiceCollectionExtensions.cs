@@ -5,6 +5,12 @@ namespace LeanCode.Pipe.Funnel.FunnelledService;
 
 public static class ServiceCollectionExtensions
 {
+    /// <summary>
+    /// Adds all classes required for LeanPipe with Funnel to function to DI.
+    /// </summary>
+    /// <returns>Service builder allowing for overriding default LeanPipe implementations
+    /// and further configuration.</returns>
+    /// <remarks>SignalR is not registered because it's not needed in this variant.</remarks>
     public static LeanPipeServicesBuilder AddFunnelledLeanPipe(
         this IServiceCollection services,
         TypesCatalog topics,
