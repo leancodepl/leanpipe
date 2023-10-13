@@ -36,9 +36,9 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
             endpoint = endpointNameFormatter.SanitizeName(endpoint);
         }
 
-        // Only RabbitMQ uses `exchange`s, other brokers use `topic`s.
+        // For RabbitMQ use `exchange`s to get instant errors if no queue doesn't exist, can't do that in other brokers.
         // https://masstransit.io/documentation/concepts/producers#supported-address-schemes
-        var endpointPrefix = bus.Topology is IRabbitMqBusTopology ? "exchange" : "topic";
+        var endpointPrefix = bus.Topology is IRabbitMqBusTopology ? "exchange" : "queue";
 
         var endpointUri = new Uri($"{endpointPrefix}:{endpoint}");
 
