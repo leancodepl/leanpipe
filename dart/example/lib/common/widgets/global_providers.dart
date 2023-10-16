@@ -3,8 +3,11 @@ import 'package:app/common/config/app_global_keys.dart';
 import 'package:app/common/util/use_global_key.dart';
 import 'package:app/features/auth/kratos/auth_bloc.dart';
 import 'package:app/features/auth/kratos/di/providers.dart';
+import 'package:app/features/projects_screen/bloc/projects_cubit.dart';
 import 'package:cqrs/cqrs.dart';
+import 'package:debug_page/debug_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
@@ -76,10 +79,16 @@ class _GlobalProviders extends HookWidget {
     ).data;
 
     final httpClient = useMemoized(
-      () => switch (accessToken) {
-        final accessToken? => oauth2.Client(oauth2.Credentials(accessToken)),
-        _ => http.Client(),
-      },
+      () => LoggingHttpClient(
+        client: switch (accessToken) {
+          final accessToken? => oauth2.Client(
+              oauth2.Credentials(accessToken),
+              identifier: 'com.exampleapp',
+            ),
+          _ => http.Client(),
+        },
+      ),
+      [accessToken],
     );
 
     final cqrs = useMemoized(
@@ -101,6 +110,8 @@ class _GlobalProviders extends HookWidget {
       },
     );
 
+    final projectsCubit = useMemoized(() => ProjectsCubit(cqrs: cqrs)..fetch());
+
     return MultiProvider(
       providers: [
         Provider.value(value: globalKeys),
@@ -109,7 +120,10 @@ class _GlobalProviders extends HookWidget {
         Provider.value(value: httpClient),
         Provider.value(value: pipeClient),
       ],
-      child: child,
+      child: MultiBlocProvider(
+        providers: [BlocProvider.value(value: projectsCubit)],
+        child: child,
+      ),
     );
   }
 }

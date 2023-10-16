@@ -69,22 +69,22 @@ class _$ReauthorizeStateCopyWithImpl<$Res, $Val extends ReauthorizeState>
 }
 
 /// @nodoc
-abstract class _$$_ReauthorizeStateCopyWith<$Res>
+abstract class _$$ReauthorizeStateImplCopyWith<$Res>
     implements $ReauthorizeStateCopyWith<$Res> {
-  factory _$$_ReauthorizeStateCopyWith(
-          _$_ReauthorizeState value, $Res Function(_$_ReauthorizeState) then) =
-      __$$_ReauthorizeStateCopyWithImpl<$Res>;
+  factory _$$ReauthorizeStateImplCopyWith(_$ReauthorizeStateImpl value,
+          $Res Function(_$ReauthorizeStateImpl) then) =
+      __$$ReauthorizeStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({AuthFlowInfo? flowInfo, LoginError? error, bool inProgress});
 }
 
 /// @nodoc
-class __$$_ReauthorizeStateCopyWithImpl<$Res>
-    extends _$ReauthorizeStateCopyWithImpl<$Res, _$_ReauthorizeState>
-    implements _$$_ReauthorizeStateCopyWith<$Res> {
-  __$$_ReauthorizeStateCopyWithImpl(
-      _$_ReauthorizeState _value, $Res Function(_$_ReauthorizeState) _then)
+class __$$ReauthorizeStateImplCopyWithImpl<$Res>
+    extends _$ReauthorizeStateCopyWithImpl<$Res, _$ReauthorizeStateImpl>
+    implements _$$ReauthorizeStateImplCopyWith<$Res> {
+  __$$ReauthorizeStateImplCopyWithImpl(_$ReauthorizeStateImpl _value,
+      $Res Function(_$ReauthorizeStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -94,7 +94,7 @@ class __$$_ReauthorizeStateCopyWithImpl<$Res>
     Object? error = freezed,
     Object? inProgress = null,
   }) {
-    return _then(_$_ReauthorizeState(
+    return _then(_$ReauthorizeStateImpl(
       flowInfo: freezed == flowInfo
           ? _value.flowInfo
           : flowInfo // ignore: cast_nullable_to_non_nullable
@@ -113,8 +113,8 @@ class __$$_ReauthorizeStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_ReauthorizeState implements _ReauthorizeState {
-  const _$_ReauthorizeState(
+class _$ReauthorizeStateImpl implements _ReauthorizeState {
+  const _$ReauthorizeStateImpl(
       {this.flowInfo, this.error, this.inProgress = false});
 
   @override
@@ -134,7 +134,7 @@ class _$_ReauthorizeState implements _ReauthorizeState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_ReauthorizeState &&
+            other is _$ReauthorizeStateImpl &&
             (identical(other.flowInfo, flowInfo) ||
                 other.flowInfo == flowInfo) &&
             (identical(other.error, error) || other.error == error) &&
@@ -148,15 +148,16 @@ class _$_ReauthorizeState implements _ReauthorizeState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_ReauthorizeStateCopyWith<_$_ReauthorizeState> get copyWith =>
-      __$$_ReauthorizeStateCopyWithImpl<_$_ReauthorizeState>(this, _$identity);
+  _$$ReauthorizeStateImplCopyWith<_$ReauthorizeStateImpl> get copyWith =>
+      __$$ReauthorizeStateImplCopyWithImpl<_$ReauthorizeStateImpl>(
+          this, _$identity);
 }
 
 abstract class _ReauthorizeState implements ReauthorizeState {
   const factory _ReauthorizeState(
       {final AuthFlowInfo? flowInfo,
       final LoginError? error,
-      final bool inProgress}) = _$_ReauthorizeState;
+      final bool inProgress}) = _$ReauthorizeStateImpl;
 
   @override
   AuthFlowInfo? get flowInfo;
@@ -166,6 +167,6 @@ abstract class _ReauthorizeState implements ReauthorizeState {
   bool get inProgress;
   @override
   @JsonKey(ignore: true)
-  _$$_ReauthorizeStateCopyWith<_$_ReauthorizeState> get copyWith =>
+  _$$ReauthorizeStateImplCopyWith<_$ReauthorizeStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

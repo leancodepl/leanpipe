@@ -1,4 +1,3 @@
-import 'package:app/app.dart';
 import 'package:app/features/auth/auth_init_page/auth_init_page.dart';
 import 'package:app/features/auth/login/login_page.dart';
 import 'package:app/features/auth/menu/change_password/change_password_page.dart';
@@ -8,6 +7,10 @@ import 'package:app/features/auth/reauthorize/reauthorize_page.dart';
 import 'package:app/features/auth/recovery/recovery_page.dart';
 import 'package:app/features/auth/register/register_page.dart';
 import 'package:app/features/auth/verification/verification_page.dart';
+import 'package:app/features/employees/employees_screen.dart';
+import 'package:app/features/home/home_screen.dart';
+import 'package:app/features/project_details_screen/project_details_screen.dart';
+import 'package:app/features/projects_screen/projects_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -36,6 +39,30 @@ class HomeRoute extends PlatformGoRouteData<void> {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) =>
       const HomePage(key: _homePageKey);
+}
+
+@TypedGoRoute<EmployeesRoute>(path: '/employees')
+class EmployeesRoute extends GoRouteData {
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) =>
+      const EmployeesPage();
+}
+
+@TypedGoRoute<ProjectsRoute>(path: '/projects')
+class ProjectsRoute extends GoRouteData {
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) =>
+      const ProjectsPage();
+}
+
+@TypedGoRoute<ProjectDetailsRoute>(path: '/project-details')
+class ProjectDetailsRoute extends GoRouteData {
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    final projectId = state.queryParameters['projectId'];
+
+    return ProjectDetailsPage(projectId: projectId);
+  }
 }
 
 @TypedGoRoute<MenuRoute>(

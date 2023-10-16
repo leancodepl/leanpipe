@@ -1,5 +1,3 @@
-export 'package:app/resources/assets.gen.dart';
-
 export 'app_text_styles.dart';
 export 'app_theme.dart';
 export 'colors/app_colors.dart';

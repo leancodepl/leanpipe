@@ -80,11 +80,11 @@ class _$RegisterStateCopyWithImpl<$Res, $Val extends RegisterState>
 }
 
 /// @nodoc
-abstract class _$$_RegisterStateCopyWith<$Res>
+abstract class _$$RegisterStateImplCopyWith<$Res>
     implements $RegisterStateCopyWith<$Res> {
-  factory _$$_RegisterStateCopyWith(
-          _$_RegisterState value, $Res Function(_$_RegisterState) then) =
-      __$$_RegisterStateCopyWithImpl<$Res>;
+  factory _$$RegisterStateImplCopyWith(
+          _$RegisterStateImpl value, $Res Function(_$RegisterStateImpl) then) =
+      __$$RegisterStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -95,11 +95,11 @@ abstract class _$$_RegisterStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$_RegisterStateCopyWithImpl<$Res>
-    extends _$RegisterStateCopyWithImpl<$Res, _$_RegisterState>
-    implements _$$_RegisterStateCopyWith<$Res> {
-  __$$_RegisterStateCopyWithImpl(
-      _$_RegisterState _value, $Res Function(_$_RegisterState) _then)
+class __$$RegisterStateImplCopyWithImpl<$Res>
+    extends _$RegisterStateCopyWithImpl<$Res, _$RegisterStateImpl>
+    implements _$$RegisterStateImplCopyWith<$Res> {
+  __$$RegisterStateImplCopyWithImpl(
+      _$RegisterStateImpl _value, $Res Function(_$RegisterStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -110,7 +110,7 @@ class __$$_RegisterStateCopyWithImpl<$Res>
     Object? generalError = freezed,
     Object? inProgress = null,
   }) {
-    return _then(_$_RegisterState(
+    return _then(_$RegisterStateImpl(
       flowInfo: freezed == flowInfo
           ? _value.flowInfo
           : flowInfo // ignore: cast_nullable_to_non_nullable
@@ -133,8 +133,8 @@ class __$$_RegisterStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$_RegisterState implements _RegisterState {
-  const _$_RegisterState(
+class _$RegisterStateImpl implements _RegisterState {
+  const _$RegisterStateImpl(
       {this.flowInfo,
       final Map<String, KratosError> fieldErrors = const {},
       this.generalError,
@@ -167,7 +167,7 @@ class _$_RegisterState implements _RegisterState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$_RegisterState &&
+            other is _$RegisterStateImpl &&
             (identical(other.flowInfo, flowInfo) ||
                 other.flowInfo == flowInfo) &&
             const DeepCollectionEquality()
@@ -189,8 +189,8 @@ class _$_RegisterState implements _RegisterState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$_RegisterStateCopyWith<_$_RegisterState> get copyWith =>
-      __$$_RegisterStateCopyWithImpl<_$_RegisterState>(this, _$identity);
+  _$$RegisterStateImplCopyWith<_$RegisterStateImpl> get copyWith =>
+      __$$RegisterStateImplCopyWithImpl<_$RegisterStateImpl>(this, _$identity);
 }
 
 abstract class _RegisterState implements RegisterState {
@@ -198,7 +198,7 @@ abstract class _RegisterState implements RegisterState {
       {final AuthFlowInfo? flowInfo,
       final Map<String, KratosError> fieldErrors,
       final RegisterGeneralError? generalError,
-      final bool inProgress}) = _$_RegisterState;
+      final bool inProgress}) = _$RegisterStateImpl;
 
   @override
   AuthFlowInfo? get flowInfo;
@@ -210,6 +210,6 @@ abstract class _RegisterState implements RegisterState {
   bool get inProgress;
   @override
   @JsonKey(ignore: true)
-  _$$_RegisterStateCopyWith<_$_RegisterState> get copyWith =>
+  _$$RegisterStateImplCopyWith<_$RegisterStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

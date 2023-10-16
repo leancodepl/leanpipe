@@ -8,6 +8,9 @@ part of 'routes.dart';
 
 List<RouteBase> get $appRoutes => [
       $homeRoute,
+      $employeesRoute,
+      $projectsRoute,
+      $projectDetailsRoute,
       $menuRoute,
       $rootRoute,
     ];
@@ -22,6 +25,73 @@ extension $HomeRouteExtension on HomeRoute {
 
   String get location => GoRouteData.$location(
         '/',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $employeesRoute => GoRouteData.$route(
+      path: '/employees',
+      factory: $EmployeesRouteExtension._fromState,
+    );
+
+extension $EmployeesRouteExtension on EmployeesRoute {
+  static EmployeesRoute _fromState(GoRouterState state) => EmployeesRoute();
+
+  String get location => GoRouteData.$location(
+        '/employees',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $projectsRoute => GoRouteData.$route(
+      path: '/projects',
+      factory: $ProjectsRouteExtension._fromState,
+    );
+
+extension $ProjectsRouteExtension on ProjectsRoute {
+  static ProjectsRoute _fromState(GoRouterState state) => ProjectsRoute();
+
+  String get location => GoRouteData.$location(
+        '/projects',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $projectDetailsRoute => GoRouteData.$route(
+      path: '/project-details',
+      factory: $ProjectDetailsRouteExtension._fromState,
+    );
+
+extension $ProjectDetailsRouteExtension on ProjectDetailsRoute {
+  static ProjectDetailsRoute _fromState(GoRouterState state) =>
+      ProjectDetailsRoute();
+
+  String get location => GoRouteData.$location(
+        '/project-details',
       );
 
   void go(BuildContext context) => context.go(location);

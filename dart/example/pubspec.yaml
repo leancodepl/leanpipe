@@ -29,6 +29,11 @@ dependencies:
   json_annotation: ^4.7.0
   leancode_contracts: ^0.8.0
   leancode_hooks: ^0.0.6
+  debug_page:
+    git:
+      url: git@github.com:leancodepl/flutter_corelibrary.git
+      ref: b7eedf2f4ea353bea7c7c43c16845129b988065b
+      path: packages/debug_page
   leancode_kratos_client:
     git:
       url: git@github.com:leancodepl/leancode_kratos.git

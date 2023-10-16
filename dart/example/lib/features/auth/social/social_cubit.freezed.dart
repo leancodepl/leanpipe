@@ -163,11 +163,11 @@ class _$SocialStateCopyWithImpl<$Res, $Val extends SocialState>
 }
 
 /// @nodoc
-abstract class _$$SocialIdleStateCopyWith<$Res>
+abstract class _$$SocialIdleStateImplCopyWith<$Res>
     implements $SocialStateCopyWith<$Res> {
-  factory _$$SocialIdleStateCopyWith(
-          _$SocialIdleState value, $Res Function(_$SocialIdleState) then) =
-      __$$SocialIdleStateCopyWithImpl<$Res>;
+  factory _$$SocialIdleStateImplCopyWith(_$SocialIdleStateImpl value,
+          $Res Function(_$SocialIdleStateImpl) then) =
+      __$$SocialIdleStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -178,11 +178,11 @@ abstract class _$$SocialIdleStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$SocialIdleStateCopyWithImpl<$Res>
-    extends _$SocialStateCopyWithImpl<$Res, _$SocialIdleState>
-    implements _$$SocialIdleStateCopyWith<$Res> {
-  __$$SocialIdleStateCopyWithImpl(
-      _$SocialIdleState _value, $Res Function(_$SocialIdleState) _then)
+class __$$SocialIdleStateImplCopyWithImpl<$Res>
+    extends _$SocialStateCopyWithImpl<$Res, _$SocialIdleStateImpl>
+    implements _$$SocialIdleStateImplCopyWith<$Res> {
+  __$$SocialIdleStateImplCopyWithImpl(
+      _$SocialIdleStateImpl _value, $Res Function(_$SocialIdleStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -193,7 +193,7 @@ class __$$SocialIdleStateCopyWithImpl<$Res>
     Object? generalError = freezed,
     Object? inProgress = null,
   }) {
-    return _then(_$SocialIdleState(
+    return _then(_$SocialIdleStateImpl(
       flowInfo: freezed == flowInfo
           ? _value.flowInfo
           : flowInfo // ignore: cast_nullable_to_non_nullable
@@ -216,8 +216,8 @@ class __$$SocialIdleStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SocialIdleState implements SocialIdleState {
-  const _$SocialIdleState(
+class _$SocialIdleStateImpl implements SocialIdleState {
+  const _$SocialIdleStateImpl(
       {this.flowInfo,
       final Map<String, KratosError> fieldErrors = const {},
       this.generalError,
@@ -250,7 +250,7 @@ class _$SocialIdleState implements SocialIdleState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SocialIdleState &&
+            other is _$SocialIdleStateImpl &&
             (identical(other.flowInfo, flowInfo) ||
                 other.flowInfo == flowInfo) &&
             const DeepCollectionEquality()
@@ -272,8 +272,9 @@ class _$SocialIdleState implements SocialIdleState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SocialIdleStateCopyWith<_$SocialIdleState> get copyWith =>
-      __$$SocialIdleStateCopyWithImpl<_$SocialIdleState>(this, _$identity);
+  _$$SocialIdleStateImplCopyWith<_$SocialIdleStateImpl> get copyWith =>
+      __$$SocialIdleStateImplCopyWithImpl<_$SocialIdleStateImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -388,7 +389,7 @@ abstract class SocialIdleState implements SocialState {
       {final AuthFlowInfo? flowInfo,
       final Map<String, KratosError> fieldErrors,
       final SocialGeneralError? generalError,
-      final bool inProgress}) = _$SocialIdleState;
+      final bool inProgress}) = _$SocialIdleStateImpl;
 
   @override
   AuthFlowInfo? get flowInfo;
@@ -400,16 +401,16 @@ abstract class SocialIdleState implements SocialState {
   bool get inProgress;
   @override
   @JsonKey(ignore: true)
-  _$$SocialIdleStateCopyWith<_$SocialIdleState> get copyWith =>
+  _$$SocialIdleStateImplCopyWith<_$SocialIdleStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$SocialTraitsStateCopyWith<$Res>
+abstract class _$$SocialTraitsStateImplCopyWith<$Res>
     implements $SocialStateCopyWith<$Res> {
-  factory _$$SocialTraitsStateCopyWith(
-          _$SocialTraitsState value, $Res Function(_$SocialTraitsState) then) =
-      __$$SocialTraitsStateCopyWithImpl<$Res>;
+  factory _$$SocialTraitsStateImplCopyWith(_$SocialTraitsStateImpl value,
+          $Res Function(_$SocialTraitsStateImpl) then) =
+      __$$SocialTraitsStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -425,11 +426,11 @@ abstract class _$$SocialTraitsStateCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$SocialTraitsStateCopyWithImpl<$Res>
-    extends _$SocialStateCopyWithImpl<$Res, _$SocialTraitsState>
-    implements _$$SocialTraitsStateCopyWith<$Res> {
-  __$$SocialTraitsStateCopyWithImpl(
-      _$SocialTraitsState _value, $Res Function(_$SocialTraitsState) _then)
+class __$$SocialTraitsStateImplCopyWithImpl<$Res>
+    extends _$SocialStateCopyWithImpl<$Res, _$SocialTraitsStateImpl>
+    implements _$$SocialTraitsStateImplCopyWith<$Res> {
+  __$$SocialTraitsStateImplCopyWithImpl(_$SocialTraitsStateImpl _value,
+      $Res Function(_$SocialTraitsStateImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -445,7 +446,7 @@ class __$$SocialTraitsStateCopyWithImpl<$Res>
     Object? generalError = freezed,
     Object? inProgress = null,
   }) {
-    return _then(_$SocialTraitsState(
+    return _then(_$SocialTraitsStateImpl(
       provider: null == provider
           ? _value.provider
           : provider // ignore: cast_nullable_to_non_nullable
@@ -488,8 +489,8 @@ class __$$SocialTraitsStateCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$SocialTraitsState implements SocialTraitsState {
-  const _$SocialTraitsState(
+class _$SocialTraitsStateImpl implements SocialTraitsState {
+  const _$SocialTraitsStateImpl(
       {required this.provider,
       required this.email,
       required this.givenName,
@@ -537,7 +538,7 @@ class _$SocialTraitsState implements SocialTraitsState {
   bool operator ==(dynamic other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$SocialTraitsState &&
+            other is _$SocialTraitsStateImpl &&
             (identical(other.provider, provider) ||
                 other.provider == provider) &&
             (identical(other.email, email) || other.email == email) &&
@@ -573,8 +574,9 @@ class _$SocialTraitsState implements SocialTraitsState {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$SocialTraitsStateCopyWith<_$SocialTraitsState> get copyWith =>
-      __$$SocialTraitsStateCopyWithImpl<_$SocialTraitsState>(this, _$identity);
+  _$$SocialTraitsStateImplCopyWith<_$SocialTraitsStateImpl> get copyWith =>
+      __$$SocialTraitsStateImplCopyWithImpl<_$SocialTraitsStateImpl>(
+          this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -697,7 +699,7 @@ abstract class SocialTraitsState implements SocialState {
       final AuthFlowInfo? flowInfo,
       final Map<String, KratosError> fieldErrors,
       final SocialGeneralError? generalError,
-      final bool inProgress}) = _$SocialTraitsState;
+      final bool inProgress}) = _$SocialTraitsStateImpl;
 
   OidcProvider get provider;
   String? get email;
@@ -714,6 +716,6 @@ abstract class SocialTraitsState implements SocialState {
   bool get inProgress;
   @override
   @JsonKey(ignore: true)
-  _$$SocialTraitsStateCopyWith<_$SocialTraitsState> get copyWith =>
+  _$$SocialTraitsStateImplCopyWith<_$SocialTraitsStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
