@@ -12,17 +12,24 @@ internal class ClaimsPrincipalJsonConverter : JsonConverter<ClaimsPrincipal>
         JsonSerializerOptions options
     )
     {
-        var base64 = reader.GetString();
+        var claimsPrincipalProxy = JsonSerializer.Deserialize<ClaimsPrincipalProxy>(
+            ref reader,
+            options
+        );
 
-        if (base64 is null)
+        if (claimsPrincipalProxy is null)
         {
             return null;
         }
 
-        using var ms = new MemoryStream(Convert.FromBase64String(base64));
-        using var binaryReader = new BinaryReader(ms);
-
-        return new(binaryReader);
+        return new(
+            new ClaimsIdentity(
+                claimsPrincipalProxy.Claims.Select(c => new Claim(c.Type, c.Value)),
+                claimsPrincipalProxy.AuthenticationType,
+                claimsPrincipalProxy.NameType,
+                claimsPrincipalProxy.RoleType
+            )
+        );
     }
 
     public override void Write(
@@ -31,11 +38,24 @@ internal class ClaimsPrincipalJsonConverter : JsonConverter<ClaimsPrincipal>
         JsonSerializerOptions options
     )
     {
-        using var ms = new MemoryStream();
-        using var binaryWriter = new BinaryWriter(ms);
+        var identity = value.Identity as ClaimsIdentity;
 
-        value.WriteTo(binaryWriter);
+        var claimsPrincipalProxy = new ClaimsPrincipalProxy(
+            value.Claims.Select(c => new ClaimProxy(c.Type, c.Value)).ToList(),
+            identity?.AuthenticationType,
+            identity?.NameClaimType,
+            identity?.RoleClaimType
+        );
 
-        writer.WriteBase64StringValue(ms.ToArray());
+        JsonSerializer.Serialize(writer, claimsPrincipalProxy, options);
     }
+
+    private record ClaimsPrincipalProxy(
+        List<ClaimProxy> Claims,
+        string? AuthenticationType,
+        string? NameType,
+        string? RoleType
+    );
+
+    private record ClaimProxy(string Type, string Value);
 }
