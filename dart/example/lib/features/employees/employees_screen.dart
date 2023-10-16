@@ -40,6 +40,7 @@ class _EmployeesScreen extends StatelessWidget {
               retry: context.read<EmployeesCubit>().fetch,
             ),
           SingleQuerySuccess(:final data) => ListView.builder(
+              itemCount: data.length,
               itemBuilder: (context, index) => ListTile(
                 title: AppText(
                   data[index].id,

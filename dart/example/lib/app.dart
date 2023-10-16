@@ -22,18 +22,11 @@ class App extends HookWidget {
       ),
     );
 
-    final debugPageController = useMemoized(
-      () => DebugPageController(
-        loggingHttpClient: context.read(),
-        showEntryButton: true,
-      ),
-    );
-
     return KeyboardDismisser(
       child: Directionality(
         textDirection: TextDirection.ltr,
         child: DebugPageOverlay(
-          controller: debugPageController,
+          controller: context.watch(),
           child: MaterialApp.router(
             scaffoldMessengerKey: globalKeys.scaffoldMessengerKey,
             routerConfig: router,
