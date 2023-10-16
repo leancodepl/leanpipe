@@ -33,7 +33,7 @@ internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
         return ServiceProvider.GetRequiredService<IPublishingKeys<T, TNotification>>();
     }
 
-    public Task PublishAsync(
+    public async Task PublishAsync(
         IEnumerable<string> keys,
         NotificationEnvelope payload,
         CancellationToken cancellationToken = default
@@ -53,6 +53,6 @@ internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
                     )
             );
 
-        return Task.WhenAll(publishTasks);
+        await Task.WhenAll(publishTasks);
     }
 }
