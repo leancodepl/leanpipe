@@ -1,3 +1,5 @@
+import 'package:app/data/contracts.dart';
+import 'package:app/features/assignment_screen/assignment_screen.dart';
 import 'package:app/features/auth/auth_init_page/auth_init_page.dart';
 import 'package:app/features/auth/login/login_page.dart';
 import 'package:app/features/auth/menu/change_password/change_password_page.dart';
@@ -7,7 +9,7 @@ import 'package:app/features/auth/reauthorize/reauthorize_page.dart';
 import 'package:app/features/auth/recovery/recovery_page.dart';
 import 'package:app/features/auth/register/register_page.dart';
 import 'package:app/features/auth/verification/verification_page.dart';
-import 'package:app/features/employees/employees_screen.dart';
+import 'package:app/features/employees_screen/employees_screen.dart';
 import 'package:app/features/home/home_screen.dart';
 import 'package:app/features/project_details_screen/project_details_screen.dart';
 import 'package:app/features/projects_screen/projects_screen.dart';
@@ -39,6 +41,14 @@ class HomeRoute extends PlatformGoRouteData<void> {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) =>
       const HomePage(key: _homePageKey);
+}
+
+@TypedGoRoute<AssignmentRoute>(path: '/assignment')
+class AssignmentRoute extends GoRouteData {
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return AssignmentPage(assignmentDTO: state.extra as AssignmentDTO?);
+  }
 }
 
 @TypedGoRoute<EmployeesRoute>(path: '/employees')

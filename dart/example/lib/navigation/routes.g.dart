@@ -8,6 +8,7 @@ part of 'routes.dart';
 
 List<RouteBase> get $appRoutes => [
       $homeRoute,
+      $assignmentRoute,
       $employeesRoute,
       $projectsRoute,
       $projectDetailsRoute,
@@ -25,6 +26,28 @@ extension $HomeRouteExtension on HomeRoute {
 
   String get location => GoRouteData.$location(
         '/',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $assignmentRoute => GoRouteData.$route(
+      path: '/assignment',
+      factory: $AssignmentRouteExtension._fromState,
+    );
+
+extension $AssignmentRouteExtension on AssignmentRoute {
+  static AssignmentRoute _fromState(GoRouterState state) => AssignmentRoute();
+
+  String get location => GoRouteData.$location(
+        '/assignment',
       );
 
   void go(BuildContext context) => context.go(location);

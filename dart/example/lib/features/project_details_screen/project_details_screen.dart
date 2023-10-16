@@ -4,8 +4,10 @@ import 'package:app/design_system/widgets/text.dart';
 import 'package:app/features/project_details_screen/bloc/project_details_cubit.dart';
 import 'package:app/features/single_query_cubit.dart';
 import 'package:app/features/widgets/error_screen.dart';
+import 'package:app/navigation/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
 class ProjectDetailsPage extends Page<void> {
   const ProjectDetailsPage({required this.projectId});
@@ -60,6 +62,11 @@ class ProjectDetailsScreen extends StatelessWidget {
                 final ProjectDetailsDTO projectDetails? => ListView.builder(
                     itemCount: projectDetails.assignments.length,
                     itemBuilder: (context, index) => ListTile(
+                      onTap: () => context.push(
+                        AssignmentRoute().location,
+                        extra: projectDetails.assignments[index],
+                      ),
+                      tileColor: Colors.grey,
                       title: AppText(
                         projectDetails.assignments[index].name,
                         style: AppTextStyles.bodyDefault,

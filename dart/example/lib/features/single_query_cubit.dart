@@ -1,18 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:leancode_contracts/leancode_contracts.dart';
 
+typedef FutureFactory<T> = Future<QueryResult<T>> Function();
+
 class SingleQueryCubit<T> extends Cubit<SingleQueryState<T>> {
-  SingleQueryCubit({required Future<QueryResult<T>> fetch})
+  SingleQueryCubit({required FutureFactory<T> fetch})
       : _fetch = fetch,
         super(const SingleQueryLoading());
 
-  // Should be a future factory?
-  final Future<QueryResult<T>> _fetch;
+  final FutureFactory<T> _fetch;
 
   Future<void> fetch() async {
     emit(const SingleQueryLoading());
 
-    final response = await _fetch;
+    final response = await _fetch();
 
     switch (response) {
       case QuerySuccess(:final data):

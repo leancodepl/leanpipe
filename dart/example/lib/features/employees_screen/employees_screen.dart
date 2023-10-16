@@ -1,7 +1,7 @@
 import 'package:app/data/contracts.dart';
 import 'package:app/design_system/styleguide/typography.dart';
 import 'package:app/design_system/widgets/text.dart';
-import 'package:app/features/employees/bloc/employees_cubit.dart';
+import 'package:app/features/employees_screen/bloc/employees_cubit.dart';
 import 'package:app/features/single_query_cubit.dart';
 import 'package:app/features/widgets/error_screen.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +31,10 @@ class _EmployeesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: context.read<EmployeesCubit>().createEmployee,
+      ),
       body: BlocBuilder<EmployeesCubit, SingleQueryState<List<EmployeeDTO>>>(
         builder: (context, state) => switch (state) {
           SingleQueryLoading() => const Center(
@@ -42,6 +46,7 @@ class _EmployeesScreen extends StatelessWidget {
           SingleQuerySuccess(:final data) => ListView.builder(
               itemCount: data.length,
               itemBuilder: (context, index) => ListTile(
+                tileColor: Colors.grey,
                 title: AppText(
                   data[index].id,
                   style: AppTextStyles.bodyDefault,

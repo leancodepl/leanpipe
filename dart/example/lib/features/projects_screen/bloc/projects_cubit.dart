@@ -4,5 +4,5 @@ import 'package:cqrs/cqrs.dart';
 
 class ProjectsCubit extends SingleQueryCubit<List<ProjectDTO>> {
   ProjectsCubit({required Cqrs cqrs})
-      : super(fetch: cqrs.get(AllProjects(sortByNameDescending: false)));
+      : super(fetch: () => cqrs.get(AllProjects(sortByNameDescending: false)));
 }

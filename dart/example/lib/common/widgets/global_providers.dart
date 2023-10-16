@@ -1,6 +1,7 @@
 import 'package:app/common/config/app_config.dart';
 import 'package:app/common/config/app_global_keys.dart';
 import 'package:app/common/util/use_global_key.dart';
+import 'package:app/data/middlewares/error_handling_cqrs_middleware.dart';
 import 'package:app/features/auth/kratos/auth_bloc.dart';
 import 'package:app/features/auth/kratos/di/providers.dart';
 import 'package:cqrs/cqrs.dart';
@@ -91,6 +92,12 @@ class _GlobalProviders extends HookWidget {
         httpClient,
         config.apiUri,
         logger: Logger('Cqrs'),
+        middlewares: [
+          ErrorHandlingCqrsMiddleware(
+            navigatorKey,
+            scaffoldMessengerKey,
+          ),
+        ],
       ),
       [httpClient, config],
     );

@@ -54,9 +54,8 @@ class ErrorHandlingCqrsMiddleware extends CqrsMiddleware {
           _handleAutheticationError();
         case CommandError.authorization:
           _handleAuthorizationError();
-        case CommandError.unknown:
-          _handleUnknownError();
         default:
+          _handleUnknownError();
       }
     }
 
