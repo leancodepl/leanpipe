@@ -51,7 +51,8 @@ public static class RegistrationConfiguratorExtensions
         )
         {
             throw new ArgumentException(
-                "LeanPipe funnelled subscriber definition override is not compatible",
+                "LeanPipe funnelled subscriber definition override is not compatible. "
+                    + "It needs to be a generic type with a single generic argument that denotes the consumer.",
                 nameof(funnelledSubscriberDefinitionOverride)
             );
         }

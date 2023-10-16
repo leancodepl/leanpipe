@@ -83,17 +83,36 @@ public class RegistrationConfiguratorExtensionsTests
         var configurator = new ServiceCollectionBusConfigurator(collection);
         configurator.AddFunnelledLeanPipeConsumers(
             new[] { ThisCatalog, ExternalCatalog }.SelectMany(tc => tc.Assemblies),
-            typeof(FunnelledSubscribedDefinitionOverride<>)
+            typeof(FunnelledSubscriberDefinitionOverride<>)
         );
         var provider = collection.BuildServiceProvider();
 
         provider
             .GetRequiredService<IConsumerDefinition<FunnelledSubscriber<Topic1>>>()
             .Should()
-            .BeOfType<FunnelledSubscribedDefinitionOverride<Topic1>>();
+            .BeOfType<FunnelledSubscriberDefinitionOverride<Topic1>>();
     }
 
-    private class FunnelledSubscribedDefinitionOverride<TTopic>
+    [Fact]
+    public void Throws_on_incorrect_override_of_FunnelledSubscriberDefinition()
+    {
+        var collection = new ServiceCollection();
+        var configurator = new ServiceCollectionBusConfigurator(collection);
+
+        ActProvider(typeof(WrongSubscriberDefinition)).Should().Throw<ArgumentException>();
+        ActProvider(typeof(AnotherWrongSubscriberDefinition<,>))
+            .Should()
+            .Throw<ArgumentException>();
+
+        Action ActProvider(Type t) =>
+            () =>
+                configurator.AddFunnelledLeanPipeConsumers(
+                    new[] { ThisCatalog, ExternalCatalog }.SelectMany(tc => tc.Assemblies),
+                    t
+                );
+    }
+
+    private class FunnelledSubscriberDefinitionOverride<TTopic>
         : FunnelledSubscriberDefinition<TTopic>
         where TTopic : ITopic
     {
@@ -106,4 +125,8 @@ public class RegistrationConfiguratorExtensionsTests
             consumerConfigurator.UseMessageRetry(rc => rc.Immediate(3));
         }
     }
+
+    private class WrongSubscriberDefinition { }
+
+    private class AnotherWrongSubscriberDefinition<T1, T2> { }
 }
