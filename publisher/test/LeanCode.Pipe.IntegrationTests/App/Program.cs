@@ -3,15 +3,37 @@ using LeanCode.Contracts.Security;
 using LeanCode.CQRS.Security;
 using LeanCode.IntegrationTestHelpers;
 using LeanCode.Pipe;
+using LeanCode.Pipe.Funnel.FunnelledService;
+using LeanCode.Pipe.Funnel.Instance;
 using LeanCode.Pipe.IntegrationTests.App;
+using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Connections;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 var appBuilder = WebApplication.CreateBuilder(args);
+appBuilder.Logging.SetMinimumLevel(LogLevel.Debug);
+
 var services = appBuilder.Services;
 
-services.AddLeanPipe(LeanPipeTypes, LeanPipeTypes);
+if (!appBuilder.Configuration.GetValue<bool>("EnableFunnel"))
+{
+    services.AddLeanPipe(LeanPipeTypes, LeanPipeTypes);
+}
+else // We mimic Funnel behaviour on a single instance
+{
+    services.AddLeanPipeFunnel();
+    services.AddFunnelledLeanPipe(LeanPipeTypes, LeanPipeTypes);
+
+    services.AddMassTransitTestHarness(cfg =>
+    {
+        cfg.ConfigureLeanPipeFunnelConsumers();
+        cfg.AddFunnelledLeanPipeConsumers("TestApp", LeanPipeTypes.Assemblies);
+    });
+}
 
 services.AddSingleton<IRoleRegistration, AppRoles>();
 services.AddSingleton<RoleRegistry>();
