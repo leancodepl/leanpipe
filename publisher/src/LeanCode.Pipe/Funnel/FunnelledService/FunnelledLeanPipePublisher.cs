@@ -14,23 +14,23 @@ internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
     private static readonly ImmutableArray<IHubProtocol> LeanPipeHubProtocols =
         ImmutableArray.Create<IHubProtocol>(new JsonHubProtocol());
 
-    private IPublishEndpoint PublishEndpoint { get; }
-    private IServiceProvider ServiceProvider { get; }
+    private readonly IPublishEndpoint publishEndpoint;
+    private readonly IServiceProvider serviceProvider;
 
     public FunnelledLeanPipePublisher(
         IPublishEndpoint publishEndpoint,
         IServiceProvider serviceProvider
     )
     {
-        PublishEndpoint = publishEndpoint;
-        ServiceProvider = serviceProvider;
+        this.publishEndpoint = publishEndpoint;
+        this.serviceProvider = serviceProvider;
     }
 
     public IPublishingKeys<T, TNotification> GetPublishingKeysProvider<T, TNotification>()
         where T : ITopic, IProduceNotification<TNotification>
         where TNotification : notnull
     {
-        return ServiceProvider.GetRequiredService<IPublishingKeys<T, TNotification>>();
+        return serviceProvider.GetRequiredService<IPublishingKeys<T, TNotification>>();
     }
 
     public async Task PublishAsync(
@@ -47,7 +47,7 @@ internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
         var publishTasks = keys.Where(k => !string.IsNullOrEmpty(k))
             .Select(
                 k =>
-                    PublishEndpoint.Publish<Group<LeanPipeSubscriber>>(
+                    publishEndpoint.Publish<Group<LeanPipeSubscriber>>(
                         new { GroupName = k, Messages = protocolDictionary, },
                         cancellationToken
                     )
