@@ -53,8 +53,18 @@ jobs:
           --no-build
           --collect "XPlat Code Coverage"
           --settings test/coverlet.runsettings
-          --logger trx
+          --logger "trx;LogFileName=LeanCode.Pipe.IntegrationTests_NoFunnel.trx"
           --results-directory TestResults
+          -e EnableFunnel=false
+      - name: Integration test with Funnel
+        run: >
+          dotnet test ./test/LeanCode.Pipe.IntegrationTests/LeanCode.Pipe.IntegrationTests.csproj
+          --no-build
+          --collect "XPlat Code Coverage"
+          --settings test/coverlet.runsettings
+          --logger "trx;LogFileName=LeanCode.Pipe.IntegrationTests_Funnel.trx"
+          --results-directory TestResults
+          -e EnableFunnel=true
       - name: Upload coverage to Codecov
         if: always()
         uses: codecov/codecov-action@v3
