@@ -25,6 +25,8 @@ public interface ILeanPipePublisher<TTopic>
 internal class LeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
     where TTopic : ITopic
 {
+    private readonly Serilog.ILogger logger;
+
     private IHubContext<LeanPipeSubscriber> HubContext { get; }
     private IServiceProvider ServiceProvider { get; }
 
@@ -33,6 +35,7 @@ internal class LeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
         IServiceProvider serviceProvider
     )
     {
+        logger = Serilog.Log.ForContext(GetType());
         HubContext = hubContext;
         ServiceProvider = serviceProvider;
     }
@@ -51,6 +54,13 @@ internal class LeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
     )
     {
         await HubContext.Clients.Groups(keys).SendAsync("notify", payload, cancellationToken);
+
+        logger.Information(
+            "Published notification {NotificationType} to {GroupCount} groups of topic {TopicType}",
+            payload.NotificationType,
+            payload.TopicType,
+            keys.Count()
+        );
     }
 }
 

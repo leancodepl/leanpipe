@@ -11,6 +11,8 @@ namespace LeanCode.Pipe.Funnel.FunnelledService;
 internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
     where TTopic : ITopic
 {
+    private readonly Serilog.ILogger logger;
+
     private static readonly ImmutableArray<IHubProtocol> LeanPipeHubProtocols =
         ImmutableArray.Create<IHubProtocol>(new JsonHubProtocol());
 
@@ -22,6 +24,7 @@ internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
         IServiceProvider serviceProvider
     )
     {
+        logger = Serilog.Log.ForContext(GetType());
         this.publishEndpoint = publishEndpoint;
         this.serviceProvider = serviceProvider;
     }
@@ -54,5 +57,12 @@ internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
             );
 
         await Task.WhenAll(publishTasks);
+
+        logger.Information(
+            "Published notification {NotificationType} to {GroupCount} groups of topic {TopicType}",
+            payload.NotificationType,
+            payload.TopicType,
+            keys.Count()
+        );
     }
 }
