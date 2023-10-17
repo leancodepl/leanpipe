@@ -5,7 +5,7 @@ namespace LeanCode.Pipe.IntegrationTests.App;
 public static class ApiHandlers
 {
     public static async Task PublishGreetingOrFarewellAsync<TTopic>(
-        LeanPipePublisher<TTopic> publisher,
+        ILeanPipePublisher<TTopic> publisher,
         TTopic topic,
         NotificationDataDTO notificationData,
         CancellationToken ct
@@ -30,7 +30,7 @@ public static class ApiHandlers
     }
 
     public static async Task PublishProjectUpdatedOrDeletedAsync(
-        LeanPipePublisher<MyFavouriteProjectsTopic> publisher,
+        ILeanPipePublisher<MyFavouriteProjectsTopic> publisher,
         MyFavouriteProjectsTopic topic,
         ProjectNotificationDataDTO projectNotificationData,
         CancellationToken ct

@@ -33,7 +33,7 @@ app.MapPost(
     async (
         HttpContext ctx,
         NotificationDataDTO notificationData,
-        LeanPipePublisher<SimpleTopic> publisher
+        ILeanPipePublisher<SimpleTopic> publisher
     ) =>
     {
         var topic = new SimpleTopic { TopicId = notificationData.TopicId };
@@ -52,7 +52,7 @@ app.MapPost(
     async (
         HttpContext ctx,
         ProjectNotificationDataDTO notificationData,
-        LeanPipePublisher<MyFavouriteProjectsTopic> publisher
+        ILeanPipePublisher<MyFavouriteProjectsTopic> publisher
     ) =>
     {
         var topic = new MyFavouriteProjectsTopic();
@@ -71,7 +71,7 @@ app.MapPost(
     async (
         HttpContext ctx,
         NotificationDataDTO notificationData,
-        LeanPipePublisher<AuthorizedTopic> publisher
+        ILeanPipePublisher<AuthorizedTopic> publisher
     ) =>
     {
         var topic = new AuthorizedTopic { TopicId = notificationData.TopicId };

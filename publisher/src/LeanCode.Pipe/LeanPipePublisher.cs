@@ -8,28 +8,59 @@ namespace LeanCode.Pipe;
 /// Allows publishing notifications to instances of TTopic.
 /// Conveniently used with extension methods from <see cref="LeanPipePublisherExtensions"/>.
 /// </summary>
-public class LeanPipePublisher<TTopic>
+public interface ILeanPipePublisher<TTopic>
     where TTopic : ITopic
 {
-    internal IHubContext<LeanPipeSubscriber> HubContext { get; }
-    internal IServiceProvider ServiceProvider { get; }
+    IPublishingKeys<T, TNotification> GetPublishingKeysProvider<T, TNotification>()
+        where T : ITopic, IProduceNotification<TNotification>
+        where TNotification : notnull;
+
+    Task PublishAsync(
+        IEnumerable<string> keys,
+        NotificationEnvelope payload,
+        CancellationToken cancellationToken = default
+    );
+}
+
+internal class LeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
+    where TTopic : ITopic
+{
+    private readonly Serilog.ILogger logger;
+
+    private IHubContext<LeanPipeSubscriber> HubContext { get; }
+    private IServiceProvider ServiceProvider { get; }
 
     public LeanPipePublisher(
         IHubContext<LeanPipeSubscriber> hubContext,
         IServiceProvider serviceProvider
     )
     {
+        logger = Serilog.Log.ForContext(GetType());
         HubContext = hubContext;
         ServiceProvider = serviceProvider;
     }
 
-    internal async Task PublishAsync(
+    public IPublishingKeys<T, TNotification> GetPublishingKeysProvider<T, TNotification>()
+        where T : ITopic, IProduceNotification<TNotification>
+        where TNotification : notnull
+    {
+        return ServiceProvider.GetRequiredService<IPublishingKeys<T, TNotification>>();
+    }
+
+    public async Task PublishAsync(
         IEnumerable<string> keys,
         NotificationEnvelope payload,
         CancellationToken cancellationToken = default
     )
     {
         await HubContext.Clients.Groups(keys).SendAsync("notify", payload, cancellationToken);
+
+        logger.Information(
+            "Published notification {NotificationType} to {GroupCount} groups of topic {TopicType}",
+            payload.NotificationType,
+            payload.TopicType,
+            keys.Count()
+        );
     }
 }
 
@@ -41,7 +72,7 @@ public static class LeanPipePublisherExtensions
     /// </summary>
     /// <remarks>Does not wait for a response from the receivers.</remarks>
     public static async Task PublishAsync<TTopic, TNotification>(
-        this LeanPipePublisher<TTopic> publisher,
+        this ILeanPipePublisher<TTopic> publisher,
         IEnumerable<string> keys,
         TTopic topic,
         TNotification notification,
@@ -61,7 +92,7 @@ public static class LeanPipePublisherExtensions
     /// </summary>
     /// <remarks>Does not wait for a response from the receivers.</remarks>
     public static async Task PublishAsync<TTopic, TNotification>(
-        this LeanPipePublisher<TTopic> publisher,
+        this ILeanPipePublisher<TTopic> publisher,
         TTopic topic,
         TNotification notification,
         CancellationToken ct = default
@@ -69,11 +100,9 @@ public static class LeanPipePublisherExtensions
         where TTopic : ITopic, IProduceNotification<TNotification>
         where TNotification : notnull
     {
-        var notificationKeys = publisher.ServiceProvider.GetRequiredService<
-            IPublishingKeys<TTopic, TNotification>
-        >();
+        var publishingKeysProvider = publisher.GetPublishingKeysProvider<TTopic, TNotification>();
 
-        var keys = await notificationKeys.GetForPublishingAsync(topic, notification, ct);
+        var keys = await publishingKeysProvider.GetForPublishingAsync(topic, notification, ct);
         var payload = NotificationEnvelope.Create(topic, notification);
 
         await publisher.PublishAsync(keys, payload, ct);

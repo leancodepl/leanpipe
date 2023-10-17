@@ -11,7 +11,7 @@ public class SubscriptionHandlerWrapperTests
         var handler = new StubHandler();
         var wrapper = new SubscriptionHandlerWrapper<Topic1>(handler);
 
-        await wrapper.OnSubscribedAsync(new Topic1(), null!, null!);
+        await wrapper.OnSubscribedAsync(new Topic1(), null!, null!, default);
 
         handler.SubscribedCalled.Should().BeTrue();
     }
@@ -22,7 +22,7 @@ public class SubscriptionHandlerWrapperTests
         var handler = new StubHandler();
         var wrapper = new SubscriptionHandlerWrapper<Topic1>(handler);
 
-        await wrapper.OnUnsubscribedAsync(new Topic1(), null!, null!);
+        await wrapper.OnUnsubscribedAsync(new Topic1(), null!, null!, default);
 
         handler.UnsubscribedCalled.Should().BeTrue();
     }

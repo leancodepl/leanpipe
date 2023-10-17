@@ -10,8 +10,9 @@ public class StubHandler<T> : ISubscriptionHandler<T>
 
     public ValueTask<bool> OnSubscribedAsync(
         T topic,
-        LeanPipeSubscriber pipe,
-        LeanPipeContext context
+        ISubscribeContext subscribeContext,
+        LeanPipeContext context,
+        CancellationToken ct
     )
     {
         SubscribedCalled = true;
@@ -20,8 +21,9 @@ public class StubHandler<T> : ISubscriptionHandler<T>
 
     public ValueTask<bool> OnUnsubscribedAsync(
         T topic,
-        LeanPipeSubscriber pipe,
-        LeanPipeContext context
+        ISubscribeContext subscribeContext,
+        LeanPipeContext context,
+        CancellationToken ct
     )
     {
         UnsubscribedCalled = true;
