@@ -60,9 +60,7 @@ public static class RegistrationConfiguratorExtensions
         foreach (var topicType in topicTypes)
         {
             var consumerType = typeof(FunnelledSubscriber<>).MakeGenericType(topicType);
-
             var consumerDefinitionType = definitionType.MakeGenericType(topicType);
-
             configurator.AddConsumer(consumerType, consumerDefinitionType);
         }
     }
