@@ -50,12 +50,12 @@ internal class ClaimsPrincipalJsonConverter : JsonConverter<ClaimsPrincipal>
         JsonSerializer.Serialize(writer, claimsPrincipalProxy, options);
     }
 
-    private record ClaimsPrincipalProxy(
+    private sealed record ClaimsPrincipalProxy(
         List<ClaimProxy> Claims,
         string? AuthenticationType,
         string? NameType,
         string? RoleType
     );
 
-    private record ClaimProxy(string Type, string Value);
+    private sealed record ClaimProxy(string Type, string Value);
 }
