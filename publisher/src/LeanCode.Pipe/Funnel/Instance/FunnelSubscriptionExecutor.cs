@@ -1,5 +1,6 @@
 using LeanCode.Contracts;
 using MassTransit;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace LeanCode.Pipe.Funnel.Instance;
 
@@ -7,25 +8,35 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
 {
     private readonly Serilog.ILogger logger = Serilog.Log.ForContext<FunnelSubscriptionExecutor>();
 
+    private readonly FunnelConfiguration configuration;
+    private readonly IMemoryCache memoryCache;
     private readonly IScopedClientFactory scopedClientFactory;
     private readonly IRequestClient<CheckTopicRecognized> checkTopicRecognizedRequestClient;
     private readonly IEndpointNameFormatter? endpointNameFormatter;
 
     public FunnelSubscriptionExecutor(
+        FunnelConfiguration configuration,
+        IMemoryCache memoryCache,
         IScopedClientFactory scopedClientFactory,
         IRequestClient<CheckTopicRecognized> checkTopicRecognizedRequestClient
     )
     {
+        this.configuration = configuration;
+        this.memoryCache = memoryCache;
         this.scopedClientFactory = scopedClientFactory;
         this.checkTopicRecognizedRequestClient = checkTopicRecognizedRequestClient;
     }
 
     public FunnelSubscriptionExecutor(
+        FunnelConfiguration configuration,
+        IMemoryCache memoryCache,
         IScopedClientFactory scopedClientFactory,
         IRequestClient<CheckTopicRecognized> checkTopicRecognizedRequestClient,
         IEndpointNameFormatter endpointNameFormatter
     )
     {
+        this.configuration = configuration;
+        this.memoryCache = memoryCache;
         this.scopedClientFactory = scopedClientFactory;
         this.checkTopicRecognizedRequestClient = checkTopicRecognizedRequestClient;
         this.endpointNameFormatter = endpointNameFormatter;
@@ -39,30 +50,15 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
         CancellationToken ct
     )
     {
-        try
+        var topicRecognized = await CheckTopicRecognizedAsync(envelope.TopicType, ct);
+
+        if (!topicRecognized)
         {
-            await checkTopicRecognizedRequestClient.GetResponse<TopicRecognized>(
-                new(envelope.TopicType),
-                ct
-            );
-        }
-        catch (RequestTimeoutException e)
-        {
-            logger.Warning(e, "Subscription to unrecognized topic attempted");
+            logger.Warning("Subscription to unrecognized topic attempted");
             return SubscriptionStatus.Malformed;
         }
 
-        var endpoint = FunnelledSubscriberEndpointNameProvider.GetName(envelope.TopicType);
-
-        if (endpointNameFormatter is not null)
-        {
-            endpoint = endpointNameFormatter.SanitizeName(endpoint);
-        }
-
-        var endpointUri = new Uri($"queue:{endpoint}");
-
-        var subscriberRequestClient =
-            scopedClientFactory.CreateRequestClient<ExecuteTopicsSubscriptionPipeline>(endpointUri);
+        var subscriberRequestClient = GetSubscriberRequestClient(envelope.TopicType);
 
         try
         {
@@ -93,4 +89,50 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
             return SubscriptionStatus.InternalServerError;
         }
     }
+
+    private IRequestClient<ExecuteTopicsSubscriptionPipeline> GetSubscriberRequestClient(
+        string topicType
+    )
+    {
+        var endpoint = FunnelledSubscriberEndpointNameProvider.GetName(topicType);
+
+        if (endpointNameFormatter is not null)
+        {
+            endpoint = endpointNameFormatter.SanitizeName(endpoint);
+        }
+
+        return scopedClientFactory.CreateRequestClient<ExecuteTopicsSubscriptionPipeline>(
+            new Uri($"queue:{endpoint}")
+        );
+    }
+
+    private Task<bool> CheckTopicRecognizedAsync(string topicType, CancellationToken ct)
+    {
+        return memoryCache.GetOrCreateAsync(
+            new TopicRecognizedCacheKey(topicType),
+            async entry =>
+            {
+                var topicType = ((TopicRecognizedCacheKey)entry.Key).TopicType;
+
+                entry.AbsoluteExpirationRelativeToNow =
+                    configuration.TopicRecognitionCachingTime ?? TimeSpan.FromHours(1);
+
+                try
+                {
+                    await checkTopicRecognizedRequestClient.GetResponse<TopicRecognized>(
+                        new(topicType),
+                        ct
+                    );
+
+                    return true;
+                }
+                catch (RequestTimeoutException)
+                {
+                    return false;
+                }
+            }
+        );
+    }
+
+    private readonly record struct TopicRecognizedCacheKey(string TopicType);
 }
