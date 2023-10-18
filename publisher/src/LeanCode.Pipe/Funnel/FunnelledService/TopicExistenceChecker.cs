@@ -3,10 +3,6 @@ using MassTransit;
 
 namespace LeanCode.Pipe.Funnel.FunnelledService;
 
-public record CheckTopicRecognized(string TopicType);
-
-public record TopicRecognized(string TopicType);
-
 public class TopicExistenceChecker : IConsumer<CheckTopicRecognized>
 {
     private readonly IEnvelopeDeserializer envelopeDeserializer;

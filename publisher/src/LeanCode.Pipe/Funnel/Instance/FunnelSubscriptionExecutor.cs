@@ -1,7 +1,5 @@
 using LeanCode.Contracts;
-using LeanCode.Pipe.Funnel.FunnelledService;
 using MassTransit;
-using MassTransit.Clients;
 
 namespace LeanCode.Pipe.Funnel.Instance;
 
@@ -9,26 +7,26 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
 {
     private readonly Serilog.ILogger logger = Serilog.Log.ForContext<FunnelSubscriptionExecutor>();
 
-    private readonly IBus bus;
+    private readonly IScopedClientFactory scopedClientFactory;
     private readonly IRequestClient<CheckTopicRecognized> checkTopicRecognizedRequestClient;
     private readonly IEndpointNameFormatter? endpointNameFormatter;
 
     public FunnelSubscriptionExecutor(
-        IBus bus,
+        IScopedClientFactory scopedClientFactory,
         IRequestClient<CheckTopicRecognized> checkTopicRecognizedRequestClient
     )
     {
-        this.bus = bus;
+        this.scopedClientFactory = scopedClientFactory;
         this.checkTopicRecognizedRequestClient = checkTopicRecognizedRequestClient;
     }
 
     public FunnelSubscriptionExecutor(
-        IBus bus,
+        IScopedClientFactory scopedClientFactory,
         IRequestClient<CheckTopicRecognized> checkTopicRecognizedRequestClient,
         IEndpointNameFormatter endpointNameFormatter
     )
     {
-        this.bus = bus;
+        this.scopedClientFactory = scopedClientFactory;
         this.checkTopicRecognizedRequestClient = checkTopicRecognizedRequestClient;
         this.endpointNameFormatter = endpointNameFormatter;
     }
@@ -63,9 +61,8 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
 
         var endpointUri = new Uri($"queue:{endpoint}");
 
-        var subscriberRequestClient = bus.CreateRequestClient<ExecuteTopicsSubscriptionPipeline>(
-            endpointUri
-        );
+        var subscriberRequestClient =
+            scopedClientFactory.CreateRequestClient<ExecuteTopicsSubscriptionPipeline>(endpointUri);
 
         try
         {
