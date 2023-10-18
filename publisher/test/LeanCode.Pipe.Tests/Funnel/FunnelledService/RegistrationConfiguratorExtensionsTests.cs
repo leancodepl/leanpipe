@@ -7,6 +7,7 @@ using MassTransit;
 using MassTransit.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
+using TopicExistenceChecker = LeanCode.Pipe.Funnel.FunnelledService.TopicExistenceChecker;
 
 namespace LeanCode.Pipe.Tests.Funnel.FunnelledService;
 
@@ -16,7 +17,7 @@ public class RegistrationConfiguratorExtensionsTests
     private static readonly TypesCatalog ExternalCatalog = TypesCatalog.Of<ExternalTopic>();
 
     [Fact]
-    public void Registers_consumers_with_default_definition_for_all_correct_specified_topics_in_the_funnelled_service()
+    public void Registers_consumers_with_default_definition_for_all_correct_specified_topics()
     {
         var collection = new ServiceCollection();
         var configurator = new ServiceCollectionBusConfigurator(collection);
@@ -47,7 +48,7 @@ public class RegistrationConfiguratorExtensionsTests
     }
 
     [Fact]
-    public void Skips_registering_consumers_with_default_definition_for_incorrect_specified_topics_in_the_funnelled_service()
+    public void Skips_registering_consumers_with_default_definition_for_incorrect_specified_topics()
     {
         var collection = new ServiceCollection();
         var configurator = new ServiceCollectionBusConfigurator(collection);
@@ -77,7 +78,7 @@ public class RegistrationConfiguratorExtensionsTests
     }
 
     [Fact]
-    public void Allows_overriding_default_subscriber_definition_for_the_funnelled_service()
+    public void Allows_overriding_default_subscriber_consumer_definition()
     {
         var collection = new ServiceCollection();
         var configurator = new ServiceCollectionBusConfigurator(collection);
@@ -110,6 +111,50 @@ public class RegistrationConfiguratorExtensionsTests
                     new[] { ThisCatalog, ExternalCatalog }.SelectMany(tc => tc.Assemblies),
                     t
                 );
+    }
+
+    [Fact]
+    public void Registers_consumer_for_checking_topic_existence()
+    {
+        var collection = new ServiceCollection();
+        var configurator = new ServiceCollectionBusConfigurator(collection);
+        configurator.AddFunnelledLeanPipeConsumers(
+            new[] { ThisCatalog, ExternalCatalog }.SelectMany(tc => tc.Assemblies)
+        );
+
+        configurator.Should().ContainSingle(d => d.ServiceType == typeof(TopicExistenceChecker));
+    }
+
+    [Fact]
+    public void Allows_overriding_checking_topic_existence_consumer_definition()
+    {
+        var collection = new ServiceCollection();
+        var configurator = new ServiceCollectionBusConfigurator(collection);
+        configurator.AddFunnelledLeanPipeConsumers(
+            new[] { ThisCatalog, ExternalCatalog }.SelectMany(tc => tc.Assemblies)
+        );
+        configurator.AddSingleton<
+            IConsumerDefinition<TopicExistenceChecker>,
+            TopicExistenceCheckerDefinition
+        >();
+        var provider = collection.BuildServiceProvider();
+
+        provider
+            .GetRequiredService<IConsumerDefinition<TopicExistenceChecker>>()
+            .Should()
+            .BeOfType<TopicExistenceCheckerDefinition>();
+    }
+
+    private class TopicExistenceCheckerDefinition : ConsumerDefinition<TopicExistenceChecker>
+    {
+        protected override void ConfigureConsumer(
+            IReceiveEndpointConfigurator endpointConfigurator,
+            IConsumerConfigurator<TopicExistenceChecker> consumerConfigurator,
+            IRegistrationContext context
+        )
+        {
+            consumerConfigurator.UseMessageRetry(rc => rc.Immediate(3));
+        }
     }
 
     private class FunnelledSubscriberDefinitionOverride<TTopic>

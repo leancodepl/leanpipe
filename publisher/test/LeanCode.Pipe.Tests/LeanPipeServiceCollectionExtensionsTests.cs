@@ -4,6 +4,7 @@ using LeanCode.Pipe.Funnel.FunnelledService;
 using LeanCode.Pipe.Funnel.Instance;
 using LeanCode.Pipe.Tests.Additional;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -112,6 +113,15 @@ public class LeanPipeServiceCollectionExtensionsTests
             .ContainSingle(
                 d =>
                     d.ServiceType == typeof(HubLifetimeManager<>)
+                    && d.Lifetime == ServiceLifetime.Singleton
+            )
+            .And.ContainSingle(
+                d =>
+                    d.ServiceType == typeof(IMemoryCache) && d.Lifetime == ServiceLifetime.Singleton
+            )
+            .And.ContainSingle(
+                d =>
+                    d.ServiceType == typeof(FunnelConfiguration)
                     && d.Lifetime == ServiceLifetime.Singleton
             )
             .And.ContainSingle(
