@@ -8,6 +8,7 @@ namespace LeanCode.Pipe;
 public interface IEnvelopeDeserializer
 {
     ITopic? Deserialize(SubscriptionEnvelope envelope);
+    bool TopicExists(string topicType);
 }
 
 public class DefaultEnvelopeDeserializer : IEnvelopeDeserializer
@@ -36,12 +37,14 @@ public class DefaultEnvelopeDeserializer : IEnvelopeDeserializer
         }
     }
 
+    public bool TopicExists(string topicType) => topicTypes.Value.ContainsKey(topicType);
+
     private ImmutableDictionary<string, Type> BuildCache()
     {
         var topicType = typeof(ITopic);
         return types.Assemblies
             .SelectMany(t => t.ExportedTypes)
             .Where(t => t.IsAssignableTo(topicType) && !t.IsAbstract && !t.IsGenericType)
-            .ToImmutableDictionary(t => t.FullName!);
+            .ToImmutableDictionary(t => t.FullName!, StringComparer.InvariantCulture);
     }
 }

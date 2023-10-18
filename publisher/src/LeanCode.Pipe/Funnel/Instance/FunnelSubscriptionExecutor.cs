@@ -1,5 +1,7 @@
 using LeanCode.Contracts;
+using LeanCode.Pipe.Funnel.FunnelledService;
 using MassTransit;
+using MassTransit.Clients;
 
 namespace LeanCode.Pipe.Funnel.Instance;
 
@@ -8,16 +10,26 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
     private readonly Serilog.ILogger logger = Serilog.Log.ForContext<FunnelSubscriptionExecutor>();
 
     private readonly IBus bus;
+    private readonly IRequestClient<CheckTopicRecognized> checkTopicRecognizedRequestClient;
     private readonly IEndpointNameFormatter? endpointNameFormatter;
 
-    public FunnelSubscriptionExecutor(IBus bus)
+    public FunnelSubscriptionExecutor(
+        IBus bus,
+        IRequestClient<CheckTopicRecognized> checkTopicRecognizedRequestClient
+    )
     {
         this.bus = bus;
+        this.checkTopicRecognizedRequestClient = checkTopicRecognizedRequestClient;
     }
 
-    public FunnelSubscriptionExecutor(IBus bus, IEndpointNameFormatter endpointNameFormatter)
+    public FunnelSubscriptionExecutor(
+        IBus bus,
+        IRequestClient<CheckTopicRecognized> checkTopicRecognizedRequestClient,
+        IEndpointNameFormatter endpointNameFormatter
+    )
     {
         this.bus = bus;
+        this.checkTopicRecognizedRequestClient = checkTopicRecognizedRequestClient;
         this.endpointNameFormatter = endpointNameFormatter;
     }
 
@@ -29,6 +41,19 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
         CancellationToken ct
     )
     {
+        try
+        {
+            await checkTopicRecognizedRequestClient.GetResponse<TopicRecognized>(
+                new(envelope.TopicType),
+                ct
+            );
+        }
+        catch (RequestTimeoutException e)
+        {
+            logger.Warning(e, "Subscription to unrecognized topic attempted");
+            return SubscriptionStatus.Malformed;
+        }
+
         var endpoint = FunnelledSubscriberEndpointNameProvider.GetName(envelope.TopicType);
 
         if (endpointNameFormatter is not null)
@@ -36,11 +61,7 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
             endpoint = endpointNameFormatter.SanitizeName(endpoint);
         }
 
-        // For RabbitMQ use `exchange`s to get instant errors if no queue doesn't exist, can't do that in other brokers.
-        // https://masstransit.io/documentation/concepts/producers#supported-address-schemes
-        var endpointPrefix = bus.Topology is IRabbitMqBusTopology ? "exchange" : "queue";
-
-        var endpointUri = new Uri($"{endpointPrefix}:{endpoint}");
+        var endpointUri = new Uri($"queue:{endpoint}");
 
         var subscriberRequestClient = bus.CreateRequestClient<ExecuteTopicsSubscriptionPipeline>(
             endpointUri
@@ -50,17 +71,6 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
         {
             var response = await subscriberRequestClient.GetResponse<SubscriptionPipelineResult>(
                 new(envelope, type, context),
-                rpc =>
-                {
-                    rpc.UseExecute(ctx =>
-                    {
-                        if (ctx is RabbitMqSendContext rctx)
-                        {
-                            // Don't create the exchange - it's responsibility of the service.
-                            rctx.Mandatory = true;
-                        }
-                    });
-                },
                 ct
             );
 

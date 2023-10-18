@@ -21,7 +21,8 @@ public static class RegistrationConfiguratorExtensions
     public static void AddFunnelledLeanPipeConsumers(
         this IRegistrationConfigurator configurator,
         IEnumerable<Assembly> assembliesWithTopics,
-        Type? funnelledSubscriberDefinitionOverride = null
+        Type? funnelledSubscriberDefinitionOverride = null,
+        Type? topicExistenceCheckerDefinitionOverride = null
     )
     {
         var result = AssemblyTypeCache
@@ -33,21 +34,40 @@ public static class RegistrationConfiguratorExtensions
             .FindTypes(TypeClassification.Closed | TypeClassification.Concrete)
             .ToArray();
 
-        configurator.AddFunnelledLeanPipeConsumers(types, funnelledSubscriberDefinitionOverride);
+        configurator.AddFunnelledLeanPipeConsumers(
+            types,
+            funnelledSubscriberDefinitionOverride,
+            topicExistenceCheckerDefinitionOverride
+        );
     }
 
     public static void AddFunnelledLeanPipeConsumers(
         this IRegistrationConfigurator configurator,
         Type[] topicTypes,
-        Type? funnelledSubscriberDefinitionOverride
+        Type? funnelledSubscriberDefinitionOverride,
+        Type? topicExistenceCheckerDefinitionOverride
     )
     {
-        var definitionType =
+        var topicExistenceCheckerDefinition =
+            topicExistenceCheckerDefinitionOverride ?? typeof(TopicExistenceCheckerDefinition);
+
+        if (
+            !topicExistenceCheckerDefinition.IsAssignableTo(typeof(TopicExistenceCheckerDefinition))
+        )
+        {
+            throw new ArgumentException(
+                "TopicExistenceChecker definition override is not compatible. "
+                    + "It needs to derive from TopicExistenceCheckerDefinition.",
+                nameof(funnelledSubscriberDefinitionOverride)
+            );
+        }
+
+        var subscriberDefinition =
             funnelledSubscriberDefinitionOverride ?? typeof(FunnelledSubscriberDefinition<>);
 
         if (
-            !definitionType.IsGenericTypeDefinition
-            || definitionType.GetGenericArguments().Length != 1
+            !subscriberDefinition.IsGenericTypeDefinition
+            || subscriberDefinition.GetGenericArguments().Length != 1
         )
         {
             throw new ArgumentException(
@@ -57,10 +77,20 @@ public static class RegistrationConfiguratorExtensions
             );
         }
 
+        configurator
+            .AddConsumer<TopicExistenceChecker>()
+            .Endpoint(e =>
+            {
+                e.Temporary = true;
+                e.InstanceId =
+                    "_"
+                    + (Assembly.GetEntryAssembly()?.GetName().Name ?? Guid.NewGuid().ToString());
+            });
+
         foreach (var topicType in topicTypes)
         {
             var consumerType = typeof(FunnelledSubscriber<>).MakeGenericType(topicType);
-            var consumerDefinitionType = definitionType.MakeGenericType(topicType);
+            var consumerDefinitionType = subscriberDefinition.MakeGenericType(topicType);
             configurator.AddConsumer(consumerType, consumerDefinitionType);
         }
     }
