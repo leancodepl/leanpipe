@@ -22,18 +22,3 @@ public class TopicExistenceChecker : IConsumer<CheckTopicRecognized>
         }
     }
 }
-
-public class TopicExistenceCheckerDefinition : ConsumerDefinition<TopicExistenceChecker>
-{
-    protected override void ConfigureConsumer(
-        IReceiveEndpointConfigurator endpointConfigurator,
-        IConsumerConfigurator<TopicExistenceChecker> consumerConfigurator,
-        IRegistrationContext context
-    )
-    {
-        Endpoint(e =>
-        {
-            e.InstanceId = Assembly.GetExecutingAssembly().FullName!;
-        });
-    }
-}

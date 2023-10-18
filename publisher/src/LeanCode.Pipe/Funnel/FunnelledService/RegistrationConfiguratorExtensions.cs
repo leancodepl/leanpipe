@@ -21,8 +21,7 @@ public static class RegistrationConfiguratorExtensions
     public static void AddFunnelledLeanPipeConsumers(
         this IRegistrationConfigurator configurator,
         IEnumerable<Assembly> assembliesWithTopics,
-        Type? funnelledSubscriberDefinitionOverride = null,
-        Type? topicExistenceCheckerDefinitionOverride = null
+        Type? funnelledSubscriberDefinitionOverride = null
     )
     {
         var result = AssemblyTypeCache
@@ -34,34 +33,15 @@ public static class RegistrationConfiguratorExtensions
             .FindTypes(TypeClassification.Closed | TypeClassification.Concrete)
             .ToArray();
 
-        configurator.AddFunnelledLeanPipeConsumers(
-            types,
-            funnelledSubscriberDefinitionOverride,
-            topicExistenceCheckerDefinitionOverride
-        );
+        configurator.AddFunnelledLeanPipeConsumers(types, funnelledSubscriberDefinitionOverride);
     }
 
     public static void AddFunnelledLeanPipeConsumers(
         this IRegistrationConfigurator configurator,
         Type[] topicTypes,
-        Type? funnelledSubscriberDefinitionOverride,
-        Type? topicExistenceCheckerDefinitionOverride
+        Type? funnelledSubscriberDefinitionOverride
     )
     {
-        var topicExistenceCheckerDefinition =
-            topicExistenceCheckerDefinitionOverride ?? typeof(TopicExistenceCheckerDefinition);
-
-        if (
-            !topicExistenceCheckerDefinition.IsAssignableTo(typeof(TopicExistenceCheckerDefinition))
-        )
-        {
-            throw new ArgumentException(
-                "TopicExistenceChecker definition override is not compatible. "
-                    + "It needs to derive from TopicExistenceCheckerDefinition.",
-                nameof(funnelledSubscriberDefinitionOverride)
-            );
-        }
-
         var subscriberDefinition =
             funnelledSubscriberDefinitionOverride ?? typeof(FunnelledSubscriberDefinition<>);
 
