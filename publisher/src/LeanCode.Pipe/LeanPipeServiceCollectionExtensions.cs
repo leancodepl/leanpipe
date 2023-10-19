@@ -51,7 +51,7 @@ public class LeanPipeServicesBuilder
         Services = services;
         this.topics = topics;
 
-        Services.AddSingleton<IEnvelopeDeserializer>(new DefaultEnvelopeDeserializer(topics, null));
+        Services.AddSingleton<ITopicExtractor>(new DefaultTopicExtractor(topics, null));
     }
 
     /// <summary>
@@ -67,9 +67,9 @@ public class LeanPipeServicesBuilder
     /// <summary>
     /// Overrides subscription envelope deserializer.
     /// </summary>
-    public LeanPipeServicesBuilder WithEnvelopeDeserializer(IEnvelopeDeserializer deserializer)
+    public LeanPipeServicesBuilder WithEnvelopeDeserializer(ITopicExtractor deserializer)
     {
-        Services.Replace(new ServiceDescriptor(typeof(IEnvelopeDeserializer), deserializer));
+        Services.Replace(new ServiceDescriptor(typeof(ITopicExtractor), deserializer));
         return this;
     }
 
@@ -113,14 +113,12 @@ public class LeanPipeServicesBuilder
         {
             var descriptor = Services[i];
             if (
-                descriptor.ServiceType == typeof(IEnvelopeDeserializer)
-                && descriptor.ImplementationInstance is DefaultEnvelopeDeserializer
+                descriptor.ServiceType == typeof(ITopicExtractor)
+                && descriptor.ImplementationInstance is DefaultTopicExtractor
             )
             {
                 Services.RemoveAt(i);
-                Services.AddSingleton<IEnvelopeDeserializer>(
-                    new DefaultEnvelopeDeserializer(topics, options)
-                );
+                Services.AddSingleton<ITopicExtractor>(new DefaultTopicExtractor(topics, options));
                 break;
             }
         }

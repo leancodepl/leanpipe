@@ -4,6 +4,7 @@ using LeanCode.Pipe.Funnel.FunnelledService;
 using LeanCode.Pipe.Funnel.Instance;
 using LeanCode.Pipe.Tests.Additional;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -28,7 +29,7 @@ public class LeanPipeServiceCollectionExtensionsTests
             )
             .And.ContainSingle(
                 d =>
-                    d.ServiceType == typeof(IEnvelopeDeserializer)
+                    d.ServiceType == typeof(ITopicExtractor)
                     && d.Lifetime == ServiceLifetime.Singleton
             )
             .And.ContainSingle(
@@ -72,7 +73,7 @@ public class LeanPipeServiceCollectionExtensionsTests
             )
             .And.ContainSingle(
                 d =>
-                    d.ServiceType == typeof(IEnvelopeDeserializer)
+                    d.ServiceType == typeof(ITopicExtractor)
                     && d.Lifetime == ServiceLifetime.Singleton
             )
             .And.ContainSingle(
@@ -116,6 +117,15 @@ public class LeanPipeServiceCollectionExtensionsTests
             )
             .And.ContainSingle(
                 d =>
+                    d.ServiceType == typeof(IMemoryCache) && d.Lifetime == ServiceLifetime.Singleton
+            )
+            .And.ContainSingle(
+                d =>
+                    d.ServiceType == typeof(FunnelConfiguration)
+                    && d.Lifetime == ServiceLifetime.Singleton
+            )
+            .And.ContainSingle(
+                d =>
                     d.ServiceType == typeof(ISubscriptionExecutor)
                     && d.Lifetime == ServiceLifetime.Transient
             );
@@ -127,10 +137,8 @@ public class LeanPipeServiceCollectionExtensionsTests
         var collection = new ServiceCollection();
         collection.AddLeanPipe(ThisCatalog, ThisCatalog).AddTopics(ExternalCatalog);
 
-        var deserializer = collection
-            .BuildServiceProvider()
-            .GetRequiredService<IEnvelopeDeserializer>();
-        var topic = deserializer.Deserialize(Envelope.Empty<ExternalTopic>());
+        var deserializer = collection.BuildServiceProvider().GetRequiredService<ITopicExtractor>();
+        var topic = deserializer.Extract(Envelope.Empty<ExternalTopic>());
 
         topic.Should().NotBeNull().And.BeOfType<ExternalTopic>();
     }

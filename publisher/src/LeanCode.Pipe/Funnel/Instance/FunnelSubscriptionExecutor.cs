@@ -1,5 +1,6 @@
 using LeanCode.Contracts;
 using MassTransit;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace LeanCode.Pipe.Funnel.Instance;
 
@@ -7,17 +8,37 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
 {
     private readonly Serilog.ILogger logger = Serilog.Log.ForContext<FunnelSubscriptionExecutor>();
 
-    private readonly IBus bus;
+    private readonly FunnelConfiguration configuration;
+    private readonly IMemoryCache memoryCache;
+    private readonly IScopedClientFactory scopedClientFactory;
+    private readonly IRequestClient<CheckIfTopicIsRecognized> checkTopicRecognizedRequestClient;
     private readonly IEndpointNameFormatter? endpointNameFormatter;
 
-    public FunnelSubscriptionExecutor(IBus bus)
+    public FunnelSubscriptionExecutor(
+        FunnelConfiguration configuration,
+        IMemoryCache memoryCache,
+        IScopedClientFactory scopedClientFactory,
+        IRequestClient<CheckIfTopicIsRecognized> checkTopicRecognizedRequestClient
+    )
     {
-        this.bus = bus;
+        this.configuration = configuration;
+        this.memoryCache = memoryCache;
+        this.scopedClientFactory = scopedClientFactory;
+        this.checkTopicRecognizedRequestClient = checkTopicRecognizedRequestClient;
     }
 
-    public FunnelSubscriptionExecutor(IBus bus, IEndpointNameFormatter endpointNameFormatter)
+    public FunnelSubscriptionExecutor(
+        FunnelConfiguration configuration,
+        IMemoryCache memoryCache,
+        IScopedClientFactory scopedClientFactory,
+        IRequestClient<CheckIfTopicIsRecognized> checkTopicRecognizedRequestClient,
+        IEndpointNameFormatter endpointNameFormatter
+    )
     {
-        this.bus = bus;
+        this.configuration = configuration;
+        this.memoryCache = memoryCache;
+        this.scopedClientFactory = scopedClientFactory;
+        this.checkTopicRecognizedRequestClient = checkTopicRecognizedRequestClient;
         this.endpointNameFormatter = endpointNameFormatter;
     }
 
@@ -29,38 +50,20 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
         CancellationToken ct
     )
     {
-        var endpoint = FunnelledSubscriberEndpointNameProvider.GetName(envelope.TopicType);
+        var topicRecognized = await CheckTopicRecognizedAsync(envelope.TopicType, ct);
 
-        if (endpointNameFormatter is not null)
+        if (!topicRecognized)
         {
-            endpoint = endpointNameFormatter.SanitizeName(endpoint);
+            logger.Warning("Subscription to unrecognized topic attempted");
+            return SubscriptionStatus.Malformed;
         }
 
-        // For RabbitMQ use `exchange`s to get instant errors if no queue doesn't exist, can't do that in other brokers.
-        // https://masstransit.io/documentation/concepts/producers#supported-address-schemes
-        var endpointPrefix = bus.Topology is IRabbitMqBusTopology ? "exchange" : "queue";
-
-        var endpointUri = new Uri($"{endpointPrefix}:{endpoint}");
-
-        var subscriberRequestClient = bus.CreateRequestClient<ExecuteTopicsSubscriptionPipeline>(
-            endpointUri
-        );
+        var subscriberRequestClient = GetSubscriberRequestClient(envelope.TopicType);
 
         try
         {
             var response = await subscriberRequestClient.GetResponse<SubscriptionPipelineResult>(
                 new(envelope, type, context),
-                rpc =>
-                {
-                    rpc.UseExecute(ctx =>
-                    {
-                        if (ctx is RabbitMqSendContext rctx)
-                        {
-                            // Don't create the exchange - it's responsibility of the service.
-                            rctx.Mandatory = true;
-                        }
-                    });
-                },
                 ct
             );
 
@@ -86,4 +89,50 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
             return SubscriptionStatus.InternalServerError;
         }
     }
+
+    private IRequestClient<ExecuteTopicsSubscriptionPipeline> GetSubscriberRequestClient(
+        string topicType
+    )
+    {
+        var endpoint = FunnelledSubscriberEndpointNameProvider.GetName(topicType);
+
+        if (endpointNameFormatter is not null)
+        {
+            endpoint = endpointNameFormatter.SanitizeName(endpoint);
+        }
+
+        return scopedClientFactory.CreateRequestClient<ExecuteTopicsSubscriptionPipeline>(
+            new Uri($"queue:{endpoint}")
+        );
+    }
+
+    private Task<bool> CheckTopicRecognizedAsync(string topicType, CancellationToken ct)
+    {
+        return memoryCache.GetOrCreateAsync(
+            new TopicRecognizedCacheKey(topicType),
+            async entry =>
+            {
+                var topicType = ((TopicRecognizedCacheKey)entry.Key).TopicType;
+
+                entry.AbsoluteExpirationRelativeToNow =
+                    configuration.TopicRecognitionCachingTime ?? TimeSpan.FromHours(1);
+
+                try
+                {
+                    await checkTopicRecognizedRequestClient.GetResponse<TopicRecognized>(
+                        new(topicType),
+                        ct
+                    );
+
+                    return true;
+                }
+                catch (RequestTimeoutException)
+                {
+                    return false;
+                }
+            }
+        );
+    }
+
+    private readonly record struct TopicRecognizedCacheKey(string TopicType);
 }

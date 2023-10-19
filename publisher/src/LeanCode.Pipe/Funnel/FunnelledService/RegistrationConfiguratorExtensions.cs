@@ -13,6 +13,7 @@ public static class RegistrationConfiguratorExtensions
     /// in the LeanPipe with Funnel model.
     /// </summary>
     /// <param name="configurator">MassTransit bus registration configurator.</param>
+    /// <param name="serviceName">Funnelled service name.</param>
     /// <param name="assembliesWithTopics">Assemblies that contain all topics exposed by the service.</param>
     /// <param name="funnelledSubscriberDefinitionOverride">
     /// Optional definition override for subscriber consumers.
@@ -20,6 +21,7 @@ public static class RegistrationConfiguratorExtensions
     /// </param>
     public static void AddFunnelledLeanPipeConsumers(
         this IRegistrationConfigurator configurator,
+        string serviceName,
         IEnumerable<Assembly> assembliesWithTopics,
         Type? funnelledSubscriberDefinitionOverride = null
     )
@@ -33,21 +35,26 @@ public static class RegistrationConfiguratorExtensions
             .FindTypes(TypeClassification.Closed | TypeClassification.Concrete)
             .ToArray();
 
-        configurator.AddFunnelledLeanPipeConsumers(types, funnelledSubscriberDefinitionOverride);
+        configurator.AddFunnelledLeanPipeConsumers(
+            serviceName,
+            types,
+            funnelledSubscriberDefinitionOverride
+        );
     }
 
     public static void AddFunnelledLeanPipeConsumers(
         this IRegistrationConfigurator configurator,
+        string serviceName,
         Type[] topicTypes,
         Type? funnelledSubscriberDefinitionOverride
     )
     {
-        var definitionType =
+        var subscriberDefinition =
             funnelledSubscriberDefinitionOverride ?? typeof(FunnelledSubscriberDefinition<>);
 
         if (
-            !definitionType.IsGenericTypeDefinition
-            || definitionType.GetGenericArguments().Length != 1
+            !subscriberDefinition.IsGenericTypeDefinition
+            || subscriberDefinition.GetGenericArguments().Length != 1
         )
         {
             throw new ArgumentException(
@@ -57,10 +64,18 @@ public static class RegistrationConfiguratorExtensions
             );
         }
 
+        configurator
+            .AddConsumer<TopicExistenceChecker>()
+            .Endpoint(e =>
+            {
+                e.Temporary = true;
+                e.InstanceId = $"_{serviceName}";
+            });
+
         foreach (var topicType in topicTypes)
         {
             var consumerType = typeof(FunnelledSubscriber<>).MakeGenericType(topicType);
-            var consumerDefinitionType = definitionType.MakeGenericType(topicType);
+            var consumerDefinitionType = subscriberDefinition.MakeGenericType(topicType);
             configurator.AddConsumer(consumerType, consumerDefinitionType);
         }
     }
