@@ -122,15 +122,12 @@ public static class LeanPipeTestClientExtensions
             n is TNotification tn && notificationPredicate(tn);
     }
 
-    /// <returns>A FIFO collection of received notifications on topic instance.</returns>
-    public static IReadOnlyCollection<object> NotificationsOn<TTopic>(
-        this LeanPipeTestClient client,
-        TTopic topic
-    )
+    /// <returns>A FIFO collection snapshot of received notifications on topic instance.</returns>
+    public static List<object> NotificationsOn<TTopic>(this LeanPipeTestClient client, TTopic topic)
         where TTopic : ITopic
     {
-        return client.Subscriptions.GetValueOrDefault(topic)?.ReceivedNotifications
-            ?? new List<object>();
+        return client.Subscriptions.GetValueOrDefault(topic)?.ReceivedNotifications.ToList()
+            ?? new();
     }
 
     /// <summary>
