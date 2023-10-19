@@ -13,6 +13,7 @@ namespace LeanCode.Pipe.Tests.Funnel.FunnelledService;
 
 public class RegistrationConfiguratorExtensionsTests
 {
+    private const string ServiceName = "TestService";
     private static readonly TypesCatalog ThisCatalog = TypesCatalog.Of<Topic1>();
     private static readonly TypesCatalog ExternalCatalog = TypesCatalog.Of<ExternalTopic>();
 
@@ -22,6 +23,7 @@ public class RegistrationConfiguratorExtensionsTests
         var collection = new ServiceCollection();
         var configurator = new ServiceCollectionBusConfigurator(collection);
         configurator.AddFunnelledLeanPipeConsumers(
+            ServiceName,
             new[] { ThisCatalog, ExternalCatalog }.SelectMany(tc => tc.Assemblies)
         );
 
@@ -53,6 +55,7 @@ public class RegistrationConfiguratorExtensionsTests
         var collection = new ServiceCollection();
         var configurator = new ServiceCollectionBusConfigurator(collection);
         configurator.AddFunnelledLeanPipeConsumers(
+            ServiceName,
             new[] { ThisCatalog, ExternalCatalog }.SelectMany(tc => tc.Assemblies)
         );
 
@@ -83,6 +86,7 @@ public class RegistrationConfiguratorExtensionsTests
         var collection = new ServiceCollection();
         var configurator = new ServiceCollectionBusConfigurator(collection);
         configurator.AddFunnelledLeanPipeConsumers(
+            ServiceName,
             new[] { ThisCatalog, ExternalCatalog }.SelectMany(tc => tc.Assemblies),
             typeof(FunnelledSubscriberDefinitionOverride<>)
         );
@@ -108,6 +112,7 @@ public class RegistrationConfiguratorExtensionsTests
         Action ActProvider(Type t) =>
             () =>
                 configurator.AddFunnelledLeanPipeConsumers(
+                    ServiceName,
                     new[] { ThisCatalog, ExternalCatalog }.SelectMany(tc => tc.Assemblies),
                     t
                 );
@@ -119,6 +124,7 @@ public class RegistrationConfiguratorExtensionsTests
         var collection = new ServiceCollection();
         var configurator = new ServiceCollectionBusConfigurator(collection);
         configurator.AddFunnelledLeanPipeConsumers(
+            ServiceName,
             new[] { ThisCatalog, ExternalCatalog }.SelectMany(tc => tc.Assemblies)
         );
 
@@ -131,6 +137,7 @@ public class RegistrationConfiguratorExtensionsTests
         var collection = new ServiceCollection();
         var configurator = new ServiceCollectionBusConfigurator(collection);
         configurator.AddFunnelledLeanPipeConsumers(
+            ServiceName,
             new[] { ThisCatalog, ExternalCatalog }.SelectMany(tc => tc.Assemblies)
         );
         configurator.AddSingleton<
