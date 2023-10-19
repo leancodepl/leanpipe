@@ -5,19 +5,19 @@ using LeanCode.Contracts;
 
 namespace LeanCode.Pipe;
 
-public interface IEnvelopeDeserializer
+public interface ITopicExtractor
 {
-    ITopic? Deserialize(SubscriptionEnvelope envelope);
+    ITopic? Extract(SubscriptionEnvelope envelope);
     bool TopicExists(string topicType);
 }
 
-public class DefaultEnvelopeDeserializer : IEnvelopeDeserializer
+public class DefaultTopicExtractor : ITopicExtractor
 {
     private readonly TypesCatalog types;
     private readonly JsonSerializerOptions? options;
     private readonly Lazy<ImmutableDictionary<string, Type>> topicTypes;
 
-    public DefaultEnvelopeDeserializer(TypesCatalog types, JsonSerializerOptions? options)
+    public DefaultTopicExtractor(TypesCatalog types, JsonSerializerOptions? options)
     {
         this.types = types;
         this.options = options;
@@ -25,7 +25,7 @@ public class DefaultEnvelopeDeserializer : IEnvelopeDeserializer
         topicTypes = new(BuildCache);
     }
 
-    public ITopic? Deserialize(SubscriptionEnvelope envelope)
+    public ITopic? Extract(SubscriptionEnvelope envelope)
     {
         if (topicTypes.Value.TryGetValue(envelope.TopicType, out var topicType))
         {

@@ -29,7 +29,7 @@ public class LeanPipeServiceCollectionExtensionsTests
             )
             .And.ContainSingle(
                 d =>
-                    d.ServiceType == typeof(IEnvelopeDeserializer)
+                    d.ServiceType == typeof(ITopicExtractor)
                     && d.Lifetime == ServiceLifetime.Singleton
             )
             .And.ContainSingle(
@@ -73,7 +73,7 @@ public class LeanPipeServiceCollectionExtensionsTests
             )
             .And.ContainSingle(
                 d =>
-                    d.ServiceType == typeof(IEnvelopeDeserializer)
+                    d.ServiceType == typeof(ITopicExtractor)
                     && d.Lifetime == ServiceLifetime.Singleton
             )
             .And.ContainSingle(
@@ -139,8 +139,8 @@ public class LeanPipeServiceCollectionExtensionsTests
 
         var deserializer = collection
             .BuildServiceProvider()
-            .GetRequiredService<IEnvelopeDeserializer>();
-        var topic = deserializer.Deserialize(Envelope.Empty<ExternalTopic>());
+            .GetRequiredService<ITopicExtractor>();
+        var topic = deserializer.Extract(Envelope.Empty<ExternalTopic>());
 
         topic.Should().NotBeNull().And.BeOfType<ExternalTopic>();
     }

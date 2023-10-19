@@ -19,17 +19,17 @@ public class SubscriptionExecutor : ISubscriptionExecutor
     private readonly Serilog.ILogger logger = Serilog.Log.ForContext<SubscriptionExecutor>();
 
     private readonly SubscriptionHandlerResolver resolver;
-    private readonly IEnvelopeDeserializer deserializer;
+    private readonly ITopicExtractor topicExtractor;
     private readonly LeanPipeSecurity security;
 
     public SubscriptionExecutor(
         SubscriptionHandlerResolver resolver,
-        IEnvelopeDeserializer deserializer,
+        ITopicExtractor topicExtractor,
         LeanPipeSecurity security
     )
     {
         this.resolver = resolver;
-        this.deserializer = deserializer;
+        this.topicExtractor = topicExtractor;
         this.security = security;
     }
 
@@ -43,7 +43,7 @@ public class SubscriptionExecutor : ISubscriptionExecutor
     {
         try
         {
-            var topic = Deserialize(envelope);
+            var topic = ExtractTopic(envelope);
 
             if (topic is null)
             {
@@ -73,11 +73,11 @@ public class SubscriptionExecutor : ISubscriptionExecutor
         }
     }
 
-    private ITopic? Deserialize(SubscriptionEnvelope envelope)
+    private ITopic? ExtractTopic(SubscriptionEnvelope envelope)
     {
         try
         {
-            var topic = deserializer.Deserialize(envelope);
+            var topic = topicExtractor.Extract(envelope);
 
             if (topic is null)
             {
