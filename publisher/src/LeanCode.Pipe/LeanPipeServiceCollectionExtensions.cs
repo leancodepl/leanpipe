@@ -118,9 +118,7 @@ public class LeanPipeServicesBuilder
             )
             {
                 Services.RemoveAt(i);
-                Services.AddSingleton<ITopicExtractor>(
-                    new DefaultTopicExtractor(topics, options)
-                );
+                Services.AddSingleton<ITopicExtractor>(new DefaultTopicExtractor(topics, options));
                 break;
             }
         }

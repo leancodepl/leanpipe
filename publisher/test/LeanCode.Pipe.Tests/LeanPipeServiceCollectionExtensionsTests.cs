@@ -137,9 +137,7 @@ public class LeanPipeServiceCollectionExtensionsTests
         var collection = new ServiceCollection();
         collection.AddLeanPipe(ThisCatalog, ThisCatalog).AddTopics(ExternalCatalog);
 
-        var deserializer = collection
-            .BuildServiceProvider()
-            .GetRequiredService<ITopicExtractor>();
+        var deserializer = collection.BuildServiceProvider().GetRequiredService<ITopicExtractor>();
         var topic = deserializer.Extract(Envelope.Empty<ExternalTopic>());
 
         topic.Should().NotBeNull().And.BeOfType<ExternalTopic>();
