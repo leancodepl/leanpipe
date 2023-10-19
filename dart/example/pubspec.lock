@@ -715,11 +715,9 @@ packages:
   leancode_pipe:
     dependency: "direct main"
     description:
-      path: dart
-      ref: "99409688d249396a8dafb45d9595ac1105d52066"
-      resolved-ref: "99409688d249396a8dafb45d9595ac1105d52066"
-      url: "git@github.com:leancodepl/leanpipe.git"
-    source: git
+      path: ".."
+      relative: true
+    source: path
     version: "0.1.0"
   logging:
     dependency: "direct main"

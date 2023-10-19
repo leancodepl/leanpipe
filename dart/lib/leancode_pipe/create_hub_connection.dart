@@ -1,6 +1,8 @@
 import 'package:leancode_pipe/leancode_pipe/authorized_pipe_http_client.dart';
 import 'package:leancode_pipe/leancode_pipe/pipe_client.dart';
+import 'package:leancode_pipe/leancode_pipe/printing_client.dart';
 import 'package:signalr_core/signalr_core.dart';
+import 'package:http/http.dart' as http;
 
 HubConnection createHubConnection({
   required String pipeUrl,

@@ -47,7 +47,10 @@ class HomeRoute extends PlatformGoRouteData<void> {
 class AssignmentRoute extends GoRouteData {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return AssignmentPage(assignmentDTO: state.extra as AssignmentDTO?);
+    return AssignmentPage(
+      projectId: state.queryParameters['projectId']!,
+      assignmentDTO: state.extra! as AssignmentDTO,
+    );
   }
 }
 

@@ -5,23 +5,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AssignmentPage extends Page<void> {
-  const AssignmentPage({required this.assignmentDTO});
+  const AssignmentPage({
+    required this.projectId,
+    required this.assignmentDTO,
+  });
 
-  final AssignmentDTO? assignmentDTO;
+  final String projectId;
+  final AssignmentDTO assignmentDTO;
 
   @override
-  Route<void> createRoute(BuildContext context) =>
-      AssignmentPageRoute(assignmentDTO, this);
+  Route<void> createRoute(BuildContext context) => AssignmentPageRoute(
+        projectId,
+        assignmentDTO,
+        this,
+      );
 }
 
 class AssignmentPageRoute extends MaterialPageRoute<void> {
-  AssignmentPageRoute(AssignmentDTO? assignmentDTO, [AssignmentPage? page])
-      : super(
+  AssignmentPageRoute(
+    String projectId,
+    AssignmentDTO assignmentDTO, [
+    AssignmentPage? page,
+  ]) : super(
           settings: page,
           builder: (context) => BlocProvider(
             create: (context) => AssignmentCubit(
               cqrs: context.read(),
               pipeClient: context.read(),
+              projectId: projectId,
               assignmentDTO: assignmentDTO,
             )..subscribe(),
             child: AssignmentScreen(assignmentDTO: assignmentDTO),
@@ -55,9 +66,17 @@ class AssignmentScreen extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: context.read<AssignmentCubit>().assignEmployee,
-        label: AppText('Assign employee'),
+      floatingActionButton: Row(
+        children: [
+          FloatingActionButton.extended(
+            onPressed: context.read<AssignmentCubit>().assignEmployee,
+            label: AppText('Assign employee'),
+          ),
+          FloatingActionButton.extended(
+            onPressed: context.read<AssignmentCubit>().unassignEmployee,
+            label: AppText('unassign employee'),
+          ),
+        ],
       ),
     );
   }

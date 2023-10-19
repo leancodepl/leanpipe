@@ -63,7 +63,10 @@ class ProjectDetailsScreen extends StatelessWidget {
                     itemCount: projectDetails.assignments.length,
                     itemBuilder: (context, index) => ListTile(
                       onTap: () => context.push(
-                        AssignmentRoute().location,
+                        Uri(
+                          path: AssignmentRoute().location,
+                          queryParameters: {'projectId': projectDetails.id},
+                        ).toString(),
                         extra: projectDetails.assignments[index],
                       ),
                       tileColor: Colors.grey,
