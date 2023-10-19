@@ -50,4 +50,41 @@ public class DefaultTopicExtractorTests
             .NotBeNull()
             .And.BeOfType<ExternalTopic>();
     }
+
+    [Fact]
+    public void Recognizes_topics_from_types_catalog()
+    {
+        var extractor = new DefaultTopicExtractor(ThisCatalog, null);
+
+        extractor.TopicExists(Envelope.Empty<Topic1>().TopicType).Should().BeTrue();
+        extractor.TopicExists(Envelope.Empty<Topic2>().TopicType).Should().BeTrue();
+    }
+
+    [Fact]
+    public void If_topic_is_not_valid_type_It_wont_be_recognized()
+    {
+        var extractor = new DefaultTopicExtractor(ThisCatalog, null);
+
+        extractor.TopicExists(Envelope.Empty<AbstractTopic>().TopicType).Should().BeFalse();
+        extractor.TopicExists(Envelope.Empty<GenericTopic<int>>().TopicType).Should().BeFalse();
+    }
+
+    [Fact]
+    public void If_topic_is_not_in_the_catalog_It_wont_be_recognized()
+    {
+        var extractor = new DefaultTopicExtractor(ThisCatalog, null);
+
+        extractor.TopicExists(Envelope.Empty<ExternalTopic>().TopicType).Should().BeFalse();
+    }
+
+    [Fact]
+    public void Recognizes_topics_from_external_assemblies_if_they_are_in_the_catalog()
+    {
+        var extractor = new DefaultTopicExtractor(
+            ThisCatalog.Merge(TypesCatalog.Of<ExternalTopic>()),
+            null
+        );
+
+        extractor.TopicExists(Envelope.Empty<ExternalTopic>().TopicType).Should().BeTrue();
+    }
 }
