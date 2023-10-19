@@ -2,7 +2,7 @@ using MassTransit;
 
 namespace LeanCode.Pipe.Funnel.FunnelledService;
 
-public class TopicExistenceChecker : IConsumer<CheckTopicRecognized>
+public class TopicExistenceChecker : IConsumer<CheckIfTopicIsRecognized>
 {
     private readonly ITopicExtractor topicExtractor;
 
@@ -11,7 +11,7 @@ public class TopicExistenceChecker : IConsumer<CheckTopicRecognized>
         this.topicExtractor = topicExtractor;
     }
 
-    public async Task Consume(ConsumeContext<CheckTopicRecognized> context)
+    public async Task Consume(ConsumeContext<CheckIfTopicIsRecognized> context)
     {
         var topicType = context.Message.TopicType;
 

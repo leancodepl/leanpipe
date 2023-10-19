@@ -11,14 +11,14 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
     private readonly FunnelConfiguration configuration;
     private readonly IMemoryCache memoryCache;
     private readonly IScopedClientFactory scopedClientFactory;
-    private readonly IRequestClient<CheckTopicRecognized> checkTopicRecognizedRequestClient;
+    private readonly IRequestClient<CheckIfTopicIsRecognized> checkTopicRecognizedRequestClient;
     private readonly IEndpointNameFormatter? endpointNameFormatter;
 
     public FunnelSubscriptionExecutor(
         FunnelConfiguration configuration,
         IMemoryCache memoryCache,
         IScopedClientFactory scopedClientFactory,
-        IRequestClient<CheckTopicRecognized> checkTopicRecognizedRequestClient
+        IRequestClient<CheckIfTopicIsRecognized> checkTopicRecognizedRequestClient
     )
     {
         this.configuration = configuration;
@@ -31,7 +31,7 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
         FunnelConfiguration configuration,
         IMemoryCache memoryCache,
         IScopedClientFactory scopedClientFactory,
-        IRequestClient<CheckTopicRecognized> checkTopicRecognizedRequestClient,
+        IRequestClient<CheckIfTopicIsRecognized> checkTopicRecognizedRequestClient,
         IEndpointNameFormatter endpointNameFormatter
     )
     {
