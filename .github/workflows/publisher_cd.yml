@@ -25,7 +25,7 @@ jobs:
             echo 1>&2 "Invalid version: ${VERSION}"
             exit 1
           fi
-          echo ::set-output name=version::${VERSION}
+          echo "version=${VERSION}" >> $GITHUB_OUTPUT
         working-directory: .
       - name: Checkout
         uses: actions/checkout@v4
