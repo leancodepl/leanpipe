@@ -76,7 +76,7 @@ void main() {
         // Simulate no response from backend (no onSubscriptionResult call)
         when(
           () => connection.send(
-            methodName: 'SubscribeAsync',
+            methodName: 'Subscribe',
             args: any(named: 'args'),
           ),
         ).thenAnswer((_) async {});
@@ -156,7 +156,7 @@ void main() {
             .thenAnswer((_) => HubConnectionState.disconnected);
         when(
           () => connection.send(
-            methodName: 'SubscribeAsync',
+            methodName: 'Subscribe',
             args: any(named: 'args'),
           ),
         ).thenAnswer((_) async {});

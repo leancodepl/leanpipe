@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:leancode_pipe/leancode_pipe.dart';
 import 'package:leancode_pipe/leancode_pipe/contracts/contracts.dart';
@@ -9,7 +8,7 @@ import 'package:uuid/uuid.dart';
 
 import 'mocks.dart';
 
-const pipeUrl = 'https://leanpipe-example.test.lncd.pl/pipe';
+const pipeUrl = 'https://exampleapp.test.lncd.pl/leanpipe';
 
 void prepareConnect(HubConnection connection) {
   when(() => connection.onreconnected(any())).thenAnswer((_) {});
@@ -81,7 +80,7 @@ void prepareSubscribeToAnswerWithData({
   when(() => uuid.v4()).thenReturn(id);
   when(
     () => connection.send(
-      methodName: 'SubscribeAsync',
+      methodName: 'Subscribe',
       args: any(named: 'args'),
     ),
   ).thenAnswer((_) async {
@@ -106,7 +105,7 @@ void prepareUnsubscribeToAnswerWithData({
   when(() => uuid.v4()).thenReturn(id);
   when(
     () => connection.send(
-      methodName: 'UnsubscribeAsync',
+      methodName: 'Unsubscribe',
       args: any(named: 'args'),
     ),
   ).thenAnswer((_) async {
@@ -118,7 +117,7 @@ void verifySubscribeCalled(HubConnection connection, [int count = 1]) {
   // Using verify on a mock resets its callCount for the method
   Future<void> callback() {
     return connection.send(
-      methodName: 'SubscribeAsync',
+      methodName: 'Subscribe',
       args: any(named: 'args'),
     );
   }
@@ -134,7 +133,7 @@ void verifyUnsubscribeCalled(HubConnection connection, [int count = 1]) {
   // Using verify on a mock resets its callCount for the method
   Future<void> callback() {
     return connection.send(
-      methodName: 'UnsubscribeAsync',
+      methodName: 'Unsubscribe',
       args: any(named: 'args'),
     );
   }
@@ -165,14 +164,13 @@ void prepareSubscribeToAnswerWithDataPerTopic({
 
   when(
     () => connection.send(
-      methodName: 'SubscribeAsync',
+      methodName: 'Subscribe',
       args: any(named: 'args'),
     ),
   ).thenAnswer((invocation) async {
     final args =
         invocation.namedArguments[const Symbol('args')] as List<dynamic>;
-    final topicJson = jsonDecode((args.first as SubscriptionEnvelope).topic)
-        as Map<String, dynamic>;
+    final topicJson = (args.first as SubscriptionEnvelope).topic;
     final topicId = topicJson['id'] as String;
     final topic = MockTopic(topicId);
 

@@ -57,7 +57,7 @@ SubscriptionEnvelope _$SubscriptionEnvelopeFromJson(
         Map<String, dynamic> json) =>
     SubscriptionEnvelope(
       id: json['Id'] as String,
-      topic: json['Topic'] as String,
+      topic: json['Topic'] as Map<String, dynamic>,
       topicType: json['TopicType'] as String,
     );
 
