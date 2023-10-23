@@ -16,7 +16,6 @@
     <PackageReference Include="LeanCode.CQRS.Security" />
     <PackageReference Include="LeanCode.Logging" />
 
-    <PackageReference Include="MassTransit.RabbitMQ" />
     <PackageReference Include="MassTransit.SignalR" />
   </ItemGroup>
 
