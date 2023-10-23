@@ -3,7 +3,7 @@ name: dart test
 on:
   push:
     branches: [main]
-    tags-ignore: ["dart-v*"]
+    tags-ignore: ["*-v*"]
     paths:
       - "dart/**"
   pull_request:
