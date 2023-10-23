@@ -1,5 +1,8 @@
 import 'package:app/data/contracts.dart';
+import 'package:app/design_system/styleguide/colors.dart';
 import 'package:app/design_system/styleguide/typography.dart';
+import 'package:app/design_system/widgets/add_floating_button.dart';
+import 'package:app/design_system/widgets/divider.dart';
 import 'package:app/design_system/widgets/text.dart';
 import 'package:app/features/employees_screen/bloc/employees_cubit.dart';
 import 'package:app/features/single_query_cubit.dart';
@@ -30,9 +33,11 @@ class _EmployeesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
+
     return Scaffold(
       appBar: AppBar(),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: AppAddFloatingButton(
         onPressed: context.read<EmployeesCubit>().createEmployee,
       ),
       body: BlocBuilder<EmployeesCubit, SingleQueryState<List<EmployeeDTO>>>(
@@ -43,10 +48,11 @@ class _EmployeesScreen extends StatelessWidget {
           SingleQueryError() => ErrorScreen(
               retry: context.read<EmployeesCubit>().fetch,
             ),
-          SingleQuerySuccess(:final data) => ListView.builder(
+          SingleQuerySuccess(:final data) => ListView.separated(
               itemCount: data.length,
+              separatorBuilder: (context, _) => const AppDivider(),
               itemBuilder: (context, index) => ListTile(
-                tileColor: Colors.grey,
+                tileColor: colors.foregroundAccentTertiary,
                 title: AppText(
                   data[index].id,
                   style: AppTextStyles.bodyDefault,

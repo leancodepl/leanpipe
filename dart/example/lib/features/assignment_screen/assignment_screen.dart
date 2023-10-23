@@ -61,7 +61,7 @@ class AssignmentScreen extends StatelessWidget {
       body: BlocBuilder<AssignmentCubit, List<String>>(
         builder: (context, logs) => ListView(
           children: [
-            AppText('Pipe logs:'),
+            const AppText('Pipe logs:'),
             for (final log in logs) AppText(log),
           ],
         ),
@@ -69,12 +69,14 @@ class AssignmentScreen extends StatelessWidget {
       floatingActionButton: Row(
         children: [
           FloatingActionButton.extended(
+            heroTag: null,
             onPressed: context.read<AssignmentCubit>().assignEmployee,
-            label: AppText('Assign employee'),
+            label: const AppText('Assign employee'),
           ),
           FloatingActionButton.extended(
+            heroTag: null,
             onPressed: context.read<AssignmentCubit>().unassignEmployee,
-            label: AppText('unassign employee'),
+            label: const AppText('unassign employee'),
           ),
         ],
       ),

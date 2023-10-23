@@ -1,5 +1,8 @@
 import 'package:app/data/contracts.dart';
+import 'package:app/design_system/styleguide/colors.dart';
 import 'package:app/design_system/styleguide/typography.dart';
+import 'package:app/design_system/widgets/add_floating_button.dart';
+import 'package:app/design_system/widgets/divider.dart';
 import 'package:app/design_system/widgets/text.dart';
 import 'package:app/features/projects_screen/bloc/projects_cubit.dart';
 import 'package:app/features/single_query_cubit.dart';
@@ -8,6 +11,7 @@ import 'package:app/navigation/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:word_generator/word_generator.dart';
 
 class ProjectsPage extends Page<void> {
   const ProjectsPage();
@@ -32,7 +36,14 @@ class ProjectsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
+
     return Scaffold(
+      floatingActionButton: AppAddFloatingButton(
+        onPressed: () => context
+            .read<ProjectsCubit>()
+            .createProject(name: WordGenerator().randomName()),
+      ),
       appBar: AppBar(),
       body: BlocBuilder<ProjectsCubit, SingleQueryState<List<ProjectDTO>>>(
         builder: (context, projectsState) => switch (projectsState) {
@@ -40,8 +51,9 @@ class ProjectsScreen extends StatelessWidget {
               retry: context.read<ProjectsCubit>().fetch,
             ),
           SingleQueryLoading() => const CircularProgressIndicator(),
-          SingleQuerySuccess(:final data) => ListView.builder(
+          SingleQuerySuccess(:final data) => ListView.separated(
               itemCount: data.length,
+              separatorBuilder: (context, _) => const AppDivider(),
               itemBuilder: (context, index) => ListTile(
                 onTap: () => context.push(
                   Uri(
@@ -49,7 +61,7 @@ class ProjectsScreen extends StatelessWidget {
                     queryParameters: {'projectId': data[index].id},
                   ).toString(),
                 ),
-                tileColor: Colors.grey,
+                tileColor: colors.foregroundAccentTertiary,
                 title: AppText(
                   data[index].name,
                   style: AppTextStyles.bodyDefault,

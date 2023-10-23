@@ -29,7 +29,7 @@ class AssignmentCubit extends Cubit<List<String>> {
   final _logger = Logger('AssignmentCubit');
 
   PipeSubscription<EmployeeAssignmentsTopic>? _pipeSubscription;
-  StreamSubscription<EmployeeAssignmentsTopicNotification>?
+  StreamSubscription<ProjectEmployeesAssignmentsTopicNotification>?
       _assignmentsSubscription;
 
   Future<void> subscribe() async {
@@ -38,11 +38,9 @@ class AssignmentCubit extends Cubit<List<String>> {
         await _pipeClient.connect();
       }
 
-      // final pipeSubscription = await _pipeClient.subscribe(
-      //   ProjectEmployeesAssignmentsTopic(projectId: _projectId),
-      // );
-      final pipeSubscription = await _pipeClient
-          .subscribe(EmployeeAssignmentsTopic(employeeId: _employeeId));
+      final pipeSubscription = await _pipeClient.subscribe(
+        ProjectEmployeesAssignmentsTopic(projectId: _projectId),
+      );
 
       _assignmentsSubscription = pipeSubscription.listen((value) {
         emit(

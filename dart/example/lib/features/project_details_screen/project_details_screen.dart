@@ -1,5 +1,7 @@
 import 'package:app/data/contracts.dart';
+import 'package:app/design_system/styleguide/colors.dart';
 import 'package:app/design_system/styleguide/typography.dart';
+import 'package:app/design_system/widgets/divider.dart';
 import 'package:app/design_system/widgets/text.dart';
 import 'package:app/features/project_details_screen/bloc/project_details_cubit.dart';
 import 'package:app/features/single_query_cubit.dart';
@@ -46,6 +48,8 @@ class ProjectDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
+
     return Scaffold(
       appBar: AppBar(),
       body: BlocBuilder<ProjectDetailsCubit,
@@ -59,8 +63,9 @@ class ProjectDetailsScreen extends StatelessWidget {
             ),
           SingleQuerySuccess(:final data) => Center(
               child: switch (data) {
-                final ProjectDetailsDTO projectDetails? => ListView.builder(
+                final ProjectDetailsDTO projectDetails? => ListView.separated(
                     itemCount: projectDetails.assignments.length,
+                    separatorBuilder: (context, _) => const AppDivider(),
                     itemBuilder: (context, index) => ListTile(
                       onTap: () => context.push(
                         Uri(
@@ -69,7 +74,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                         ).toString(),
                         extra: projectDetails.assignments[index],
                       ),
-                      tileColor: Colors.grey,
+                      tileColor: colors.foregroundAccentTertiary,
                       title: AppText(
                         projectDetails.assignments[index].name,
                         style: AppTextStyles.bodyDefault,

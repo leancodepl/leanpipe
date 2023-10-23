@@ -1,6 +1,6 @@
 import 'package:app/common/config/app_global_keys.dart';
 import 'package:app/common/widgets/keyboard_dismisser.dart';
-import 'package:app/design_system_old/app_design_system.dart';
+import 'package:app/design_system/styleguide/colors.dart';
 import 'package:app/navigation/router.dart';
 import 'package:app/resources/l10n/app_localizations.dart';
 import 'package:debug_page/debug_page.dart';
@@ -27,12 +27,14 @@ class App extends HookWidget {
         textDirection: TextDirection.ltr,
         child: DebugPageOverlay(
           controller: context.watch(),
-          child: MaterialApp.router(
-            scaffoldMessengerKey: globalKeys.scaffoldMessengerKey,
-            routerConfig: router,
-            theme: AppTheme.light(),
-            localizationsDelegates: AppLocalizations.localizationsDelegates,
-            supportedLocales: AppLocalizations.supportedLocales,
+          child: AppColorTheme(
+            colors: AppColorThemes.light,
+            child: MaterialApp.router(
+              scaffoldMessengerKey: globalKeys.scaffoldMessengerKey,
+              routerConfig: router,
+              localizationsDelegates: AppLocalizations.localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+            ),
           ),
         ),
       ),

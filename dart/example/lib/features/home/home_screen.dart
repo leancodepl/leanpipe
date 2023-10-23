@@ -1,4 +1,6 @@
+import 'package:app/design_system/styleguide/colors.dart';
 import 'package:app/design_system/styleguide/typography.dart';
+import 'package:app/design_system/widgets/divider.dart';
 import 'package:app/design_system/widgets/text.dart';
 import 'package:app/navigation/routes.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +21,6 @@ class HomeRoute extends MaterialPageRoute<void> {
         );
 }
 
-// TODO: Style
 class _Tile extends StatelessWidget {
   const _Tile({
     required this.label,
@@ -31,8 +32,10 @@ class _Tile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
+
     return ListTile(
-      tileColor: Colors.red,
+      tileColor: colors.foregroundAccentTertiary,
       title: AppText(
         label,
         style: AppTextStyles.bodyDefault,
@@ -55,6 +58,7 @@ class _HomeScreen extends StatelessWidget {
             label: 'Projects',
             onTap: () => context.push(ProjectsRoute().location),
           ),
+          const AppDivider(),
           _Tile(
             label: 'Employees',
             onTap: () => context.push(EmployeesRoute().location),

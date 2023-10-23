@@ -408,10 +408,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_hooks
-      sha256: "6ae13b1145c589112cbd5c4fda6c65908993a9cb18d4f82042e9c28dd9fbf611"
+      sha256: "7c8db779c2d1010aa7f9ea3fbefe8f86524fcb87b69e8b0af31e1a4b55422dec"
       url: "https://pub.dev"
     source: hosted
-    version: "0.20.1"
+    version: "0.20.3"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
@@ -1462,6 +1462,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.0.3"
+  word_generator:
+    dependency: "direct main"
+    description:
+      name: word_generator
+      sha256: "6fc2c1e6d106ea7ad5b9c579815818a4d2544f6c33df62b70a7a63e07f62ae7e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.3"
   xdg_directories:
     dependency: transitive
     description:
