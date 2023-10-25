@@ -82,7 +82,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                                 path: AssignmentRoute().location,
                                 queryParameters: {
                                   'projectId': projectDetails.id,
-                                  'employeeId': data[0],
+                                  'employeeId': data[0].id,
                                 },
                               ).toString(),
                               extra: projectDetails.assignments[index],

@@ -9,6 +9,7 @@ import 'package:app/features/single_query_cubit.dart';
 import 'package:app/features/widgets/error_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 
 class EmployeesPage extends Page<void> {
   const EmployeesPage({super.key});
@@ -25,12 +26,21 @@ class EmployeesPageRoute extends MaterialPageRoute<void> {
         );
 }
 
-class _EmployeesScreen extends StatelessWidget {
+class _EmployeesScreen extends HookWidget {
   const _EmployeesScreen();
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+
+    useEffect(
+      () {
+        context.read<EmployeesCubit>().fetch();
+
+        return;
+      },
+      const [],
+    );
 
     return Scaffold(
       appBar: AppBar(),

@@ -9,11 +9,10 @@ import 'package:cqrs/cqrs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
+import 'package:leancode_pipe/leancode_pipe/authorized_pipe_http_client.dart';
 import 'package:leancode_pipe/leancode_pipe/pipe_client.dart';
 import 'package:logging/logging.dart';
-import 'package:oauth2/oauth2.dart' as oauth2;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
@@ -55,6 +54,13 @@ class _GlobalProviders extends HookWidget {
   final PackageInfo packageInfo;
   final Widget child;
 
+  Future<String> getToken(BuildContext context) async {
+    final credentials =
+        await context.read<FlutterSecureCredentialsStorage>().read();
+
+    return credentials ?? '';
+  }
+
   @override
   Widget build(BuildContext context) {
     final navigatorKey = useGlobalKey<NavigatorState>();
@@ -79,10 +85,9 @@ class _GlobalProviders extends HookWidget {
     ).data;
 
     final httpClient = useMemoized(
-      () => switch (accessToken) {
-        final accessToken? => oauth2.Client(oauth2.Credentials(accessToken)),
-        _ => http.Client(),
-      },
+      () => AuthorizedPipeHttpClient(
+        tokenFactory: () => getToken(context),
+      ),
       [accessToken],
     );
 
@@ -103,12 +108,7 @@ class _GlobalProviders extends HookWidget {
 
     final pipeClient = PipeClient(
       pipeUrl: config.pipeUri.toString(),
-      tokenFactory: () async {
-        final credentials =
-            await context.read<FlutterSecureCredentialsStorage>().read();
-
-        return credentials ?? '';
-      },
+      tokenFactory: () => getToken(context),
     );
 
     final employeesCubit = useMemoized(() => EmployeesCubit(cqrs: cqrs));
