@@ -1,6 +1,5 @@
 import 'package:app/design_system_old/app_design_system.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class AppButton extends StatelessWidget {
   const AppButton({

@@ -2,8 +2,11 @@ import 'package:app/design_system_old/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 
 class AppFormField extends StatelessWidget {
-  const AppFormField(
-      {super.key, required this.header, required this.widgetBelow,});
+  const AppFormField({
+    super.key,
+    required this.header,
+    required this.widgetBelow,
+  });
   final String header;
   final Widget widgetBelow;
 

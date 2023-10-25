@@ -1,5 +1,5 @@
 import 'package:app/common/util/colors_context_extension.dart';
-import 'package:app/design_system_old/app_design_system.dart';
+import 'package:app/design_system_old/widgets/buttons/app_button.dart';
 import 'package:flutter/material.dart';
 
 class AppPrimaryButton extends StatelessWidget {
