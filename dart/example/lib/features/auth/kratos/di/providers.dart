@@ -1,5 +1,4 @@
 import 'package:app/features/auth/kratos/auth_bloc.dart';
-import 'package:app/features/auth/menu/menu_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:http/http.dart' as http;
@@ -34,15 +33,9 @@ List<SingleChildWidget> useKratosProviders({
     [],
   );
 
-  final menuCubit = useMemoized(
-    () => MenuCubit(kratosClient: kratosClient),
-    [],
-  );
-
   return [
     Provider.value(value: kratosSecureStorage),
     Provider.value(value: kratosClient),
     BlocProvider.value(value: authCubit),
-    BlocProvider.value(value: menuCubit),
   ];
 }

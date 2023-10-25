@@ -12,11 +12,6 @@ dependencies:
   bloc_presentation: ^0.4.0
   collection: ^1.16.0
   cqrs: ^10.0.1
-  debug_page:
-    git:
-      url: git@github.com:leancodepl/flutter_corelibrary.git
-      ref: b7eedf2f4ea353bea7c7c43c16845129b988065b
-      path: packages/debug_page
   flutter:
     sdk: flutter
   flutter_bloc: ^8.0.1

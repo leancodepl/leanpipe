@@ -6,8 +6,6 @@ import 'package:app/features/auth/kratos/common/multi_validator.dart';
 import 'package:app/features/auth/kratos/common/trait.dart';
 import 'package:app/features/auth/kratos/common/validators.dart';
 import 'package:app/features/auth/register/register_cubit.dart';
-import 'package:app/features/auth/social/social_cubit.dart';
-import 'package:app/features/auth/social/social_traits_form.dart';
 import 'package:app/navigation/routes.dart';
 import 'package:app/resources/strings.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
@@ -15,26 +13,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:leancode_hooks/leancode_hooks.dart';
-import 'package:leancode_kratos_client/leancode_kratos_client.dart';
 
 class RegisterPage extends Page<void> {
   @override
   Route<void> createRoute(BuildContext context) => MaterialPageRoute<void>(
-        builder: (context) => MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (context) => RegisterCubit(
-                kratosClient: context.read(),
-                authCubit: context.read(),
-              ),
-            ),
-            BlocProvider(
-              create: (context) => SocialCubit(
-                kratosClient: context.read(),
-                authCubit: context.read(),
-              ),
-            ),
-          ],
+        builder: (context) => BlocProvider(
+          create: (context) => RegisterCubit(
+            kratosClient: context.read(),
+            authCubit: context.read(),
+          ),
           child: const _RegisterScreen(),
         ),
         settings: this,
@@ -47,8 +34,6 @@ class _RegisterScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final s = l10n(context);
-
-    final socialState = context.watch<SocialCubit>().state;
 
     void navigateToEmailVerification(String? email, String? flowId) {
       context.go(
@@ -72,23 +57,10 @@ class _RegisterScreen extends HookWidget {
           navigateToEmailVerification(email, flowId),
       },
     );
-    useBlocPresentationListener<SocialCubit, SocialEvent>(
-      listener: (context, event) => switch (event) {
-        SocialSuccessEvent() => context.go(HomeRoute().location),
-        SocialVerifyEmailEvent(
-          email: final email,
-          flowId: final flowId,
-        ) =>
-          navigateToEmailVerification(email, flowId),
-      },
-    );
 
     return Scaffold(
       appBar: AppBar(title: AppText(s.register_header)),
-      body: socialState.map(
-        idle: (_) => const _RegisterForm(),
-        traitsStep: (socialState) => SocialTraitsForm(state: socialState),
-      ),
+      body: const _RegisterForm(),
     );
   }
 }
@@ -101,10 +73,8 @@ class _RegisterForm extends HookWidget {
     final s = l10n(context);
 
     final cubit = context.watch<RegisterCubit>();
-    final socialCubit = context.watch<SocialCubit>();
 
     final state = cubit.state;
-    final socialState = socialCubit.state;
 
     final formKey = useMemoized(GlobalKey<FormState>.new);
 
@@ -117,7 +87,7 @@ class _RegisterForm extends HookWidget {
     final generalError = state.generalError;
 
     return AppLoadingOverlay(
-      isLoading: state.inProgress || socialState.inProgress,
+      isLoading: state.inProgress,
       child: Form(
         key: formKey,
         child: SingleChildScrollView(
@@ -128,23 +98,6 @@ class _RegisterForm extends HookWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 16),
-                  AppPrimaryButton(
-                    label: s.register_with_apple_button,
-                    onPressed: () =>
-                        socialCubit.registerWithOidc(OidcProvider.apple),
-                  ),
-                  const SizedBox(height: 16),
-                  AppPrimaryButton(
-                    label: s.register_with_google_button,
-                    onPressed: () =>
-                        socialCubit.registerWithOidc(OidcProvider.google),
-                  ),
-                  const SizedBox(height: 16),
-                  AppPrimaryButton(
-                    label: s.register_with_facebook_button,
-                    onPressed: () =>
-                        socialCubit.registerWithOidc(OidcProvider.facebook),
-                  ),
                   const SizedBox(height: 16),
                   AppFormField(
                     header: s.email_field,

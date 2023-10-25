@@ -1,4 +1,5 @@
 import 'package:app/data/contracts.dart';
+import 'package:app/design_system_old/app_text_styles.dart';
 import 'package:app/design_system_old/widgets/app_text.dart';
 import 'package:app/features/assignment_screen/assignment_cubit.dart';
 import 'package:flutter/material.dart';
@@ -58,27 +59,42 @@ class AssignmentScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: AppText('Assignment "${assignment.name}"')),
-      body: BlocBuilder<AssignmentCubit, List<String>>(
-        builder: (context, logs) => ListView(
+      bottomSheet: Padding(
+        padding: MediaQuery.paddingOf(context),
+        child: Row(
           children: [
-            const AppText('Pipe logs:'),
-            for (final log in logs) AppText(log),
+            const SizedBox(width: 32),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: context.read<AssignmentCubit>().assignEmployee,
+                child: const AppText('Assign employee'),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: ElevatedButton(
+                onPressed: context.read<AssignmentCubit>().unassignEmployee,
+                child: const AppText('Unassign employee'),
+              ),
+            ),
+            const SizedBox(width: 32),
           ],
         ),
       ),
-      floatingActionButton: Row(
-        children: [
-          FloatingActionButton.extended(
-            heroTag: null,
-            onPressed: context.read<AssignmentCubit>().assignEmployee,
-            label: const AppText('Assign employee'),
-          ),
-          FloatingActionButton.extended(
-            heroTag: null,
-            onPressed: context.read<AssignmentCubit>().unassignEmployee,
-            label: const AppText('unassign employee'),
-          ),
-        ],
+      body: BlocBuilder<AssignmentCubit, List<String>>(
+        builder: (context, logs) => ListView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          children: [
+            const SizedBox(height: 32),
+            const AppText(
+              'Pipe logs:',
+              style: AppTextStyle.headlineM,
+            ),
+            const SizedBox(height: 16),
+            for (final log in logs) AppText(log),
+            if (logs.isEmpty) const AppText('No logs so far...'),
+          ],
+        ),
       ),
     );
   }

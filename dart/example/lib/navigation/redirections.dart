@@ -43,7 +43,6 @@ final _unauthenticatedRoutes = [
   RegisterRoute().location,
   VerifyRoute().location,
   LoginRoute().location,
-  RecoveryRoute().location,
 ];
 
 String? authStateRedirect(

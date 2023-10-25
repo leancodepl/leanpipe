@@ -12,7 +12,6 @@ List<RouteBase> get $appRoutes => [
       $employeesRoute,
       $projectsRoute,
       $projectDetailsRoute,
-      $menuRoute,
       $rootRoute,
     ];
 
@@ -127,95 +126,6 @@ extension $ProjectDetailsRouteExtension on ProjectDetailsRoute {
   void replace(BuildContext context) => context.replace(location);
 }
 
-RouteBase get $menuRoute => GoRouteData.$route(
-      path: '/menu',
-      factory: $MenuRouteExtension._fromState,
-      routes: [
-        GoRouteData.$route(
-          path: 'changePassword',
-          factory: $ChangePasswordRouteExtension._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'profile',
-          factory: $ProfileRouteExtension._fromState,
-        ),
-        GoRouteData.$route(
-          path: 'reauth',
-          factory: $ReauthorizationRouteExtension._fromState,
-        ),
-      ],
-    );
-
-extension $MenuRouteExtension on MenuRoute {
-  static MenuRoute _fromState(GoRouterState state) => MenuRoute();
-
-  String get location => GoRouteData.$location(
-        '/menu',
-      );
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-extension $ChangePasswordRouteExtension on ChangePasswordRoute {
-  static ChangePasswordRoute _fromState(GoRouterState state) =>
-      ChangePasswordRoute();
-
-  String get location => GoRouteData.$location(
-        '/menu/changePassword',
-      );
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-extension $ProfileRouteExtension on ProfileRoute {
-  static ProfileRoute _fromState(GoRouterState state) => ProfileRoute();
-
-  String get location => GoRouteData.$location(
-        '/menu/profile',
-      );
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-extension $ReauthorizationRouteExtension on ReauthorizationRoute {
-  static ReauthorizationRoute _fromState(GoRouterState state) =>
-      ReauthorizationRoute();
-
-  String get location => GoRouteData.$location(
-        '/menu/reauth',
-      );
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
 RouteBase get $rootRoute => ShellRouteData.$route(
       factory: $RootRouteExtension._fromState,
       routes: [
@@ -238,10 +148,6 @@ RouteBase get $rootRoute => ShellRouteData.$route(
             GoRouteData.$route(
               path: 'login',
               factory: $LoginRouteExtension._fromState,
-            ),
-            GoRouteData.$route(
-              path: 'recovery',
-              factory: $RecoveryRouteExtension._fromState,
             ),
           ],
         ),
@@ -308,23 +214,6 @@ extension $LoginRouteExtension on LoginRoute {
 
   String get location => GoRouteData.$location(
         '/auth/login',
-      );
-
-  void go(BuildContext context) => context.go(location);
-
-  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
-
-  void pushReplacement(BuildContext context) =>
-      context.pushReplacement(location);
-
-  void replace(BuildContext context) => context.replace(location);
-}
-
-extension $RecoveryRouteExtension on RecoveryRoute {
-  static RecoveryRoute _fromState(GoRouterState state) => RecoveryRoute();
-
-  String get location => GoRouteData.$location(
-        '/auth/recovery',
       );
 
   void go(BuildContext context) => context.go(location);

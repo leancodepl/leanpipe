@@ -25,18 +25,8 @@ class ErrorHandlingCqrsMiddleware extends CqrsMiddleware {
   Future<QueryResult<T>> handleQueryResult<T>(
     QueryResult<T> result,
   ) {
-    if (result case QueryFailure(:final error)) {
-      switch (error) {
-        case QueryError.network:
-          _handleNetworkError();
-        case QueryError.authentication:
-          _handleAutheticationError();
-        case QueryError.authorization:
-          _handleAuthorizationError();
-        case QueryError.unknown:
-          _handleUnknownError();
-        default:
-      }
+    if (result case QueryFailure()) {
+      _handleError();
     }
 
     return Future.value(result);
@@ -46,17 +36,8 @@ class ErrorHandlingCqrsMiddleware extends CqrsMiddleware {
   Future<CommandResult> handleCommandResult(
     CommandResult result,
   ) {
-    if (result case CommandFailure(:final error)) {
-      switch (error) {
-        case CommandError.network:
-          _handleNetworkError();
-        case CommandError.authentication:
-          _handleAutheticationError();
-        case CommandError.authorization:
-          _handleAuthorizationError();
-        default:
-          _handleUnknownError();
-      }
+    if (result case CommandFailure()) {
+      _handleError();
     }
 
     return Future.value(result);
@@ -66,42 +47,14 @@ class ErrorHandlingCqrsMiddleware extends CqrsMiddleware {
   Future<OperationResult<T>> handleOperationResult<T>(
     OperationResult<T> result,
   ) {
-    if (result case OperationFailure(:final error)) {
-      switch (error) {
-        case OperationError.network:
-          _handleNetworkError();
-        case OperationError.authentication:
-          _handleAutheticationError();
-        case OperationError.authorization:
-          _handleAuthorizationError();
-        case OperationError.unknown:
-          _handleUnknownError();
-        default:
-      }
+    if (result case OperationFailure()) {
+      _handleError();
     }
 
     return Future.value(result);
   }
 
-  void _handleNetworkError() {
-    if (_s case final s?) {
-      _showSnackBar(s.error_handling_network);
-    }
-  }
-
-  void _handleAutheticationError() {
-    // TODO: Call logout() here
-  }
-
-  void _handleAuthorizationError() {
-    if (_s case final s?) {
-      _showSnackBar(s.error_handling_authorization);
-    }
-
-    // TODO: Navigate to main screen
-  }
-
-  void _handleUnknownError() {
+  void _handleError() {
     if (_s case final s?) {
       _showSnackBar(s.error_handling_unknown);
     }

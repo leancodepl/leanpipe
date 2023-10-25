@@ -2,11 +2,6 @@ import 'package:app/data/contracts.dart';
 import 'package:app/features/assignment_screen/assignment_screen.dart';
 import 'package:app/features/auth/auth_init_page/auth_init_page.dart';
 import 'package:app/features/auth/login/login_page.dart';
-import 'package:app/features/auth/menu/change_password/change_password_page.dart';
-import 'package:app/features/auth/menu/menu_page.dart';
-import 'package:app/features/auth/menu/profile/profile_page.dart';
-import 'package:app/features/auth/reauthorize/reauthorize_page.dart';
-import 'package:app/features/auth/recovery/recovery_page.dart';
 import 'package:app/features/auth/register/register_page.dart';
 import 'package:app/features/auth/verification/verification_page.dart';
 import 'package:app/features/employees_screen/employees_screen.dart';
@@ -78,41 +73,6 @@ class ProjectDetailsRoute extends GoRouteData {
   }
 }
 
-@TypedGoRoute<MenuRoute>(
-  path: '/menu',
-  routes: [
-    TypedGoRoute<ChangePasswordRoute>(
-      path: 'changePassword',
-    ),
-    TypedGoRoute<ProfileRoute>(
-      path: 'profile',
-    ),
-    TypedGoRoute<ReauthorizationRoute>(path: 'reauth'),
-  ],
-)
-class MenuRoute extends GoRouteData {
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) => MenuPage();
-}
-
-class ReauthorizationRoute extends GoRouteData {
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) =>
-      ReauthorizePage();
-}
-
-class ChangePasswordRoute extends GoRouteData {
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) =>
-      const ChangePasswordPage();
-}
-
-class ProfileRoute extends GoRouteData {
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) =>
-      const ProfilePage();
-}
-
 @TypedShellRoute<RootRoute>(
   routes: [
     TypedGoRoute<HomeRoute>(path: '/'),
@@ -122,7 +82,6 @@ class ProfileRoute extends GoRouteData {
         TypedGoRoute<RegisterRoute>(path: 'register'),
         TypedGoRoute<VerifyRoute>(path: 'verify'),
         TypedGoRoute<LoginRoute>(path: 'login'),
-        TypedGoRoute<RecoveryRoute>(path: 'recovery'),
       ],
     ),
   ],
@@ -169,12 +128,6 @@ class VerifyRoute extends GoRouteData {
       code: code,
     );
   }
-}
-
-class RecoveryRoute extends GoRouteData {
-  @override
-  Page<void> buildPage(BuildContext context, GoRouterState state) =>
-      RecoveryPage();
 }
 
 Page<T> _buildAppPage<T>({
