@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:leancode_pipe/leancode_pipe/contracts/contracts.dart';
@@ -570,7 +569,7 @@ class PipeClient {
   }) async {
     final envelope = SubscriptionEnvelope(
       id: subscriptionId,
-      topic: jsonEncode(topic.toJson()),
+      topic: topic.toJson(),
       topicType: topic.getFullName(),
     );
 
@@ -598,8 +597,8 @@ class PipeClient {
 }
 
 enum _PipeServiceMethod {
-  subscribe('SubscribeAsync'),
-  unsubscribe('UnsubscribeAsync');
+  subscribe('Subscribe'),
+  unsubscribe('Unsubscribe');
 
   const _PipeServiceMethod(this.methodName);
 

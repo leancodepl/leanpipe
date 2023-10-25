@@ -83,7 +83,7 @@ class SubscriptionEnvelope {
       _$SubscriptionEnvelopeFromJson(json);
 
   final String id;
-  final String topic;
+  final Map<String, dynamic> topic;
   final String topicType;
 
   Map<String, dynamic> toJson() => _$SubscriptionEnvelopeToJson(this);
