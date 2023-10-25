@@ -139,7 +139,7 @@ public class SubscriptionExecutor : ISubscriptionExecutor
 
         if (result)
         {
-            logger.Debug(
+            logger.Information(
                 "Subscription operation {SubscriptionOperation} on topic {TopicType} completed successfully",
                 type,
                 envelope.TopicType
