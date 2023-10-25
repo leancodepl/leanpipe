@@ -4,8 +4,10 @@ import 'package:app/common/util/use_global_key.dart';
 import 'package:app/data/middlewares/error_handling_cqrs_middleware.dart';
 import 'package:app/features/auth/kratos/auth_bloc.dart';
 import 'package:app/features/auth/kratos/di/providers.dart';
+import 'package:app/features/employees_screen/bloc/employees_cubit.dart';
 import 'package:cqrs/cqrs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:http/http.dart' as http;
 import 'package:leancode_kratos_client/leancode_kratos_client.dart';
@@ -109,6 +111,8 @@ class _GlobalProviders extends HookWidget {
       },
     );
 
+    final employeesCubit = useMemoized(() => EmployeesCubit(cqrs: cqrs));
+
     return MultiProvider(
       providers: [
         Provider.value(value: globalKeys),
@@ -116,6 +120,7 @@ class _GlobalProviders extends HookWidget {
         Provider.value(value: cqrs),
         Provider.value(value: httpClient),
         Provider.value(value: pipeClient),
+        BlocProvider.value(value: employeesCubit),
       ],
       child: child,
     );

@@ -9,15 +9,18 @@ class AssignmentPage extends Page<void> {
   const AssignmentPage({
     required this.projectId,
     required this.assignmentDTO,
+    required this.employeeId,
   });
 
   final String projectId;
   final AssignmentDTO assignmentDTO;
+  final String employeeId;
 
   @override
   Route<void> createRoute(BuildContext context) => AssignmentPageRoute(
         projectId,
         assignmentDTO,
+        employeeId,
         this,
       );
 }
@@ -25,7 +28,8 @@ class AssignmentPage extends Page<void> {
 class AssignmentPageRoute extends MaterialPageRoute<void> {
   AssignmentPageRoute(
     String projectId,
-    AssignmentDTO assignmentDTO, [
+    AssignmentDTO assignmentDTO,
+    String employeeId, [
     AssignmentPage? page,
   ]) : super(
           settings: page,
@@ -35,6 +39,7 @@ class AssignmentPageRoute extends MaterialPageRoute<void> {
               pipeClient: context.read(),
               projectId: projectId,
               assignmentDTO: assignmentDTO,
+              employeeId: employeeId,
             )..subscribe(),
             child: AssignmentScreen(assignmentDTO: assignmentDTO),
           ),

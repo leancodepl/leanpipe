@@ -4,6 +4,7 @@ import 'package:app/design_system/styleguide/typography.dart';
 import 'package:app/design_system/widgets/add_floating_button.dart';
 import 'package:app/design_system/widgets/divider.dart';
 import 'package:app/design_system/widgets/text.dart';
+import 'package:app/features/employees_screen/bloc/employees_cubit.dart';
 import 'package:app/features/projects_screen/bloc/projects_cubit.dart';
 import 'package:app/features/single_query_cubit.dart';
 import 'package:app/features/widgets/error_screen.dart';
@@ -11,6 +12,7 @@ import 'package:app/navigation/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:leancode_hooks/leancode_hooks.dart';
 import 'package:word_generator/word_generator.dart';
 
 class ProjectsPage extends Page<void> {
@@ -31,12 +33,21 @@ class ProjectsPageRoute extends MaterialPageRoute<void> {
         );
 }
 
-class ProjectsScreen extends StatelessWidget {
+class ProjectsScreen extends HookWidget {
   const ProjectsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+
+    useEffect(
+      () {
+        context.read<EmployeesCubit>().fetch();
+
+        return;
+      },
+      const [],
+    );
 
     return Scaffold(
       floatingActionButton: AppAddFloatingButton(

@@ -45,6 +45,7 @@ class AssignmentRoute extends GoRouteData {
     return AssignmentPage(
       projectId: state.queryParameters['projectId']!,
       assignmentDTO: state.extra! as AssignmentDTO,
+      employeeId: state.queryParameters['employeeId']!,
     );
   }
 }

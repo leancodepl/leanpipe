@@ -12,19 +12,22 @@ class AssignmentCubit extends Cubit<List<String>> {
     required PipeClient pipeClient,
     required String projectId,
     required AssignmentDTO assignmentDTO,
+    required String employeeId,
   })  : _cqrs = cqrs,
         _pipeClient = pipeClient,
         _projectId = projectId,
         _assignmentDTO = assignmentDTO,
+        _employeeId = employeeId,
         super([]);
 
-  static const _employeeId = 'employee_01HCWMVECWCH7SNWH7RV5AVEZN';
+  // static const _employeeId = 'employee_01HCWMVECWCH7SNWH7RV5AVEZN';
 
   final Cqrs _cqrs;
   final PipeClient _pipeClient;
 
   final String _projectId;
   final AssignmentDTO _assignmentDTO;
+  final String _employeeId;
 
   final _logger = Logger('AssignmentCubit');
 

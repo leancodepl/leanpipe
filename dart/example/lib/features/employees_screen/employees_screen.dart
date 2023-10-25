@@ -21,10 +21,7 @@ class EmployeesPageRoute extends MaterialPageRoute<void> {
   EmployeesPageRoute([EmployeesPage? page])
       : super(
           settings: page,
-          builder: (context) => BlocProvider(
-            create: (context) => EmployeesCubit(cqrs: context.read())..fetch(),
-            child: const _EmployeesScreen(),
-          ),
+          builder: (context) => const _EmployeesScreen(),
         );
 }
 
