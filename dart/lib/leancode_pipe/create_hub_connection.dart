@@ -12,7 +12,6 @@ HubConnection createHubConnection({
         HttpConnectionOptions(
           client: AuthorizedPipeHttpClient(tokenFactory: tokenFactory),
           transport: HttpTransportType.webSockets,
-          accessTokenFactory: tokenFactory,
         ),
       )
       .withAutomaticReconnect(
