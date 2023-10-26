@@ -6,7 +6,7 @@ namespace LeanCode.Pipe.Funnel.TestApp2;
 [AllowUnauthorized]
 public class Topic2 : ITopic, IProduceNotification<Notification2>
 {
-    public string Topic2Id { get; set; }
+    public string Topic2Id { get; set; } = default!;
 }
 
 public class Notification2
