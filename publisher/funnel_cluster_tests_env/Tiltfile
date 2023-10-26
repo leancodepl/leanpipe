@@ -3,9 +3,6 @@ load('ext://helm_resource', 'helm_resource', 'helm_repo')
 allow_k8s_contexts('k3d-testapp')
 default_registry('k3d-testapp-registry.local.lncd.pl:21345')
 
-helm_repo('bitnami', 'https://charts.bitnami.com/bitnami')
-helm_resource('rabbit', 'bitnami/rabbitmq', flags=['--set=auth.password=user'])
-
 local_resource(
   'build-testappfunnel',
   'dotnet publish -o out/testapp_funnel ../test/LeanCode.Pipe.Funnel.TestAppFunnel',
@@ -52,10 +49,12 @@ docker_build(
   only = ['out/scaled_service_tests'],
 )
 
+k8s_yaml('k8s/rabbitmq.yaml')
 k8s_yaml('k8s/testapp_funnel.yaml')
 k8s_yaml('k8s/testapp1.yaml')
 k8s_yaml('k8s/scaled_service_tests.yaml')
 
-k8s_resource('testapp-funnel', resource_deps=['rabbit'])
-k8s_resource('testapp1', resource_deps=['rabbit'])
+k8s_resource('rabbitmq')
+k8s_resource('testapp-funnel', resource_deps=['rabbitmq'])
+k8s_resource('testapp1', resource_deps=['rabbitmq'])
 k8s_resource('scaled-service-tests', resource_deps=['testapp-funnel', 'testapp1'])

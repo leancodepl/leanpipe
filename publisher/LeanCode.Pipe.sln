@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanCode.Pipe.Funnel.TestAp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanCode.Pipe.Funnel.TestAppFunnel", "test\LeanCode.Pipe.Funnel.TestAppFunnel\LeanCode.Pipe.Funnel.TestAppFunnel.csproj", "{6D361069-9CD4-44DA-914A-80A62458B04F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "funnel_scaling", "funnel_scaling", "{2A218F39-75C1-4EE1-8614-D67AB30574F0}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "funnel_msvc", "funnel_msvc", "{2A218F39-75C1-4EE1-8614-D67AB30574F0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanCode.Pipe.Funnel.ScaledServiceTests", "test\LeanCode.Pipe.Funnel.ScaledServiceTests\LeanCode.Pipe.Funnel.ScaledServiceTests.csproj", "{531D5FD5-9C72-4F24-B9E7-E53CFBF20B57}"
 EndProject

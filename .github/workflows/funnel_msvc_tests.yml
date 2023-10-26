@@ -25,10 +25,8 @@ jobs:
         uses: yokawasa/action-setup-kube-tools@v0.9.3
         with:
           tilt: v0.33.6
-          helm: v3.11.1
           setup-tools: |
             tilt
-            helm
       - name: Create test cluster
         uses: AbsaOSS/k3d-action@v2
         with: 
