@@ -33,13 +33,11 @@ dependencies:
     git:
       url: git@github.com:leancodepl/leancode_kratos.git
       ref: 3595a81221db4a71b5cce823601da930e773795f
-  # leancode_pipe:
-  #   git:
-  #     url: git@github.com:leancodepl/leanpipe.git
-  #     ref: 99409688d249396a8dafb45d9595ac1105d52066
-  #     path: dart
   leancode_pipe:
-    path: ../
+    git:
+      url: git@github.com:leancodepl/leanpipe.git
+      ref: e6721c5a37771f6df007eb543caadd2c392e61e3
+      path: dart
   logging: ^1.0.2
   package_info_plus: ^4.1.0
   provider: ^6.0.3
