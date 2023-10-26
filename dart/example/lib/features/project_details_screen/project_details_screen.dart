@@ -10,6 +10,7 @@ import 'package:app/features/employees_screen/bloc/employees_cubit.dart';
 import 'package:app/features/error_screen/error_screen.dart';
 import 'package:app/features/project_details_screen/bloc/project_details_cubit.dart';
 import 'package:app/navigation/routes.dart';
+import 'package:app/resources/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -39,8 +40,8 @@ class ProjectDetailsPageRoute extends MaterialPageRoute<void> {
                 )..fetch(),
                 child: const ProjectDetailsScreen(),
               ),
-            _ => const AppText(
-                'Unknown project id',
+            _ => AppText(
+                l10n(context).project_details_screen_unknown_id,
                 style: AppTextStyle.body,
               ),
           },
@@ -53,6 +54,8 @@ class ProjectDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+
+    final s = l10n(context);
 
     return Scaffold(
       appBar: AppBar(),
@@ -88,7 +91,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                                 path: AssignmentRoute().location,
                                 queryParameters: {
                                   'projectId': projectDetails.id,
-                                  'employeeId': data[0].id,
+                                  'employeeId': data.first.id,
                                 },
                               ).toString(),
                               extra: projectDetails.assignments[index],
@@ -98,8 +101,8 @@ class ProjectDetailsScreen extends StatelessWidget {
                               scaffoldMessengerKey: context
                                   .read<AppGlobalKeys>()
                                   .scaffoldMessengerKey,
-                              text:
-                                  'Employees list is either empty or has not been fetched',
+                              text: s
+                                  .project_details_screen_cannot_open_assignment,
                             );
                             return;
                         }

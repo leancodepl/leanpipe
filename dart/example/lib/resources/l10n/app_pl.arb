@@ -169,5 +169,19 @@
   "profile_save_changes": "Zapisz",
   "reauthorize_title": "Autoryzacja",
   "reauthorize_info": "Aby wykonać tę operację musisz się ponownie zalogować.",
-  "reauthorize_info_button": "Dalej"
+  "reauthorize_info_button": "Dalej",
+  "home_screen_projects": "Projekty",
+  "home_screen_employees": "Pracownicy",
+  "project_details_screen_cannot_open_assignment": "Lista pracowników nie została pobrana lub jest pusta",
+  "project_details_screen_unknown_id": "Nieznane id projektu",
+  "assignment_screen_title": "Zadanie {name}",
+  "@assignment_screen_title": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "assignment_screen_assign": "Przypisz pracownika",
+  "assignment_screen_unassign": "Cofnij przypisanie pracownika",
+  "assignment_screen_pipe_logs": "Logi rury",
+  "assignment_screen_pipe_logs_placeholder": "Brak logów..."
 }

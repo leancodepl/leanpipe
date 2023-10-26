@@ -16,7 +16,7 @@ import 'app_localizations_pl.dart';
 /// `supportedLocales` list. For example:
 ///
 /// ```dart
-/// import 'l10n/app_localizations.dart';
+/// import 'gen_l10n/app_localizations.dart';
 ///
 /// return MaterialApp(
 ///   localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -60,8 +60,7 @@ import 'app_localizations_pl.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-      : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -69,8 +68,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -82,8 +80,7 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
     delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
@@ -98,1027 +95,1080 @@ abstract class AppLocalizations {
 
   /// No description provided for @common_app_name.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **'LeanCode template'**
   String get common_app_name;
 
   /// No description provided for @force_update_screen_title.
   ///
-  /// In pl, this message translates to:
-  /// **'Aktualizuj aplikację'**
+  /// In en, this message translates to:
+  /// **'Update app'**
   String get force_update_screen_title;
 
   /// No description provided for @force_update_screen_subtitle.
   ///
-  /// In pl, this message translates to:
-  /// **'Dostępna jest nowa wersja aplikacji, pobierz ją aby korzystać'**
+  /// In en, this message translates to:
+  /// **'New version is available, download it to continue'**
   String get force_update_screen_subtitle;
 
   /// No description provided for @force_update_screen_updateButton.
   ///
-  /// In pl, this message translates to:
-  /// **'Aktualizuj'**
+  /// In en, this message translates to:
+  /// **'Update'**
   String get force_update_screen_updateButton;
 
   /// No description provided for @suggest_update_dialog_title.
   ///
-  /// In pl, this message translates to:
-  /// **'Aktualizuj aplikację'**
+  /// In en, this message translates to:
+  /// **'Update app'**
   String get suggest_update_dialog_title;
 
   /// No description provided for @suggest_update_dialog_subtitle.
   ///
-  /// In pl, this message translates to:
-  /// **'Dostępna jest nowa wersja aplikacji, możesz ją teraz pobrać'**
+  /// In en, this message translates to:
+  /// **'New version is available, you can download it now'**
   String get suggest_update_dialog_subtitle;
 
   /// No description provided for @suggest_update_dialog_updateButton.
   ///
-  /// In pl, this message translates to:
-  /// **'Aktualizuj'**
+  /// In en, this message translates to:
+  /// **'Update'**
   String get suggest_update_dialog_updateButton;
 
   /// No description provided for @suggest_update_dialog_cancelButton.
   ///
-  /// In pl, this message translates to:
-  /// **'Anuluj'**
+  /// In en, this message translates to:
+  /// **'Cancel'**
   String get suggest_update_dialog_cancelButton;
 
   /// No description provided for @validator_field_empty.
   ///
-  /// In pl, this message translates to:
-  /// **'Pole nie może być puste'**
+  /// In en, this message translates to:
+  /// **'Field cannnot be empty'**
   String get validator_field_empty;
 
   /// No description provided for @validator_email_wrong_format.
   ///
-  /// In pl, this message translates to:
-  /// **'Niepoprawny format email'**
+  /// In en, this message translates to:
+  /// **'Wrong format of email'**
   String get validator_email_wrong_format;
 
   /// No description provided for @validator_passwords_not_match.
   ///
-  /// In pl, this message translates to:
-  /// **'Hasła nie są identyczne'**
+  /// In en, this message translates to:
+  /// **'Passwords don\'t match'**
   String get validator_passwords_not_match;
 
   /// No description provided for @validator_min_chars_password.
   ///
-  /// In pl, this message translates to:
-  /// **'Hasło musi mieć minimum 8 znaków'**
+  /// In en, this message translates to:
+  /// **'Passwords need to be at least 8 characters'**
   String get validator_min_chars_password;
 
   /// No description provided for @enter_code_email.
   ///
-  /// In pl, this message translates to:
-  /// **'Podaj kod z e-maila'**
+  /// In en, this message translates to:
+  /// **'Enter the code from e-mail'**
   String get enter_code_email;
 
   /// No description provided for @error_verification.
   ///
-  /// In pl, this message translates to:
-  /// **'Błąd podczas weryfikacji'**
+  /// In en, this message translates to:
+  /// **'Error during verification'**
   String get error_verification;
 
   /// No description provided for @success_verification.
   ///
-  /// In pl, this message translates to:
-  /// **'Zweryfikowane'**
+  /// In en, this message translates to:
+  /// **'Success verification'**
   String get success_verification;
 
   /// No description provided for @verification_page_title.
   ///
-  /// In pl, this message translates to:
-  /// **'Weryfikacja konta'**
+  /// In en, this message translates to:
+  /// **'Verification'**
   String get verification_page_title;
 
   /// No description provided for @login_page_recovery_button.
   ///
-  /// In pl, this message translates to:
-  /// **'Zapomniane hasło'**
+  /// In en, this message translates to:
+  /// **'Forgotten password'**
   String get login_page_recovery_button;
 
   /// No description provided for @recovery_page_title.
   ///
-  /// In pl, this message translates to:
-  /// **'Odzyskiwanie konta'**
+  /// In en, this message translates to:
+  /// **'Recovery page'**
   String get recovery_page_title;
 
   /// No description provided for @recovery_page_password_changed.
   ///
-  /// In pl, this message translates to:
-  /// **'Hasło zostało zmienione'**
+  /// In en, this message translates to:
+  /// **'Password has been changed'**
   String get recovery_page_password_changed;
 
   /// No description provided for @recovery_page_send.
   ///
-  /// In pl, this message translates to:
-  /// **'Wyślij'**
+  /// In en, this message translates to:
+  /// **'Send'**
   String get recovery_page_send;
 
   /// No description provided for @recovery_page_pin_title.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **'PIN'**
   String get recovery_page_pin_title;
 
   /// No description provided for @register.
   ///
-  /// In pl, this message translates to:
-  /// **'Zarejestruj'**
+  /// In en, this message translates to:
+  /// **'Register'**
   String get register;
 
   /// No description provided for @continue_registration.
   ///
-  /// In pl, this message translates to:
-  /// **'Kontynuuj'**
+  /// In en, this message translates to:
+  /// **'Continue'**
   String get continue_registration;
 
   /// No description provided for @terms_conditions_checkbox.
   ///
-  /// In pl, this message translates to:
-  /// **'Zgadzam się z warunkami'**
+  /// In en, this message translates to:
+  /// **'I agree to the terms and conditions'**
   String get terms_conditions_checkbox;
 
   /// No description provided for @login_button.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **'Login'**
   String get login_button;
 
   /// No description provided for @email_field.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **'E-mail'**
   String get email_field;
 
   /// No description provided for @password_field.
   ///
-  /// In pl, this message translates to:
-  /// **'Hasło'**
+  /// In en, this message translates to:
+  /// **'Password'**
   String get password_field;
 
   /// No description provided for @register_first_name_field.
   ///
-  /// In pl, this message translates to:
-  /// **'Imię'**
+  /// In en, this message translates to:
+  /// **'Given name'**
   String get register_first_name_field;
 
   /// No description provided for @register_family_name_field.
   ///
-  /// In pl, this message translates to:
-  /// **'Nazwisko'**
+  /// In en, this message translates to:
+  /// **'Family name'**
   String get register_family_name_field;
 
   /// No description provided for @register_header.
   ///
-  /// In pl, this message translates to:
-  /// **'Rejestracja'**
+  /// In en, this message translates to:
+  /// **'Register'**
   String get register_header;
 
   /// No description provided for @login_header.
   ///
-  /// In pl, this message translates to:
-  /// **'Logowanie'**
+  /// In en, this message translates to:
+  /// **'Login'**
   String get login_header;
 
   /// No description provided for @field_error.
   ///
-  /// In pl, this message translates to:
-  /// **'Pole zawiera błąd: {errorId}'**
+  /// In en, this message translates to:
+  /// **'Field contains errors: {errorId}'**
   String field_error(Object errorId);
 
   /// No description provided for @kratos_info_self_service_login_root.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_info_self_service_login_root;
 
   /// No description provided for @kratos_info_self_service_login.
   ///
-  /// In pl, this message translates to:
-  /// **'Zaloguj się'**
+  /// In en, this message translates to:
+  /// **'Sign in'**
   String get kratos_info_self_service_login;
 
   /// No description provided for @kratos_info_self_service_login_with.
   ///
-  /// In pl, this message translates to:
-  /// **'Zaloguj z '**
+  /// In en, this message translates to:
+  /// **'Sign in with TODO '**
   String get kratos_info_self_service_login_with;
 
   /// No description provided for @kratos_info_self_service_login_re_auth.
   ///
-  /// In pl, this message translates to:
-  /// **'Prosimy, potwierdź tę akcję weryfikując swoją tożsamość'**
+  /// In en, this message translates to:
+  /// **'Please confirm this action by verifying that it is you'**
   String get kratos_info_self_service_login_re_auth;
 
   /// No description provided for @kratos_info_self_service_login_mfa.
   ///
-  /// In pl, this message translates to:
-  /// **'Wypełnij kolejny krok logowania'**
+  /// In en, this message translates to:
+  /// **'Please complete the second authentication challenge.'**
   String get kratos_info_self_service_login_mfa;
 
   /// No description provided for @kratos_info_self_service_login_verify.
   ///
-  /// In pl, this message translates to:
-  /// **'Zweryfikuj'**
+  /// In en, this message translates to:
+  /// **'Verify'**
   String get kratos_info_self_service_login_verify;
 
   /// No description provided for @kratos_info_self_service_login_totp_label.
   ///
-  /// In pl, this message translates to:
-  /// **'Kod uwierzytelnienia'**
+  /// In en, this message translates to:
+  /// **'Authentication code'**
   String get kratos_info_self_service_login_totp_label;
 
   /// No description provided for @kratos_info_login_lookup_label.
   ///
-  /// In pl, this message translates to:
-  /// **'Kod przywracania'**
+  /// In en, this message translates to:
+  /// **'Backup recovery code'**
   String get kratos_info_login_lookup_label;
 
   /// No description provided for @kratos_info_self_service_login_web_authn.
   ///
-  /// In pl, this message translates to:
-  /// **'Wprowadź kod bezpieczeństwa'**
+  /// In en, this message translates to:
+  /// **'Use security key'**
   String get kratos_info_self_service_login_web_authn;
 
   /// No description provided for @kratos_info_login_totp.
   ///
-  /// In pl, this message translates to:
-  /// **'Potwierdź i zaloguj się'**
+  /// In en, this message translates to:
+  /// **'Use Authenticator'**
   String get kratos_info_login_totp;
 
   /// No description provided for @kratos_info_login_lookup.
   ///
-  /// In pl, this message translates to:
-  /// **'Wprowadź kod przywracania'**
+  /// In en, this message translates to:
+  /// **'Use backup recovery code'**
   String get kratos_info_login_lookup;
 
   /// No description provided for @kratos_info_self_service_login_continue_web_authn.
   ///
-  /// In pl, this message translates to:
-  /// **'Kontynuuj z kodem bezpieczeństwa'**
+  /// In en, this message translates to:
+  /// **'Continue with security key'**
   String get kratos_info_self_service_login_continue_web_authn;
 
   /// No description provided for @kratos_info_self_service_login_web_authn_passwordless.
   ///
-  /// In pl, this message translates to:
-  /// **'Przygotuj swoje urządzenie (np. klucz bezpieczeństwa, skaner biometryczny) i kliknij przycisk Kontynuuj'**
+  /// In en, this message translates to:
+  /// **'Prepare your WebAuthn device (e.g. security key, biometrics scanner, ...) and press continue.'**
   String get kratos_info_self_service_login_web_authn_passwordless;
 
   /// No description provided for @kratos_info_self_service_login_continue.
   ///
-  /// In pl, this message translates to:
-  /// **'Kontynuuj'**
+  /// In en, this message translates to:
+  /// **'Continue'**
   String get kratos_info_self_service_login_continue;
 
   /// No description provided for @kratos_info_self_service_logout.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_info_self_service_logout;
 
   /// No description provided for @kratos_info_self_service_mfa.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_info_self_service_mfa;
 
   /// No description provided for @kratos_info_self_service_registration_root.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_info_self_service_registration_root;
 
   /// No description provided for @kratos_info_self_service_registration.
   ///
-  /// In pl, this message translates to:
-  /// **'Zarejestruj się'**
+  /// In en, this message translates to:
+  /// **'Sign up'**
   String get kratos_info_self_service_registration;
 
   /// No description provided for @kratos_info_self_service_registration_with.
   ///
-  /// In pl, this message translates to:
-  /// **'Zarejestruj z '**
+  /// In en, this message translates to:
+  /// **'Sign up with TODO '**
   String get kratos_info_self_service_registration_with;
 
   /// No description provided for @kratos_info_self_service_registration_continue.
   ///
-  /// In pl, this message translates to:
-  /// **'Kontynuuj'**
+  /// In en, this message translates to:
+  /// **'Continue'**
   String get kratos_info_self_service_registration_continue;
 
   /// No description provided for @kratos_info_self_service_registration_register_web_authn.
   ///
-  /// In pl, this message translates to:
-  /// **'Zarejestruj się z kluczem bezpieczeństwa'**
+  /// In en, this message translates to:
+  /// **'Sign up with security key'**
   String get kratos_info_self_service_registration_register_web_authn;
 
   /// No description provided for @kratos_info_self_service_settings.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_info_self_service_settings;
 
   /// No description provided for @kratos_info_self_service_settings_update_success.
   ///
-  /// In pl, this message translates to:
-  /// **'Zmiany zostały zapisane'**
+  /// In en, this message translates to:
+  /// **'Your changes have been saved!'**
   String get kratos_info_self_service_settings_update_success;
 
   /// No description provided for @kratos_info_self_service_settings_update_link_oidc.
   ///
-  /// In pl, this message translates to:
-  /// **'Połącz konto '**
+  /// In en, this message translates to:
+  /// **'Link TODO'**
   String get kratos_info_self_service_settings_update_link_oidc;
 
   /// No description provided for @kratos_info_self_service_settings_update_unlink_oidc.
   ///
-  /// In pl, this message translates to:
-  /// **'Odłącz konto '**
+  /// In en, this message translates to:
+  /// **'Unlink TODO '**
   String get kratos_info_self_service_settings_update_unlink_oidc;
 
   /// No description provided for @kratos_info_self_service_settings_update_unlink_totp.
   ///
-  /// In pl, this message translates to:
-  /// **'Wyłącz weryfikację dwuetapową'**
+  /// In en, this message translates to:
+  /// **'Unlink TOTP Authenticator App'**
   String get kratos_info_self_service_settings_update_unlink_totp;
 
   /// No description provided for @kratos_info_self_service_settings_totp_qrcode.
   ///
-  /// In pl, this message translates to:
-  /// **''**
+  /// In en, this message translates to:
+  /// **'Authenticator app QR code'**
   String get kratos_info_self_service_settings_totp_qrcode;
 
   /// No description provided for @kratos_info_self_service_settings_totp_secret.
   ///
-  /// In pl, this message translates to:
-  /// **''**
+  /// In en, this message translates to:
+  /// **'TODO'**
   String get kratos_info_self_service_settings_totp_secret;
 
   /// No description provided for @kratos_info_self_service_settings_reveal_lookup.
   ///
-  /// In pl, this message translates to:
-  /// **''**
+  /// In en, this message translates to:
+  /// **'Reveal backup recovery codes'**
   String get kratos_info_self_service_settings_reveal_lookup;
 
   /// No description provided for @kratos_info_self_service_settings_regenerate_lookup.
   ///
-  /// In pl, this message translates to:
-  /// **''**
+  /// In en, this message translates to:
+  /// **'Generate new backup recovery codes'**
   String get kratos_info_self_service_settings_regenerate_lookup;
 
   /// No description provided for @kratos_info_self_service_settings_lookup_secret.
   ///
-  /// In pl, this message translates to:
-  /// **''**
+  /// In en, this message translates to:
+  /// **'TODO'**
   String get kratos_info_self_service_settings_lookup_secret;
 
   /// No description provided for @kratos_info_self_service_settings_lookup_secret_label.
   ///
-  /// In pl, this message translates to:
-  /// **''**
+  /// In en, this message translates to:
+  /// **'This is your authenticator app secret. Use it if you can not scan the QR code.'**
   String get kratos_info_self_service_settings_lookup_secret_label;
 
   /// No description provided for @kratos_info_self_service_settings_lookup_confirm.
   ///
-  /// In pl, this message translates to:
-  /// **''**
+  /// In en, this message translates to:
+  /// **'Confirm backup recovery codes'**
   String get kratos_info_self_service_settings_lookup_confirm;
 
   /// No description provided for @kratos_info_self_service_settings_register_web_authn.
   ///
-  /// In pl, this message translates to:
-  /// **''**
+  /// In en, this message translates to:
+  /// **'Add security key'**
   String get kratos_info_self_service_settings_register_web_authn;
 
   /// No description provided for @kratos_info_self_service_settings_register_web_authn_display_name.
   ///
-  /// In pl, this message translates to:
-  /// **''**
+  /// In en, this message translates to:
+  /// **'Name of the security key'**
   String get kratos_info_self_service_settings_register_web_authn_display_name;
 
   /// No description provided for @kratos_info_self_service_settings_lookup_secret_used.
   ///
-  /// In pl, this message translates to:
-  /// **''**
+  /// In en, this message translates to:
+  /// **'Secret was used at TODO'**
   String get kratos_info_self_service_settings_lookup_secret_used;
 
   /// No description provided for @kratos_info_self_service_settings_lookup_secret_list.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_info_self_service_settings_lookup_secret_list;
 
   /// No description provided for @kratos_info_self_service_settings_disable_lookup.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_info_self_service_settings_disable_lookup;
 
   /// No description provided for @kratos_info_self_service_settings_totp_secret_label.
   ///
-  /// In pl, this message translates to:
-  /// **'Jeśli nie możesz użyć kodu QR, podaj w aplikacji ten klucz aktywacyjny:'**
+  /// In en, this message translates to:
+  /// **'If you are unable to use the QR code, please provide this activation key in the app:'**
   String get kratos_info_self_service_settings_totp_secret_label;
 
   /// No description provided for @kratos_info_self_service_settings_remove_web_authn.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_info_self_service_settings_remove_web_authn;
 
   /// No description provided for @kratos_info_self_service_recovery.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_info_self_service_recovery;
 
   /// No description provided for @kratos_info_self_service_recovery_successful.
   ///
-  /// In pl, this message translates to:
-  /// **'Udało Ci się odzyskać dostęp do konta. Zmień swoje hasło w poniższym formularzu.'**
+  /// In en, this message translates to:
+  /// **'You have successfully regained access to your account. Change your password in the form below.'**
   String get kratos_info_self_service_recovery_successful;
 
   /// No description provided for @kratos_info_self_service_recovery_email_sent.
   ///
-  /// In pl, this message translates to:
-  /// **'Na podany adres e-mail wysłaliśmy Ci wiadomość z linkiem do resetowania hasła.'**
+  /// In en, this message translates to:
+  /// **'We have sent you an email with a link to reset your password to the email address you provided.'**
   String get kratos_info_self_service_recovery_email_sent;
 
   /// No description provided for @kratos_info_self_service_recovery_email_with_code_sent.
   ///
-  /// In pl, this message translates to:
-  /// **'Na podany przez Ciebie adres email wysłaliśmy wiadomość zawierającą kod do odzyskiwania konta.'**
+  /// In en, this message translates to:
+  /// **'We have sent an email containing a recovery code to the email address you provided.'**
   String get kratos_info_self_service_recovery_email_with_code_sent;
 
   /// No description provided for @kratos_info_node_label.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_info_node_label;
 
   /// No description provided for @kratos_info_node_label_input_password.
   ///
-  /// In pl, this message translates to:
-  /// **'Hasło'**
+  /// In en, this message translates to:
+  /// **'Password'**
   String get kratos_info_node_label_input_password;
 
   /// No description provided for @kratos_info_node_label_generated.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_info_node_label_generated;
 
   /// No description provided for @kratos_info_node_label_save.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_info_node_label_save;
 
   /// No description provided for @kratos_info_node_label_id.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_info_node_label_id;
 
   /// No description provided for @kratos_info_node_label_submit.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_info_node_label_submit;
 
   /// No description provided for @kratos_info_node_label_verify_otp.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_info_node_label_verify_otp;
 
   /// No description provided for @kratos_info_node_label_email.
   ///
-  /// In pl, this message translates to:
-  /// **''**
+  /// In en, this message translates to:
+  /// **'Email'**
   String get kratos_info_node_label_email;
 
   /// No description provided for @kratos_info_node_label_resend_otp.
   ///
-  /// In pl, this message translates to:
-  /// **''**
+  /// In en, this message translates to:
+  /// **'Resend code'**
   String get kratos_info_node_label_resend_otp;
 
   /// No description provided for @kratos_info_node_label_continue.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_info_node_label_continue;
 
   /// No description provided for @kratos_info_node_label_recovery_code.
   ///
-  /// In pl, this message translates to:
-  /// **''**
+  /// In en, this message translates to:
+  /// **'Recovery code'**
   String get kratos_info_node_label_recovery_code;
 
   /// No description provided for @kratos_info_node_label_verification_code.
   ///
-  /// In pl, this message translates to:
-  /// **''**
+  /// In en, this message translates to:
+  /// **'Verification code'**
   String get kratos_info_node_label_verification_code;
 
   /// No description provided for @kratos_info_self_service_verification.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_info_self_service_verification;
 
   /// No description provided for @kratos_info_self_service_verification_email_sent.
   ///
-  /// In pl, this message translates to:
-  /// **'Wiadomość e-mail z linkiem weryfikacyjnym została wysłana na podany przez Ciebie adres'**
+  /// In en, this message translates to:
+  /// **'An email with a verification link has been sent to the address you provided'**
   String get kratos_info_self_service_verification_email_sent;
 
   /// No description provided for @kratos_info_self_service_verification_successful.
   ///
-  /// In pl, this message translates to:
-  /// **'Twój adres e-mail został potwierdzony'**
+  /// In en, this message translates to:
+  /// **'Your email address has been confirmed'**
   String get kratos_info_self_service_verification_successful;
 
   /// No description provided for @kratos_info_self_service_verification_email_with_code_sent.
   ///
-  /// In pl, this message translates to:
-  /// **'Wiadomość e-mail z kodem weryfikacyjnym została wysłana na podany przez Ciebie adres'**
+  /// In en, this message translates to:
+  /// **'An email with a verification code has been sent to the address you provided'**
   String get kratos_info_self_service_verification_email_with_code_sent;
 
   /// No description provided for @kratos_error_validation.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation;
 
   /// No description provided for @kratos_error_validation_generic.
   ///
-  /// In pl, this message translates to:
-  /// **'Pole ma niepoprawny format'**
+  /// In en, this message translates to:
+  /// **'The field has an invalid format'**
   String get kratos_error_validation_generic;
 
   /// No description provided for @kratos_error_validation_required.
   ///
-  /// In pl, this message translates to:
-  /// **'To pole jest wymagane'**
+  /// In en, this message translates to:
+  /// **'This field is required'**
   String get kratos_error_validation_required;
 
   /// No description provided for @kratos_error_validation_min_length.
   ///
-  /// In pl, this message translates to:
-  /// **'Wymagane jest minimum  znaków'**
+  /// In en, this message translates to:
+  /// **'A minimum of 8 characters is required'**
   String get kratos_error_validation_min_length;
 
   /// No description provided for @kratos_error_validation_invalid_format.
   ///
-  /// In pl, this message translates to:
-  /// **'Niepoprawny format danych'**
+  /// In en, this message translates to:
+  /// **'Invalid data format'**
   String get kratos_error_validation_invalid_format;
 
   /// No description provided for @kratos_error_validation_password_policy_violation.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **'Min. 8 characters, Password must not be on the list of leaked passwords'**
   String get kratos_error_validation_password_policy_violation;
 
   /// No description provided for @kratos_error_validation_invalid_credentials.
   ///
-  /// In pl, this message translates to:
-  /// **'Nieprawidłowy adres e-mail lub hasło'**
+  /// In en, this message translates to:
+  /// **'Invalid email address or password'**
   String get kratos_error_validation_invalid_credentials;
 
   /// No description provided for @kratos_error_validation_duplicate_credentials.
   ///
-  /// In pl, this message translates to:
-  /// **'Konto z takimi danymi logowania już istnieje'**
+  /// In en, this message translates to:
+  /// **'An account with this login information already exists'**
   String get kratos_error_validation_duplicate_credentials;
 
   /// No description provided for @kratos_error_validation_totp_verifier_wrong.
   ///
-  /// In pl, this message translates to:
-  /// **'Podany kod weryfikacyjny jest nieprawidłowy'**
+  /// In en, this message translates to:
+  /// **'The verification code you entered is invalid'**
   String get kratos_error_validation_totp_verifier_wrong;
 
   /// No description provided for @kratos_error_validation_identifier_missing.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_identifier_missing;
 
   /// No description provided for @kratos_error_validation_address_not_verified.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_address_not_verified;
 
   /// No description provided for @kratos_error_validation_no_totp_device.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_no_totp_device;
 
   /// No description provided for @kratos_error_validation_lookup_already_used.
   ///
-  /// In pl, this message translates to:
-  /// **'Kod przywracania został już wykorzystany'**
+  /// In en, this message translates to:
+  /// **'The recovery code has already been redeemed'**
   String get kratos_error_validation_lookup_already_used;
 
   /// No description provided for @kratos_error_validation_no_web_authn_device.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_no_web_authn_device;
 
   /// No description provided for @kratos_error_validation_no_lookup.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_no_lookup;
 
   /// No description provided for @kratos_error_validation_such_no_web_authn_user.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_such_no_web_authn_user;
 
   /// No description provided for @kratos_error_validation_lookup_invalid.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_lookup_invalid;
 
   /// No description provided for @kratos_error_validation_max_length.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_max_length;
 
   /// No description provided for @kratos_error_validation_minimum.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_minimum;
 
   /// No description provided for @kratos_error_validation_exclusive_minimum.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_exclusive_minimum;
 
   /// No description provided for @kratos_error_validation_maximum.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_maximum;
 
   /// No description provided for @kratos_error_validation_exclusive_maximum.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_exclusive_maximum;
 
   /// No description provided for @kratos_error_validation_multiple_of.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_multiple_of;
 
   /// No description provided for @kratos_error_validation_max_items.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_max_items;
 
   /// No description provided for @kratos_error_validation_min_items.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_min_items;
 
   /// No description provided for @kratos_error_validation_unique_items.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_unique_items;
 
   /// No description provided for @kratos_error_validation_wrong_type.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_wrong_type;
 
   /// No description provided for @kratos_error_validation_duplicate_credentials_on_oidc_link.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_duplicate_credentials_on_oidc_link;
 
   /// No description provided for @kratos_error_validation_login.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_login;
 
   /// No description provided for @kratos_error_validation_login_flow_expired.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_login_flow_expired;
 
   /// No description provided for @kratos_error_validation_login_no_strategy_found.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_login_no_strategy_found;
 
   /// No description provided for @kratos_error_validation_registration_no_strategy_found.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_registration_no_strategy_found;
 
   /// No description provided for @kratos_error_validation_settings_no_strategy_found.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_settings_no_strategy_found;
 
   /// No description provided for @kratos_error_validation_recovery_no_strategy_found.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_recovery_no_strategy_found;
 
   /// No description provided for @kratos_error_validation_verification_no_strategy_found.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_verification_no_strategy_found;
 
   /// No description provided for @kratos_error_validation_registration.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_registration;
 
   /// No description provided for @kratos_error_validation_registration_flow_expired.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_registration_flow_expired;
 
   /// No description provided for @kratos_error_validation_settings.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_settings;
 
   /// No description provided for @kratos_error_validation_settings_flow_expired.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_settings_flow_expired;
 
   /// No description provided for @kratos_error_validation_recovery.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_recovery;
 
   /// No description provided for @kratos_error_validation_recovery_retry_success.
   ///
-  /// In pl, this message translates to:
-  /// **'Zapytanie zostało już wysłane poprawnie i nie może zostać powtórzone'**
+  /// In en, this message translates to:
+  /// **'The request has already been sent successfully and cannot be repeated'**
   String get kratos_error_validation_recovery_retry_success;
 
   /// No description provided for @kratos_error_validation_recovery_state_failure.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_recovery_state_failure;
 
   /// No description provided for @kratos_error_validation_recovery_missing_recovery_token.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_recovery_missing_recovery_token;
 
   /// No description provided for @kratos_error_validation_recovery_token_invalid_or_already_used.
   ///
-  /// In pl, this message translates to:
-  /// **'Kod jest nieprawidłowy lub został już wykorzystany'**
+  /// In en, this message translates to:
+  /// **'The code is invalid or has already been used'**
   String get kratos_error_validation_recovery_token_invalid_or_already_used;
 
   /// No description provided for @kratos_error_validation_recovery_flow_expired.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_recovery_flow_expired;
 
   /// No description provided for @kratos_error_validation_recovery_code_invalid_or_already_used.
   ///
-  /// In pl, this message translates to:
-  /// **'Kod jest niepoprawny lub został już wykorzystany'**
+  /// In en, this message translates to:
+  /// **'The code is invalid or has already been redeemed'**
   String get kratos_error_validation_recovery_code_invalid_or_already_used;
 
   /// No description provided for @kratos_error_validation_verification.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_verification;
 
   /// No description provided for @kratos_error_validation_verification_token_invalid_or_already_used.
   ///
-  /// In pl, this message translates to:
-  /// **'Kod jest nieprawidłowy lub został już wykorzystany'**
+  /// In en, this message translates to:
+  /// **'The code is invalid or has already been used'**
   String get kratos_error_validation_verification_token_invalid_or_already_used;
 
   /// No description provided for @kratos_error_validation_verification_retry_success.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_verification_retry_success;
 
   /// No description provided for @kratos_error_validation_verification_state_failure.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_verification_state_failure;
 
   /// No description provided for @kratos_error_validation_verification_missing_verification_token.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_verification_missing_verification_token;
 
   /// No description provided for @kratos_error_validation_verification_flow_expired.
   ///
-  /// In pl, this message translates to:
+  /// In en, this message translates to:
   /// **''**
   String get kratos_error_validation_verification_flow_expired;
 
   /// No description provided for @kratos_error_validation_verification_code_invalid_or_already_used.
   ///
-  /// In pl, this message translates to:
-  /// **'Podany kod jest niepoprawny lub został już użyty. Spróbuj ponownie'**
+  /// In en, this message translates to:
+  /// **'The code you entered is invalid or has already been used. try again'**
   String get kratos_error_validation_verification_code_invalid_or_already_used;
 
   /// No description provided for @kratos_error_system.
   ///
-  /// In pl, this message translates to:
-  /// **'Błąd systemu'**
+  /// In en, this message translates to:
+  /// **'System error'**
   String get kratos_error_system;
 
   /// No description provided for @kratos_error_system_generic.
   ///
-  /// In pl, this message translates to:
-  /// **'Wystąpił błąd'**
+  /// In en, this message translates to:
+  /// **'Generic error'**
   String get kratos_error_system_generic;
 
   /// No description provided for @register_with_apple_button.
   ///
-  /// In pl, this message translates to:
-  /// **'Zarejestruj z Apple'**
+  /// In en, this message translates to:
+  /// **'Register with Apple'**
   String get register_with_apple_button;
 
   /// No description provided for @register_with_google_button.
   ///
-  /// In pl, this message translates to:
-  /// **'Zarejestruj z Google'**
+  /// In en, this message translates to:
+  /// **'Register with Google'**
   String get register_with_google_button;
 
   /// No description provided for @register_with_facebook_button.
   ///
-  /// In pl, this message translates to:
-  /// **'Zarejestruj z Facebook'**
+  /// In en, this message translates to:
+  /// **'Register with Facebook'**
   String get register_with_facebook_button;
 
   /// No description provided for @error_handling_network.
   ///
-  /// In pl, this message translates to:
-  /// **'Brak internetu, spróbuj ponownie później'**
+  /// In en, this message translates to:
+  /// **'No internet connection, try again later'**
   String get error_handling_network;
 
   /// No description provided for @error_handling_authorization.
   ///
-  /// In pl, this message translates to:
-  /// **'Brak dostępu, cofnij'**
+  /// In en, this message translates to:
+  /// **'No permission, go back'**
   String get error_handling_authorization;
 
   /// No description provided for @error_handling_unknown.
   ///
-  /// In pl, this message translates to:
-  /// **'Coś poszło nie tak, spróbuj ponownie'**
+  /// In en, this message translates to:
+  /// **'Something went wrong, try again'**
   String get error_handling_unknown;
 
   /// No description provided for @register_unknown_error.
   ///
-  /// In pl, this message translates to:
-  /// **'Coś poszło nie tak, spróbuj ponownie'**
+  /// In en, this message translates to:
+  /// **'Something went wrong, try again'**
   String get register_unknown_error;
 
   /// No description provided for @login_unknown_error.
   ///
-  /// In pl, this message translates to:
-  /// **'Coś poszło nie tak, spróbuj ponownie'**
+  /// In en, this message translates to:
+  /// **'Something went wrong, try again'**
   String get login_unknown_error;
 
   /// No description provided for @social_traits_unknown_error.
   ///
-  /// In pl, this message translates to:
-  /// **'Coś poszło nie tak, spróbuj ponownie'**
+  /// In en, this message translates to:
+  /// **'Something went wrong, try again'**
   String get social_traits_unknown_error;
 
   /// No description provided for @login_with_apple_button.
   ///
-  /// In pl, this message translates to:
-  /// **'Zaloguj z Apple'**
+  /// In en, this message translates to:
+  /// **'Sign in with Apple'**
   String get login_with_apple_button;
 
   /// No description provided for @login_with_google_button.
   ///
-  /// In pl, this message translates to:
-  /// **'Zaloguj z Google'**
+  /// In en, this message translates to:
+  /// **'Sign in with Google'**
   String get login_with_google_button;
 
   /// No description provided for @login_with_facebook_button.
   ///
-  /// In pl, this message translates to:
-  /// **'Zaloguj z Facebook'**
+  /// In en, this message translates to:
+  /// **'Sign in with Facebook'**
   String get login_with_facebook_button;
 
   /// No description provided for @social_traits_cancel.
   ///
-  /// In pl, this message translates to:
-  /// **'Anuluj'**
+  /// In en, this message translates to:
+  /// **'Cancel'**
   String get social_traits_cancel;
 
   /// No description provided for @change_password_title.
   ///
-  /// In pl, this message translates to:
-  /// **'Zmień hasło'**
+  /// In en, this message translates to:
+  /// **'Change password'**
   String get change_password_title;
 
   /// No description provided for @change_password_confirm_password.
   ///
-  /// In pl, this message translates to:
-  /// **'Potwierdź hasło'**
+  /// In en, this message translates to:
+  /// **'Confirm password'**
   String get change_password_confirm_password;
 
   /// No description provided for @profile_my_profile.
   ///
-  /// In pl, this message translates to:
-  /// **'Mój profil'**
+  /// In en, this message translates to:
+  /// **'My profile'**
   String get profile_my_profile;
 
   /// No description provided for @profile_password_change.
   ///
-  /// In pl, this message translates to:
-  /// **'Zmiana hasła'**
+  /// In en, this message translates to:
+  /// **'Password change'**
   String get profile_password_change;
 
   /// No description provided for @profile_logout.
   ///
-  /// In pl, this message translates to:
-  /// **'Wyloguj'**
+  /// In en, this message translates to:
+  /// **'Logout'**
   String get profile_logout;
 
   /// No description provided for @profile_edit_form.
   ///
-  /// In pl, this message translates to:
-  /// **'Edytuj'**
+  /// In en, this message translates to:
+  /// **'Edit'**
   String get profile_edit_form;
 
   /// No description provided for @profile_save_changes.
   ///
-  /// In pl, this message translates to:
-  /// **'Zapisz'**
+  /// In en, this message translates to:
+  /// **'Save'**
   String get profile_save_changes;
 
   /// No description provided for @reauthorize_title.
   ///
-  /// In pl, this message translates to:
-  /// **'Autoryzacja'**
+  /// In en, this message translates to:
+  /// **'Authorization'**
   String get reauthorize_title;
 
   /// No description provided for @reauthorize_info.
   ///
-  /// In pl, this message translates to:
-  /// **'Aby wykonać tę operację musisz się ponownie zalogować.'**
+  /// In en, this message translates to:
+  /// **'To perform this operation you must log in again.'**
   String get reauthorize_info;
 
   /// No description provided for @reauthorize_info_button.
   ///
-  /// In pl, this message translates to:
-  /// **'Dalej'**
+  /// In en, this message translates to:
+  /// **'Next'**
   String get reauthorize_info_button;
+
+  /// No description provided for @home_screen_projects.
+  ///
+  /// In en, this message translates to:
+  /// **'Projects'**
+  String get home_screen_projects;
+
+  /// No description provided for @home_screen_employees.
+  ///
+  /// In en, this message translates to:
+  /// **'Employees'**
+  String get home_screen_employees;
+
+  /// No description provided for @project_details_screen_cannot_open_assignment.
+  ///
+  /// In en, this message translates to:
+  /// **'Employees list is either empty or has not been fetched'**
+  String get project_details_screen_cannot_open_assignment;
+
+  /// No description provided for @project_details_screen_unknown_id.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown project id'**
+  String get project_details_screen_unknown_id;
+
+  /// No description provided for @assignment_screen_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Assignment {name}'**
+  String assignment_screen_title(Object name);
+
+  /// No description provided for @assignment_screen_assign.
+  ///
+  /// In en, this message translates to:
+  /// **'Assign employee'**
+  String get assignment_screen_assign;
+
+  /// No description provided for @assignment_screen_unassign.
+  ///
+  /// In en, this message translates to:
+  /// **'Unassign employee'**
+  String get assignment_screen_unassign;
+
+  /// No description provided for @assignment_screen_pipe_logs.
+  ///
+  /// In en, this message translates to:
+  /// **'Pipe logs'**
+  String get assignment_screen_pipe_logs;
+
+  /// No description provided for @assignment_screen_pipe_logs_placeholder.
+  ///
+  /// In en, this message translates to:
+  /// **'No logs so far...'**
+  String get assignment_screen_pipe_logs_placeholder;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -1127,25 +1177,25 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['en', 'pl'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'pl'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'en':
-      return AppLocalizationsEn();
-    case 'pl':
-      return AppLocalizationsPl();
+    case 'en': return AppLocalizationsEn();
+    case 'pl': return AppLocalizationsPl();
   }
 
   throw FlutterError(
-      'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
-      'an issue with the localizations generation tool. Please file an issue '
-      'on GitHub with a reproducible sample app and the gen-l10n configuration '
-      'that was used.');
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.'
+  );
 }

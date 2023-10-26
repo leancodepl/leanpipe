@@ -11,8 +11,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get force_update_screen_title => 'Aktualizuj aplikację';
 
   @override
-  String get force_update_screen_subtitle =>
-      'Dostępna jest nowa wersja aplikacji, pobierz ją aby korzystać';
+  String get force_update_screen_subtitle => 'Dostępna jest nowa wersja aplikacji, pobierz ją aby korzystać';
 
   @override
   String get force_update_screen_updateButton => 'Aktualizuj';
@@ -21,8 +20,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get suggest_update_dialog_title => 'Aktualizuj aplikację';
 
   @override
-  String get suggest_update_dialog_subtitle =>
-      'Dostępna jest nowa wersja aplikacji, możesz ją teraz pobrać';
+  String get suggest_update_dialog_subtitle => 'Dostępna jest nowa wersja aplikacji, możesz ją teraz pobrać';
 
   @override
   String get suggest_update_dialog_updateButton => 'Aktualizuj';
@@ -114,26 +112,22 @@ class AppLocalizationsPl extends AppLocalizations {
   String get kratos_info_self_service_login_with => 'Zaloguj z ';
 
   @override
-  String get kratos_info_self_service_login_re_auth =>
-      'Prosimy, potwierdź tę akcję weryfikując swoją tożsamość';
+  String get kratos_info_self_service_login_re_auth => 'Prosimy, potwierdź tę akcję weryfikując swoją tożsamość';
 
   @override
-  String get kratos_info_self_service_login_mfa =>
-      'Wypełnij kolejny krok logowania';
+  String get kratos_info_self_service_login_mfa => 'Wypełnij kolejny krok logowania';
 
   @override
   String get kratos_info_self_service_login_verify => 'Zweryfikuj';
 
   @override
-  String get kratos_info_self_service_login_totp_label =>
-      'Kod uwierzytelnienia';
+  String get kratos_info_self_service_login_totp_label => 'Kod uwierzytelnienia';
 
   @override
   String get kratos_info_login_lookup_label => 'Kod przywracania';
 
   @override
-  String get kratos_info_self_service_login_web_authn =>
-      'Wprowadź kod bezpieczeństwa';
+  String get kratos_info_self_service_login_web_authn => 'Wprowadź kod bezpieczeństwa';
 
   @override
   String get kratos_info_login_totp => 'Potwierdź i zaloguj się';
@@ -142,12 +136,10 @@ class AppLocalizationsPl extends AppLocalizations {
   String get kratos_info_login_lookup => 'Wprowadź kod przywracania';
 
   @override
-  String get kratos_info_self_service_login_continue_web_authn =>
-      'Kontynuuj z kodem bezpieczeństwa';
+  String get kratos_info_self_service_login_continue_web_authn => 'Kontynuuj z kodem bezpieczeństwa';
 
   @override
-  String get kratos_info_self_service_login_web_authn_passwordless =>
-      'Przygotuj swoje urządzenie (np. klucz bezpieczeństwa, skaner biometryczny) i kliknij przycisk Kontynuuj';
+  String get kratos_info_self_service_login_web_authn_passwordless => 'Przygotuj swoje urządzenie (np. klucz bezpieczeństwa, skaner biometryczny) i kliknij przycisk Kontynuuj';
 
   @override
   String get kratos_info_self_service_login_continue => 'Kontynuuj';
@@ -171,27 +163,22 @@ class AppLocalizationsPl extends AppLocalizations {
   String get kratos_info_self_service_registration_continue => 'Kontynuuj';
 
   @override
-  String get kratos_info_self_service_registration_register_web_authn =>
-      'Zarejestruj się z kluczem bezpieczeństwa';
+  String get kratos_info_self_service_registration_register_web_authn => 'Zarejestruj się z kluczem bezpieczeństwa';
 
   @override
   String get kratos_info_self_service_settings => '';
 
   @override
-  String get kratos_info_self_service_settings_update_success =>
-      'Zmiany zostały zapisane';
+  String get kratos_info_self_service_settings_update_success => 'Zmiany zostały zapisane';
 
   @override
-  String get kratos_info_self_service_settings_update_link_oidc =>
-      'Połącz konto ';
+  String get kratos_info_self_service_settings_update_link_oidc => 'Połącz konto ';
 
   @override
-  String get kratos_info_self_service_settings_update_unlink_oidc =>
-      'Odłącz konto ';
+  String get kratos_info_self_service_settings_update_unlink_oidc => 'Odłącz konto ';
 
   @override
-  String get kratos_info_self_service_settings_update_unlink_totp =>
-      'Wyłącz weryfikację dwuetapową';
+  String get kratos_info_self_service_settings_update_unlink_totp => 'Wyłącz weryfikację dwuetapową';
 
   @override
   String get kratos_info_self_service_settings_totp_qrcode => '';
@@ -218,9 +205,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get kratos_info_self_service_settings_register_web_authn => '';
 
   @override
-  String
-      get kratos_info_self_service_settings_register_web_authn_display_name =>
-          '';
+  String get kratos_info_self_service_settings_register_web_authn_display_name => '';
 
   @override
   String get kratos_info_self_service_settings_lookup_secret_used => '';
@@ -232,8 +217,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get kratos_info_self_service_settings_disable_lookup => '';
 
   @override
-  String get kratos_info_self_service_settings_totp_secret_label =>
-      'Jeśli nie możesz użyć kodu QR, podaj w aplikacji ten klucz aktywacyjny:';
+  String get kratos_info_self_service_settings_totp_secret_label => 'Jeśli nie możesz użyć kodu QR, podaj w aplikacji ten klucz aktywacyjny:';
 
   @override
   String get kratos_info_self_service_settings_remove_web_authn => '';
@@ -242,16 +226,13 @@ class AppLocalizationsPl extends AppLocalizations {
   String get kratos_info_self_service_recovery => '';
 
   @override
-  String get kratos_info_self_service_recovery_successful =>
-      'Udało Ci się odzyskać dostęp do konta. Zmień swoje hasło w poniższym formularzu.';
+  String get kratos_info_self_service_recovery_successful => 'Udało Ci się odzyskać dostęp do konta. Zmień swoje hasło w poniższym formularzu.';
 
   @override
-  String get kratos_info_self_service_recovery_email_sent =>
-      'Na podany adres e-mail wysłaliśmy Ci wiadomość z linkiem do resetowania hasła.';
+  String get kratos_info_self_service_recovery_email_sent => 'Na podany adres e-mail wysłaliśmy Ci wiadomość z linkiem do resetowania hasła.';
 
   @override
-  String get kratos_info_self_service_recovery_email_with_code_sent =>
-      'Na podany przez Ciebie adres email wysłaliśmy wiadomość zawierającą kod do odzyskiwania konta.';
+  String get kratos_info_self_service_recovery_email_with_code_sent => 'Na podany przez Ciebie adres email wysłaliśmy wiadomość zawierającą kod do odzyskiwania konta.';
 
   @override
   String get kratos_info_node_label => '';
@@ -293,16 +274,13 @@ class AppLocalizationsPl extends AppLocalizations {
   String get kratos_info_self_service_verification => '';
 
   @override
-  String get kratos_info_self_service_verification_email_sent =>
-      'Wiadomość e-mail z linkiem weryfikacyjnym została wysłana na podany przez Ciebie adres';
+  String get kratos_info_self_service_verification_email_sent => 'Wiadomość e-mail z linkiem weryfikacyjnym została wysłana na podany przez Ciebie adres';
 
   @override
-  String get kratos_info_self_service_verification_successful =>
-      'Twój adres e-mail został potwierdzony';
+  String get kratos_info_self_service_verification_successful => 'Twój adres e-mail został potwierdzony';
 
   @override
-  String get kratos_info_self_service_verification_email_with_code_sent =>
-      'Wiadomość e-mail z kodem weryfikacyjnym została wysłana na podany przez Ciebie adres';
+  String get kratos_info_self_service_verification_email_with_code_sent => 'Wiadomość e-mail z kodem weryfikacyjnym została wysłana na podany przez Ciebie adres';
 
   @override
   String get kratos_error_validation => '';
@@ -314,28 +292,22 @@ class AppLocalizationsPl extends AppLocalizations {
   String get kratos_error_validation_required => 'To pole jest wymagane';
 
   @override
-  String get kratos_error_validation_min_length =>
-      'Wymagane jest minimum  znaków';
+  String get kratos_error_validation_min_length => 'Wymagane jest minimum  znaków';
 
   @override
-  String get kratos_error_validation_invalid_format =>
-      'Niepoprawny format danych';
+  String get kratos_error_validation_invalid_format => 'Niepoprawny format danych';
 
   @override
-  String get kratos_error_validation_password_policy_violation =>
-      'Min. 8 characters, Password must not be on the list of leaked passwords';
+  String get kratos_error_validation_password_policy_violation => 'Min. 8 characters, Password must not be on the list of leaked passwords';
 
   @override
-  String get kratos_error_validation_invalid_credentials =>
-      'Nieprawidłowy adres e-mail lub hasło';
+  String get kratos_error_validation_invalid_credentials => 'Nieprawidłowy adres e-mail lub hasło';
 
   @override
-  String get kratos_error_validation_duplicate_credentials =>
-      'Konto z takimi danymi logowania już istnieje';
+  String get kratos_error_validation_duplicate_credentials => 'Konto z takimi danymi logowania już istnieje';
 
   @override
-  String get kratos_error_validation_totp_verifier_wrong =>
-      'Podany kod weryfikacyjny jest nieprawidłowy';
+  String get kratos_error_validation_totp_verifier_wrong => 'Podany kod weryfikacyjny jest nieprawidłowy';
 
   @override
   String get kratos_error_validation_identifier_missing => '';
@@ -347,8 +319,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get kratos_error_validation_no_totp_device => '';
 
   @override
-  String get kratos_error_validation_lookup_already_used =>
-      'Kod przywracania został już wykorzystany';
+  String get kratos_error_validation_lookup_already_used => 'Kod przywracania został już wykorzystany';
 
   @override
   String get kratos_error_validation_no_web_authn_device => '';
@@ -432,8 +403,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get kratos_error_validation_recovery => '';
 
   @override
-  String get kratos_error_validation_recovery_retry_success =>
-      'Zapytanie zostało już wysłane poprawnie i nie może zostać powtórzone';
+  String get kratos_error_validation_recovery_retry_success => 'Zapytanie zostało już wysłane poprawnie i nie może zostać powtórzone';
 
   @override
   String get kratos_error_validation_recovery_state_failure => '';
@@ -442,23 +412,19 @@ class AppLocalizationsPl extends AppLocalizations {
   String get kratos_error_validation_recovery_missing_recovery_token => '';
 
   @override
-  String get kratos_error_validation_recovery_token_invalid_or_already_used =>
-      'Kod jest nieprawidłowy lub został już wykorzystany';
+  String get kratos_error_validation_recovery_token_invalid_or_already_used => 'Kod jest nieprawidłowy lub został już wykorzystany';
 
   @override
   String get kratos_error_validation_recovery_flow_expired => '';
 
   @override
-  String get kratos_error_validation_recovery_code_invalid_or_already_used =>
-      'Kod jest niepoprawny lub został już wykorzystany';
+  String get kratos_error_validation_recovery_code_invalid_or_already_used => 'Kod jest niepoprawny lub został już wykorzystany';
 
   @override
   String get kratos_error_validation_verification => '';
 
   @override
-  String
-      get kratos_error_validation_verification_token_invalid_or_already_used =>
-          'Kod jest nieprawidłowy lub został już wykorzystany';
+  String get kratos_error_validation_verification_token_invalid_or_already_used => 'Kod jest nieprawidłowy lub został już wykorzystany';
 
   @override
   String get kratos_error_validation_verification_retry_success => '';
@@ -467,16 +433,13 @@ class AppLocalizationsPl extends AppLocalizations {
   String get kratos_error_validation_verification_state_failure => '';
 
   @override
-  String get kratos_error_validation_verification_missing_verification_token =>
-      '';
+  String get kratos_error_validation_verification_missing_verification_token => '';
 
   @override
   String get kratos_error_validation_verification_flow_expired => '';
 
   @override
-  String
-      get kratos_error_validation_verification_code_invalid_or_already_used =>
-          'Podany kod jest niepoprawny lub został już użyty. Spróbuj ponownie';
+  String get kratos_error_validation_verification_code_invalid_or_already_used => 'Podany kod jest niepoprawny lub został już użyty. Spróbuj ponownie';
 
   @override
   String get kratos_error_system => 'Błąd systemu';
@@ -494,8 +457,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get register_with_facebook_button => 'Zarejestruj z Facebook';
 
   @override
-  String get error_handling_network =>
-      'Brak internetu, spróbuj ponownie później';
+  String get error_handling_network => 'Brak internetu, spróbuj ponownie później';
 
   @override
   String get error_handling_authorization => 'Brak dostępu, cofnij';
@@ -510,8 +472,7 @@ class AppLocalizationsPl extends AppLocalizations {
   String get login_unknown_error => 'Coś poszło nie tak, spróbuj ponownie';
 
   @override
-  String get social_traits_unknown_error =>
-      'Coś poszło nie tak, spróbuj ponownie';
+  String get social_traits_unknown_error => 'Coś poszło nie tak, spróbuj ponownie';
 
   @override
   String get login_with_apple_button => 'Zaloguj z Apple';
@@ -550,9 +511,37 @@ class AppLocalizationsPl extends AppLocalizations {
   String get reauthorize_title => 'Autoryzacja';
 
   @override
-  String get reauthorize_info =>
-      'Aby wykonać tę operację musisz się ponownie zalogować.';
+  String get reauthorize_info => 'Aby wykonać tę operację musisz się ponownie zalogować.';
 
   @override
   String get reauthorize_info_button => 'Dalej';
+
+  @override
+  String get home_screen_projects => 'Projekty';
+
+  @override
+  String get home_screen_employees => 'Pracownicy';
+
+  @override
+  String get project_details_screen_cannot_open_assignment => 'Lista pracowników nie została pobrana lub jest pusta';
+
+  @override
+  String get project_details_screen_unknown_id => 'Nieznane id projektu';
+
+  @override
+  String assignment_screen_title(Object name) {
+    return 'Zadanie $name';
+  }
+
+  @override
+  String get assignment_screen_assign => 'Przypisz pracownika';
+
+  @override
+  String get assignment_screen_unassign => 'Cofnij przypisanie pracownika';
+
+  @override
+  String get assignment_screen_pipe_logs => 'Logi rury';
+
+  @override
+  String get assignment_screen_pipe_logs_placeholder => 'Brak logów...';
 }

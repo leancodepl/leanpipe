@@ -76,7 +76,7 @@ dependency_overrides:
 
 flutter:
   uses-material-design: true
-  generate: false
+  generate: true
 
 flutter_gen:
   output: lib/resources/

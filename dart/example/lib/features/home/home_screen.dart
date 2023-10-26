@@ -2,6 +2,7 @@ import 'package:app/common/colors.dart';
 import 'package:app/common/widgets/app_design_system.dart';
 import 'package:app/common/widgets/app_divider.dart';
 import 'package:app/navigation/routes.dart';
+import 'package:app/resources/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -49,17 +50,19 @@ class _HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final s = l10n(context);
+
     return Scaffold(
       appBar: AppBar(),
       body: ListView(
         children: [
           _Tile(
-            label: 'Projects',
+            label: s.home_screen_projects,
             onTap: () => context.push(ProjectsRoute().location),
           ),
           const AppDivider(),
           _Tile(
-            label: 'Employees',
+            label: s.home_screen_employees,
             onTap: () => context.push(EmployeesRoute().location),
           ),
         ],

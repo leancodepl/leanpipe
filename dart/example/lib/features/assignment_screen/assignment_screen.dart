@@ -2,6 +2,7 @@ import 'package:app/common/widgets/app_text.dart';
 import 'package:app/common/widgets/app_text_styles.dart';
 import 'package:app/data/contracts.dart';
 import 'package:app/features/assignment_screen/assignment_cubit.dart';
+import 'package:app/resources/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -62,8 +63,12 @@ class AssignmentScreen extends StatelessWidget {
       return const SizedBox();
     }
 
+    final s = l10n(context);
+
     return Scaffold(
-      appBar: AppBar(title: AppText('Assignment "${assignment.name}"')),
+      appBar: AppBar(
+        title: AppText(s.assignment_screen_title(assignment.name)),
+      ),
       bottomSheet: Padding(
         padding: MediaQuery.paddingOf(context),
         child: Row(
@@ -72,14 +77,14 @@ class AssignmentScreen extends StatelessWidget {
             Expanded(
               child: ElevatedButton(
                 onPressed: context.read<AssignmentCubit>().assignEmployee,
-                child: const AppText('Assign employee'),
+                child: AppText(s.assignment_screen_assign),
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
               child: ElevatedButton(
                 onPressed: context.read<AssignmentCubit>().unassignEmployee,
-                child: const AppText('Unassign employee'),
+                child: AppText(s.assignment_screen_unassign),
               ),
             ),
             const SizedBox(width: 32),
@@ -91,13 +96,14 @@ class AssignmentScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24),
           children: [
             const SizedBox(height: 32),
-            const AppText(
-              'Pipe logs:',
+            AppText(
+              s.assignment_screen_pipe_logs,
               style: AppTextStyle.headlineM,
             ),
             const SizedBox(height: 16),
             for (final log in logs) AppText(log),
-            if (logs.isEmpty) const AppText('No logs so far...'),
+            if (logs.isEmpty)
+              AppText(s.assignment_screen_pipe_logs_placeholder),
           ],
         ),
       ),

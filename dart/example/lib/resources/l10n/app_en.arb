@@ -169,5 +169,19 @@
   "profile_save_changes": "Save",
   "reauthorize_title": "Authorization",
   "reauthorize_info": "To perform this operation you must log in again.",
-  "reauthorize_info_button": "Next"
+  "reauthorize_info_button": "Next",
+  "home_screen_projects": "Projects",
+  "home_screen_employees": "Employees",
+  "project_details_screen_cannot_open_assignment": "Employees list is either empty or has not been fetched",
+  "project_details_screen_unknown_id": "Unknown project id",
+  "assignment_screen_title": "Assignment {name}",
+  "@assignment_screen_title": {
+    "placeholders": {
+      "name": {}
+    }
+  },
+  "assignment_screen_assign": "Assign employee",
+  "assignment_screen_unassign": "Unassign employee",
+  "assignment_screen_pipe_logs": "Pipe logs",
+  "assignment_screen_pipe_logs_placeholder": "No logs so far..."
 }
