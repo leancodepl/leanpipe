@@ -39,7 +39,7 @@ public class ScaledFunnelledServiceTests
     {
         var topic = new Topic1
         {
-            Topic1Id = nameof(Publishing_notifications_from_any_service_instance_works)
+            Topic1Id = nameof(Publishing_notifications_from_any_service_instance_works),
         };
 
         await leanPipeClient.SubscribeSuccessAsync(topic);
@@ -53,14 +53,16 @@ public class ScaledFunnelledServiceTests
 
         await testApp1AClient.PostAsJsonAsync("/publish", topic);
 
-        (await instanceANotification).Should()
+        (await instanceANotification)
+            .Should()
             .BeEquivalentTo(expectedNotification, opts => opts.RespectingRuntimeTypes());
 
         var instanceBNotification = leanPipeClient.WaitForNextNotificationOn(topic);
 
         await testApp1BClient.PostAsJsonAsync("/publish", topic);
 
-        (await instanceBNotification).Should()
+        (await instanceBNotification)
+            .Should()
             .BeEquivalentTo(expectedNotification, opts => opts.RespectingRuntimeTypes());
     }
 }
