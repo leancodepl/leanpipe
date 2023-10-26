@@ -1,5 +1,8 @@
 using LeanCode.Components;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR.Protocol;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace LeanCode.Pipe.Funnel.FunnelledService;
 
@@ -22,6 +25,12 @@ public static class ServiceCollectionExtensions
         services.AddTransient(typeof(ISubscriptionHandler<>), typeof(KeyedSubscriptionHandler<>));
         services.AddTransient(typeof(ILeanPipePublisher<>), typeof(FunnelledLeanPipePublisher<>));
         services.AddTransient<SubscriptionHandlerResolver>();
+
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<IHubProtocol, JsonHubProtocol>());
+        services.Configure(
+            (JsonHubProtocolOptions options) =>
+                options.PayloadSerializerOptions.PropertyNamingPolicy = null
+        );
 
         return new LeanPipeServicesBuilder(services, topics).AddHandlers(handlers);
     }

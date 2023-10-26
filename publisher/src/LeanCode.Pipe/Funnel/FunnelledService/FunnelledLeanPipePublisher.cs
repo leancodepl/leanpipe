@@ -3,8 +3,10 @@ using LeanCode.Contracts;
 using MassTransit;
 using MassTransit.SignalR.Contracts;
 using MassTransit.SignalR.Utils;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Protocol;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LeanCode.Pipe.Funnel.FunnelledService;
 
@@ -13,20 +15,20 @@ internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
 {
     private readonly Serilog.ILogger logger;
 
-    private static readonly ImmutableArray<IHubProtocol> LeanPipeHubProtocols =
-        ImmutableArray.Create<IHubProtocol>(new JsonHubProtocol());
-
     private readonly IPublishEndpoint publishEndpoint;
+    private readonly IHubProtocol hubProtocol;
     private readonly IServiceProvider serviceProvider;
 
     public FunnelledLeanPipePublisher(
         IPublishEndpoint publishEndpoint,
+        IHubProtocol hubProtocol,
         IServiceProvider serviceProvider
     )
     {
         logger = Serilog.Log.ForContext(GetType());
         this.publishEndpoint = publishEndpoint;
         this.serviceProvider = serviceProvider;
+        this.hubProtocol = hubProtocol;
     }
 
     public IPublishingKeys<T, TNotification> GetPublishingKeysProvider<T, TNotification>()
@@ -42,7 +44,7 @@ internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
         CancellationToken cancellationToken = default
     )
     {
-        var protocolDictionary = LeanPipeHubProtocols.ToProtocolDictionary(
+        var protocolDictionary = new[] { hubProtocol }.ToProtocolDictionary(
             "notify",
             new object[] { payload }
         );
@@ -51,7 +53,7 @@ internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
             .Select(
                 k =>
                     publishEndpoint.Publish<Group<LeanPipeSubscriber>>(
-                        new { GroupName = k, Messages = protocolDictionary, },
+                        new { GroupName = k, Messages = protocolDictionary },
                         cancellationToken
                     )
             );
