@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <AssemblyName>TestApp1</AssemblyName>
+    <AssemblyName>TestApp2</AssemblyName>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 

@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: testapp1-svc
+  name: testapp2-svc
   labels:
-    app: testapp1
+    app: testapp2
 spec:
   ports:
     - port: 80
@@ -11,28 +11,28 @@ spec:
       protocol: TCP
   clusterIP: None
   selector:
-    app: testapp1
+    app: testapp2
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: testapp1
+  name: testapp2
   labels:
-    app: testapp1
+    app: testapp2
 spec:
   selector:
     matchLabels:
-      app: testapp1
-  serviceName: testapp1-svc
-  replicas: 2
+      app: testapp2
+  serviceName: testapp2-svc
+  replicas: 1
   template:
     metadata:
       labels:
-        app: testapp1
+        app: testapp2
     spec:
       containers:
-        - name: testapp1
-          image: testapp1
+        - name: testapp2
+          image: testapp2
           ports:
             - containerPort: 8080
             - containerPort: 22

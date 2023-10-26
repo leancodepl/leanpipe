@@ -1,5 +1,3 @@
-load('ext://helm_resource', 'helm_resource', 'helm_repo')
-
 allow_k8s_contexts('k3d-testapp')
 default_registry('k3d-testapp-registry.local.lncd.pl:21345')
 
@@ -18,6 +16,13 @@ local_resource(
 )
 
 local_resource(
+  'build-testapp2',
+  'dotnet publish -o out/testapp2 ../test/LeanCode.Pipe.Funnel.TestApp2',
+  deps=['src', '../test/LeanCode.Pipe.Funnel.TestApp2'],
+  ignore=['../**/obj', '../**/bin'],
+)
+
+local_resource(
   'build-scaled-service-tests',
   'dotnet publish -o out/scaled_service_tests ../test/LeanCode.Pipe.Funnel.ScaledServiceTests',
   deps=[
@@ -25,6 +30,18 @@ local_resource(
     '../test/LeanCode.Pipe.Funnel.TestAppFunnel',
     '../test/LeanCode.Pipe.Funnel.TestApp1',
     '../test/LeanCode.Pipe.Funnel.ScaledServiceTests' ],
+  ignore=['../**/obj', '../**/bin'],
+)
+
+local_resource(
+  'build-multiple-target-services-tests',
+  'dotnet publish -o out/multiple_target_services_tests ../test/LeanCode.Pipe.Funnel.MultipleTargetServicesTests',
+  deps=[
+    '../src',
+    '../test/LeanCode.Pipe.Funnel.TestAppFunnel',
+    '../test/LeanCode.Pipe.Funnel.TestApp1',
+    '../test/LeanCode.Pipe.Funnel.TestApp2',
+    '../test/LeanCode.Pipe.Funnel.MultipleTargetServicesTests' ],
   ignore=['../**/obj', '../**/bin'],
 )
 
@@ -43,18 +60,36 @@ docker_build(
 )
 
 docker_build(
+  'testapp2',
+  '.',
+  dockerfile='testapp2.dockerfile',
+  only = ['out/testapp2'],
+)
+
+docker_build(
   'scaled_service_tests',
   '.',
   dockerfile='scaled_service_tests.dockerfile',
   only = ['out/scaled_service_tests'],
 )
 
+docker_build(
+  'multiple_target_services_tests',
+  '.',
+  dockerfile='multiple_target_services_tests.dockerfile',
+  only = ['out/multiple_target_services_tests'],
+)
+
 k8s_yaml('k8s/rabbitmq.yaml')
 k8s_yaml('k8s/testapp_funnel.yaml')
 k8s_yaml('k8s/testapp1.yaml')
+k8s_yaml('k8s/testapp2.yaml')
 k8s_yaml('k8s/scaled_service_tests.yaml')
+k8s_yaml('k8s/multiple_target_services_tests.yaml')
 
 k8s_resource('rabbitmq')
 k8s_resource('testapp-funnel', resource_deps=['rabbitmq'])
 k8s_resource('testapp1', resource_deps=['rabbitmq'])
+k8s_resource('testapp2', resource_deps=['rabbitmq'])
 k8s_resource('scaled-service-tests', resource_deps=['testapp-funnel', 'testapp1'])
+k8s_resource('multiple-target-services-tests', resource_deps=['testapp-funnel', 'testapp1', 'testapp2'])

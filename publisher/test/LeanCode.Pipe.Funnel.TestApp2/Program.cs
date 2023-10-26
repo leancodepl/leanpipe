@@ -1,22 +1,22 @@
 using LeanCode.Logging;
 using LeanCode.Pipe;
 using LeanCode.Pipe.Funnel.FunnelledService;
-using LeanCode.Pipe.Funnel.TestApp1;
+using LeanCode.Pipe.Funnel.TestApp2;
 using MassTransit;
 
 var appBuilder = WebApplication.CreateBuilder(args);
 var hostBuilder = appBuilder.Host;
 
-hostBuilder.ConfigureDefaultLogging("TestApp1", new[] { typeof(Program).Assembly });
+hostBuilder.ConfigureDefaultLogging("TestApp2", new[] { typeof(Program).Assembly });
 
 var services = appBuilder.Services;
 
-services.AddFunnelledLeanPipe(new(typeof(Topic1)), new(typeof(Topic1Keys)));
+services.AddFunnelledLeanPipe(new(typeof(Topic2)), new(typeof(Topic2Keys)));
 
 services.AddOptions<MassTransitHostOptions>().Configure(opts => opts.WaitUntilStarted = true);
 services.AddMassTransit(cfg =>
 {
-    cfg.AddFunnelledLeanPipeConsumers("TestApp1", new[] { typeof(Program).Assembly });
+    cfg.AddFunnelledLeanPipeConsumers("TestApp2", new[] { typeof(Program).Assembly });
 
     cfg.UsingRabbitMq(
         (ctx, cfg) =>
@@ -38,10 +38,10 @@ app.MapHealthChecks("/health/ready", new() { Predicate = check => check.Tags.Con
 
 app.MapPost(
     "/publish",
-    async (HttpContext ctx, Topic1 topic, ILeanPipePublisher<Topic1> publisher) =>
+    async (HttpContext ctx, Topic2 topic, ILeanPipePublisher<Topic2> publisher) =>
         await publisher.PublishAsync(
             topic,
-            new Notification1 { Greeting = $"Hello from topic1 {topic.Topic1Id}" },
+            new Notification2 { Farewell = $"Goodbye from topic2 {topic.Topic2Id}" },
             ctx.RequestAborted
         )
 );

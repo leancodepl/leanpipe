@@ -1,0 +1,126 @@
+using System.Net.Http.Json;
+using FluentAssertions;
+using LeanCode.Pipe.Funnel.TestApp1;
+using LeanCode.Pipe.Funnel.TestApp2;
+using LeanCode.Pipe.TestClient;
+using Microsoft.AspNetCore.Http.Connections;
+using Xunit;
+
+namespace LeanCode.Pipe.Funnel.MultipleTargetServicesTests;
+
+public class MultipleTargetServicesTests
+{
+    private readonly LeanPipeTestClient leanPipeClient =
+        new(
+            new(
+                "http://testapp-funnel-0.testapp-funnel-svc.default.svc.cluster.local:8080/leanpipe"
+            ),
+            new(typeof(Topic1), typeof(Topic2)),
+            cfg =>
+            {
+                cfg.Transports = HttpTransportType.WebSockets;
+                cfg.SkipNegotiation = true;
+            }
+        );
+
+    private readonly HttpClient testApp1Client =
+        new()
+        {
+            BaseAddress = new("http://testapp1-0.testapp1-svc.default.svc.cluster.local:8080"),
+        };
+
+    private readonly HttpClient testApp2Client =
+        new()
+        {
+            BaseAddress = new("http://testapp2-0.testapp2-svc.default.svc.cluster.local:8080"),
+        };
+
+    [Fact]
+    public async Task Subscribing_and_receiving_notifications_from_any_target_service_works_and_does_not_interfere_with_each_other()
+    {
+        var topic1 = new Topic1
+        {
+            Topic1Id = nameof(
+                Subscribing_and_receiving_notifications_from_any_target_service_works_and_does_not_interfere_with_each_other
+            ),
+        };
+
+        var topic2 = new Topic2
+        {
+            Topic2Id = nameof(
+                Subscribing_and_receiving_notifications_from_any_target_service_works_and_does_not_interfere_with_each_other
+            ),
+        };
+
+        await leanPipeClient.SubscribeSuccessAsync(topic1);
+        await leanPipeClient.SubscribeSuccessAsync(topic2);
+
+        var expectedNotification1 = new Notification1
+        {
+            Greeting = $"Hello from topic1 {topic1.Topic1Id}",
+        };
+
+        var expectedNotification2 = new Notification2
+        {
+            Farewell = $"Goodbye from topic2 {topic2.Topic2Id}",
+        };
+
+        var service1Notification = leanPipeClient.WaitForNextNotificationOn(topic1);
+        var service2Notification = leanPipeClient.WaitForNextNotificationOn(
+            topic2,
+            timeout: TimeSpan.FromMilliseconds(500)
+        );
+
+        await testApp1Client.PostAsJsonAsync("/publish", topic1);
+
+        (await service1Notification)
+            .Should()
+            .BeEquivalentTo(expectedNotification1, opts => opts.RespectingRuntimeTypes());
+
+        await service2Notification
+            .Awaiting(x => x)
+            .Should()
+            .ThrowAsync<OperationCanceledException>();
+
+        service2Notification = leanPipeClient.WaitForNextNotificationOn(topic2);
+        service1Notification = leanPipeClient.WaitForNextNotificationOn(
+            topic1,
+            timeout: TimeSpan.FromMilliseconds(500)
+        );
+
+        await testApp2Client.PostAsJsonAsync("/publish", topic2);
+
+        (await service2Notification)
+            .Should()
+            .BeEquivalentTo(expectedNotification2, opts => opts.RespectingRuntimeTypes());
+
+        await service1Notification
+            .Awaiting(x => x)
+            .Should()
+            .ThrowAsync<OperationCanceledException>();
+
+        await leanPipeClient.UnsubscribeSuccessAsync(topic1);
+
+        service1Notification = leanPipeClient.WaitForNextNotificationOn(
+            topic1,
+            timeout: TimeSpan.FromMilliseconds(500)
+        );
+
+        await testApp1Client.PostAsJsonAsync("/publish", topic1);
+
+        await service1Notification
+            .Awaiting(x => x)
+            .Should()
+            .ThrowAsync<OperationCanceledException>();
+
+        service2Notification = leanPipeClient.WaitForNextNotificationOn(topic2);
+
+        await testApp2Client.PostAsJsonAsync("/publish", topic2);
+
+        (await service2Notification)
+            .Should()
+            .BeEquivalentTo(expectedNotification2, opts => opts.RespectingRuntimeTypes());
+
+        await leanPipeClient.UnsubscribeSuccessAsync(topic2);
+    }
+}

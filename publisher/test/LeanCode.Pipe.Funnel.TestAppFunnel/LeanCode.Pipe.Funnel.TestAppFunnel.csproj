@@ -4,18 +4,12 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>TestAppFunnel</AssemblyName>
     <Nullable>enable</Nullable>
-    <ContainerRepository>testapp-funnel</ContainerRepository>
-    <ContainerRegistry>k3d-testapp-registry.local.lncd.pl:21345</ContainerRegistry>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="../../src/LeanCode.Pipe/LeanCode.Pipe.csproj" />
 
     <PackageReference Include="MassTransit.RabbitMQ" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="Properties\launchSettings.json" />
   </ItemGroup>
 
 </Project>
