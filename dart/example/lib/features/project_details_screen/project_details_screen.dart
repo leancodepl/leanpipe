@@ -2,6 +2,7 @@ import 'package:app/common/config/app_global_keys.dart';
 import 'package:app/data/contracts.dart';
 import 'package:app/design_system/styleguide/colors.dart';
 import 'package:app/design_system/styleguide/typography.dart';
+import 'package:app/design_system/widgets/add_floating_button.dart';
 import 'package:app/design_system/widgets/divider.dart';
 import 'package:app/design_system/widgets/text.dart';
 import 'package:app/features/employees_screen/bloc/employees_cubit.dart';
@@ -13,6 +14,7 @@ import 'package:app/navigation/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:word_generator/word_generator.dart';
 
 class ProjectDetailsPage extends Page<void> {
   const ProjectDetailsPage({required this.projectId});
@@ -55,6 +57,11 @@ class ProjectDetailsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(),
+      floatingActionButton: AppAddFloatingButton(
+        onPressed: () => context
+            .read<ProjectDetailsCubit>()
+            .addAssignment(name: WordGenerator().randomName()),
+      ),
       body: BlocBuilder<ProjectDetailsCubit,
           SingleQueryState<ProjectDetailsDTO?>>(
         builder: (context, state) => switch (state) {
