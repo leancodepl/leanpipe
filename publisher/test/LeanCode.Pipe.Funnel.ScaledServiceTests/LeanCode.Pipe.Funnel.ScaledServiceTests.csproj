@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <AssemblyName>ScaledServiceTests</AssemblyName>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
+    <PackageReference Include="xunit"/>
+    <PackageReference Include="xunit.runner.visualstudio"/>
+    <PackageReference Include="coverlet.collector">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="System.Linq.Async" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../LeanCode.Pipe.Funnel.TestApp1/LeanCode.Pipe.Funnel.TestApp1.csproj" />
+    <ProjectReference Include="../../src/LeanCode.Pipe.TestClient/LeanCode.Pipe.TestClient.csproj" />
+  </ItemGroup>
+
+</Project>

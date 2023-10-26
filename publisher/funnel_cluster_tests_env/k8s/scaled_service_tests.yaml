@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: scaled-service-tests
+  labels:
+    app: scaled-service-tests
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: scaled-service-tests
+        image: scaled_service_tests
+        ports:
+          - containerPort: 22

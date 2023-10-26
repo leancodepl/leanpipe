@@ -1,0 +1,61 @@
+load('ext://helm_resource', 'helm_resource', 'helm_repo')
+
+allow_k8s_contexts('k3d-testapp')
+default_registry('k3d-testapp-registry.local.lncd.pl:21345')
+
+helm_repo('bitnami', 'https://charts.bitnami.com/bitnami')
+helm_resource('rabbit', 'bitnami/rabbitmq', flags=['--set=auth.password=user'])
+
+local_resource(
+  'build-testappfunnel',
+  'dotnet publish -o out/testapp_funnel ../test/LeanCode.Pipe.Funnel.TestAppFunnel',
+  deps=['../src', '../test/LeanCode.Pipe.Funnel.TestAppFunnel'],
+  ignore=['../**/obj', '../**/bin'],
+)
+
+local_resource(
+  'build-testapp1',
+  'dotnet publish -o out/testapp1 ../test/LeanCode.Pipe.Funnel.TestApp1',
+  deps=['src', '../test/LeanCode.Pipe.Funnel.TestApp1'],
+  ignore=['../**/obj', '../**/bin'],
+)
+
+local_resource(
+  'build-scaled-service-tests',
+  'dotnet publish -o out/scaled_service_tests ../test/LeanCode.Pipe.Funnel.ScaledServiceTests',
+  deps=[
+    '../src',
+    '../test/LeanCode.Pipe.Funnel.TestAppFunnel',
+    '../test/LeanCode.Pipe.Funnel.TestApp1',
+    '../test/LeanCode.Pipe.Funnel.ScaledServiceTests' ],
+  ignore=['../**/obj', '../**/bin'],
+)
+
+docker_build(
+  'testapp_funnel',
+  '.',
+  dockerfile='testapp_funnel.dockerfile',
+  only = ['out/testapp_funnel'],
+)
+
+docker_build(
+  'testapp1',
+  '.',
+  dockerfile='testapp1.dockerfile',
+  only = ['out/testapp1'],
+)
+
+docker_build(
+  'scaled_service_tests',
+  '.',
+  dockerfile='scaled_service_tests.dockerfile',
+  only = ['out/scaled_service_tests'],
+)
+
+k8s_yaml('k8s/testapp_funnel.yaml')
+k8s_yaml('k8s/testapp1.yaml')
+k8s_yaml('k8s/scaled_service_tests.yaml')
+
+k8s_resource('testapp-funnel', resource_deps=['rabbit'])
+k8s_resource('testapp1', resource_deps=['rabbit'])
+k8s_resource('scaled-service-tests', resource_deps=['testapp-funnel', 'testapp1'])

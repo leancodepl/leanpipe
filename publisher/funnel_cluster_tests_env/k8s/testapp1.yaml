@@ -1,0 +1,100 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: testapp1-svc
+  labels:
+    app: testapp1
+spec:
+  ports:
+    - port: 80
+      targetPort: 8080
+      protocol: TCP
+  clusterIP: None
+  selector:
+    app: testapp1
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: testapp1
+  labels:
+    app: testapp1
+spec:
+  selector:
+    matchLabels:
+      app: testapp1
+  serviceName: testapp1-svc
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: testapp1
+    spec:
+      containers:
+        - name: testapp1
+          image: testapp1
+          ports:
+            - containerPort: 8080
+            - containerPort: 22
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 8080
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 8080
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: testapp1-0
+#  labels:
+#    app: testapp1
+#spec:
+#  type: ClusterIP
+#  ports:
+#    - port: 80
+#      targetPort: 8080
+#      protocol: TCP
+#  selector:
+#    app: testapp1-0
+#---
+#apiVersion: v1
+#kind: Service
+#metadata:
+#  name: testapp1-1
+#  labels:
+#    app: testapp1
+#spec:
+#  type: ClusterIP
+#  ports:
+#    - port: 80
+#      targetPort: 8080
+#      protocol: TCP
+#  selector:
+#    app: testapp1-1
+#---
+#apiVersion: networking.k8s.io/v1
+#kind: Ingress
+#metadata:
+#  name: testapp1-ingress
+#spec:
+#  rules:
+#    - host: testapp1.local.lncd.pl
+#      http:
+#        paths:
+#          - path: /0
+#            backend:
+#              service:
+#                name: testapp1-0
+#                port:
+#                  number: 80
+#            pathType: ImplementationSpecific
+#          - path: /1
+#            backend:
+#              service:
+#                name: testapp1-1
+#                port:
+#                  number: 80
+#            pathType: ImplementationSpecific
