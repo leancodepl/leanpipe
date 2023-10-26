@@ -20,8 +20,6 @@ class AssignmentCubit extends Cubit<List<String>> {
         _employeeId = employeeId,
         super([]);
 
-  // static const _employeeId = 'employee_01HCWMVECWCH7SNWH7RV5AVEZN';
-
   final Cqrs _cqrs;
   final PipeClient _pipeClient;
 

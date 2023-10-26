@@ -1,6 +1,5 @@
 import 'package:app/common/bloc/single_query_cubit.dart';
 import 'package:app/data/contracts.dart';
-import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:cqrs/cqrs.dart';
 
 sealed class ProjectsCubitEvent {
@@ -11,10 +10,7 @@ class FailedToCreateProject implements ProjectsCubitEvent {
   const FailedToCreateProject();
 }
 
-class ProjectsCubit extends SingleQueryCubit<List<ProjectDTO>>
-    with
-        BlocPresentationMixin<SingleQueryState<List<ProjectDTO>>,
-            ProjectsCubitEvent> {
+class ProjectsCubit extends SingleQueryCubit<List<ProjectDTO>> {
   ProjectsCubit({required Cqrs cqrs})
       : _cqrs = cqrs,
         super(fetch: () => cqrs.get(AllProjects(sortByNameDescending: false)));

@@ -1,5 +1,5 @@
-import 'package:app/common/widgets/app_design_system.dart';
 import 'package:app/common/widgets/buttons/app_primary_button.dart';
+import 'package:app/resources/strings.dart';
 import 'package:flutter/material.dart';
 
 class ErrorScreen extends StatelessWidget {
@@ -12,16 +12,13 @@ class ErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const AppText(
-          'An error occured',
-          style: AppTextStyle.body,
-        ),
-        const SizedBox(height: 16),
-        AppPrimaryButton(label: 'Try again', onPressed: retry),
-      ],
+    final s = l10n(context);
+
+    return Center(
+      child: AppPrimaryButton(
+        label: s.error_handling_unknown,
+        onPressed: retry,
+      ),
     );
   }
 }

@@ -13,9 +13,10 @@ class AuthInitPage extends HookWidget {
     useEffect(
       () {
         authCubit.init();
+
         return;
       },
-      [],
+      [authCubit],
     );
 
     return BlocBuilder<AuthCubit, AuthState>(
