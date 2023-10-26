@@ -1,10 +1,19 @@
 name: Funnel in µsvc tests
 
-on: push
+on:
+  push:
+    branches: [ main ]
+    tags-ignore: [ "*-v*" ]
+    paths:
+      - "publisher/**"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "publisher/**"
 
 jobs:
   setup-cluster-and-test:
-    name: Test Funnel on cluster with multiple & scaled services
+    name: Test Funnel on cluster with multiple scaled services
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -21,7 +30,7 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-      - name: Setup kube tools
+      - name: Setup Tilt
         uses: yokawasa/action-setup-kube-tools@v0.9.3
         with:
           tilt: v0.33.6
