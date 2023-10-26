@@ -4,7 +4,7 @@ on: push
 
 jobs:
   setup-cluster-and-test:
-    name: Setup cluster & test
+    name: Test Funnel on cluster with multiple & scaled services
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -31,6 +31,6 @@ jobs:
         uses: AbsaOSS/k3d-action@v2
         with: 
           cluster-name: testapp
-          args: --config=publisher/funnel_cluster_tests_env/k8s/k3d.yaml
+          args: --config=publisher/funnel_test_cluster/k8s/k3d.yaml
       - name: Run Tilt CI with tests
-        run: tilt ci --context k3d-testapp -f funnel_cluster_tests_env/Tiltfile
+        run: tilt ci --context k3d-testapp -f funnel_test_cluster/Tiltfile
