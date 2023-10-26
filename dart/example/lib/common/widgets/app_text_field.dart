@@ -1,5 +1,5 @@
-import 'package:app/common/util/colors_context_extension.dart';
-import 'package:app/design_system_old/app_design_system.dart';
+import 'package:app/common/colors.dart';
+import 'package:app/common/widgets/app_design_system.dart';
 import 'package:flutter/material.dart';
 
 class AppTextField extends StatelessWidget {
@@ -67,8 +67,8 @@ class AppTextField extends StatelessWidget {
       borderSide: enableBorder
           ? BorderSide(
               color: error == null
-                  ? colors.bgInfoSecondary
-                  : colors.bgDangerSecondary,
+                  ? colors.backgroundInfoSecondary
+                  : colors.backgroundDangerPrimary,
             )
           : BorderSide.none,
     );
@@ -77,8 +77,8 @@ class AppTextField extends StatelessWidget {
       borderSide: enableBorder
           ? BorderSide(
               color: error == null
-                  ? colors.fgSuccessSecondary
-                  : colors.bgDangerSecondary,
+                  ? colors.foregroundSuccessSecondary
+                  : colors.backgroundDangerSecondary,
             )
           : BorderSide.none,
     );
@@ -89,6 +89,7 @@ class AppTextField extends StatelessWidget {
       crossAxisAlignment: crossAxisAlignment,
       children: [
         if (label != null) ...[
+          // ignore: use_design_system_item_AppDefaultTextStyle
           DefaultTextStyle(
             style: AppTextStyle.caption,
             child: label,
@@ -113,7 +114,7 @@ class AppTextField extends StatelessWidget {
           enabled: enabled,
           decoration: InputDecoration(
             filled: true,
-            fillColor: fillColor ?? colors.bgDefaultPrimary,
+            fillColor: fillColor ?? colors.backgroundDefaultPrimary,
             contentPadding: const EdgeInsets.symmetric(
               horizontal: 16,
               // 12 is the base vertical padding, anything lower is ignored
@@ -124,7 +125,7 @@ class AppTextField extends StatelessWidget {
             disabledBorder: enabledBorder,
             hintMaxLines: hintMaxLines,
             hintStyle: AppTextStyle.caption.copyWith(
-              color: colors.fgWarningSecondary,
+              color: colors.foregroundWarningSecondary,
             ),
             hintText: hint,
             suffixIcon: suffixIcon != null
@@ -145,7 +146,7 @@ class AppTextField extends StatelessWidget {
           AppText(
             error,
             style: AppTextStyle.caption,
-            color: colors.bgDangerSecondary,
+            color: colors.backgroundDangerSecondary,
             textAlign: errorTextAlign,
           ),
         ],

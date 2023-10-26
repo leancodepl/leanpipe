@@ -1,6 +1,6 @@
+import 'package:app/common/widgets/app_text.dart';
+import 'package:app/common/widgets/app_text_styles.dart';
 import 'package:app/data/contracts.dart';
-import 'package:app/design_system_old/app_text_styles.dart';
-import 'package:app/design_system_old/widgets/app_text.dart';
 import 'package:app/features/assignment_screen/assignment_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

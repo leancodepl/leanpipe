@@ -1,15 +1,14 @@
+import 'package:app/common/bloc/single_query_cubit.dart';
+import 'package:app/common/colors.dart';
 import 'package:app/common/config/app_global_keys.dart';
+import 'package:app/common/util/show_snack_bar.dart';
+import 'package:app/common/widgets/app_add_floating_button.dart';
+import 'package:app/common/widgets/app_design_system.dart';
+import 'package:app/common/widgets/app_divider.dart';
 import 'package:app/data/contracts.dart';
-import 'package:app/design_system/styleguide/colors.dart';
-import 'package:app/design_system/styleguide/typography.dart';
-import 'package:app/design_system/widgets/add_floating_button.dart';
-import 'package:app/design_system/widgets/divider.dart';
-import 'package:app/design_system/widgets/text.dart';
 import 'package:app/features/employees_screen/bloc/employees_cubit.dart';
+import 'package:app/features/error_screen/error_screen.dart';
 import 'package:app/features/project_details_screen/bloc/project_details_cubit.dart';
-import 'package:app/features/show_snack_bar.dart';
-import 'package:app/features/single_query_cubit.dart';
-import 'package:app/features/widgets/error_screen.dart';
 import 'package:app/navigation/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -42,7 +41,7 @@ class ProjectDetailsPageRoute extends MaterialPageRoute<void> {
               ),
             _ => const AppText(
                 'Unknown project id',
-                style: AppTextStyles.bodyDefault,
+                style: AppTextStyle.body,
               ),
           },
         );
@@ -108,7 +107,7 @@ class ProjectDetailsScreen extends StatelessWidget {
                       tileColor: colors.foregroundAccentTertiary,
                       title: AppText(
                         projectDetails.assignments[index].name,
-                        style: AppTextStyles.bodyDefault,
+                        style: AppTextStyle.body,
                       ),
                     ),
                   ),

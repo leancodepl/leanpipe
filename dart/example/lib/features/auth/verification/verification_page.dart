@@ -1,6 +1,6 @@
-import 'package:app/common/util/colors_context_extension.dart';
-import 'package:app/design_system_old/app_design_system.dart';
-import 'package:app/design_system_old/widgets/app_pin_code_input.dart';
+import 'package:app/common/colors.dart';
+import 'package:app/common/widgets/app_design_system.dart';
+import 'package:app/common/widgets/app_pin_code_input.dart';
 import 'package:app/features/auth/verification/verification_cubit.dart';
 import 'package:app/navigation/routes.dart';
 import 'package:app/resources/strings.dart';
@@ -51,6 +51,7 @@ class VerificationPage extends HookWidget {
     required this.flowId,
     required this.code,
   });
+
   final String? email;
   final String? flowId;
   final String? code;
@@ -103,14 +104,14 @@ class VerificationBody extends HookWidget {
       listener: (context, state) {
         if (state is VerificationSuccess) {
           final snackBar = SnackBar(
-            backgroundColor: colors.bgSuccessSecondary,
+            backgroundColor: colors.backgroundSuccessSecondary,
             content: AppText(s.success_verification),
           );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           context.go(AuthRoute<void>().location);
         } else if (state is VerificationError) {
           final snackBar = SnackBar(
-            backgroundColor: colors.bgDangerSecondary,
+            backgroundColor: colors.backgroundDangerSecondary,
             content: AppText(s.error_verification),
           );
           pinController.clear();
@@ -126,7 +127,7 @@ class VerificationBody extends HookWidget {
                 _ => false
               },
               child: Container(
-                color: colors.bgDefaultSecondary,
+                color: colors.backgroundDefaultSecondary,
                 child: const Center(
                   child: CircularProgressIndicator(),
                 ),

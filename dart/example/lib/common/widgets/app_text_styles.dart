@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: use_design_system_item_AppTextStyle
 class AppTextStyle extends TextStyle {
   const AppTextStyle._({
     required double super.fontSize,

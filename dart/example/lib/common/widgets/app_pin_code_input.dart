@@ -1,5 +1,5 @@
-import 'package:app/common/util/colors_context_extension.dart';
-import 'package:app/design_system_old/app_design_system.dart';
+import 'package:app/common/colors.dart';
+import 'package:app/common/widgets/app_design_system.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -79,9 +79,8 @@ class _PinCodeTextFieldState extends State<AppPinCodeInput> {
                     border: InputBorder.none,
                   ),
                   showCursor: false,
-                  style: TextStyle(
-                    color: colors.transparent,
-                  ),
+                  // ignore: use_design_system_item_AppTextStyle
+                  style: TextStyle(color: colors.transparent),
                 ),
               ),
               Positioned(
@@ -136,13 +135,13 @@ class _PinCodeTextFieldState extends State<AppPinCodeInput> {
           decoration: BoxDecoration(
             border: Border.all(
               color: currentField
-                  ? colors.bgInfoPrimaryPressed
-                  : colors.bgInfoSecondary,
+                  ? colors.backgroundInfoPrimaryPressed
+                  : colors.backgroundInfoSecondary,
               width: 2,
             ),
             color: currentField
-                ? colors.fgDefaultPrimary
-                : colors.fgDefaultSecondary,
+                ? colors.foregroundDefaultPrimary
+                : colors.foregroundDefaultSecondary,
           ),
           child: buildChild(i),
         ),

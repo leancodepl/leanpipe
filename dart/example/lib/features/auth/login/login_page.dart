@@ -1,6 +1,6 @@
-import 'package:app/design_system_old/app_design_system.dart';
-import 'package:app/design_system_old/widgets/app_text_form_field.dart';
-import 'package:app/design_system_old/widgets/buttons/app_primary_button.dart';
+import 'package:app/common/widgets/app_design_system.dart';
+import 'package:app/common/widgets/app_text_form_field.dart';
+import 'package:app/common/widgets/buttons/app_primary_button.dart';
 import 'package:app/features/auth/kratos/common/kratos_errors.dart';
 import 'package:app/features/auth/kratos/common/multi_validator.dart';
 import 'package:app/features/auth/kratos/common/validators.dart';

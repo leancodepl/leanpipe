@@ -1,4 +1,4 @@
-import 'package:app/features/show_snack_bar.dart';
+import 'package:app/common/util/show_snack_bar.dart';
 import 'package:app/resources/l10n/app_localizations.dart';
 import 'package:app/resources/strings.dart';
 import 'package:cqrs/cqrs.dart';

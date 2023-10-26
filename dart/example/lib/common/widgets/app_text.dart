@@ -1,5 +1,5 @@
-import 'package:app/common/util/colors_context_extension.dart';
-import 'package:app/design_system_old/app_design_system.dart';
+import 'package:app/common/colors.dart';
+import 'package:app/common/widgets/app_design_system.dart';
 import 'package:flutter/material.dart';
 
 /// By default uses `AppTextStyle.body` and `AppColors.text`
@@ -23,7 +23,7 @@ class AppText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveColor = color ?? context.colors.fgDefaultPrimary;
+    final effectiveColor = color ?? context.colors.foregroundDefaultPrimary;
     final effectiveStyle = (style ?? AppTextStyle.body).copyWith(
       color: effectiveColor,
     );
@@ -34,6 +34,7 @@ class AppText extends StatelessWidget {
       style: effectiveStyle,
       textAlign: textAlign,
       overflow: overflow,
+      // ignore: use_design_system_item_AppDefaultTextStyle
       maxLines: maxLines ?? DefaultTextStyle.of(context).maxLines,
     );
   }

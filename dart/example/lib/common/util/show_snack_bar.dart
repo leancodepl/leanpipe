@@ -1,6 +1,6 @@
-import 'package:app/common/util/colors_context_extension.dart';
-import 'package:app/design_system_old/app_text_styles.dart';
-import 'package:app/design_system_old/widgets/app_text.dart';
+import 'package:app/common/colors.dart';
+import 'package:app/common/widgets/app_text.dart';
+import 'package:app/common/widgets/app_text_styles.dart';
 import 'package:flutter/material.dart';
 
 void showSnackBar({
@@ -16,7 +16,7 @@ void showSnackBar({
 
   final snackBar = SnackBar(
     margin: const EdgeInsets.all(24),
-    backgroundColor: colors.bgDefaultPrimary,
+    backgroundColor: colors.backgroundDefaultPrimary,
     content: AppText(text, style: AppTextStyle.button),
     behavior: SnackBarBehavior.floating,
   );

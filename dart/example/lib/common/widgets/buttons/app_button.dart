@@ -1,4 +1,4 @@
-import 'package:app/design_system_old/app_design_system.dart';
+import 'package:app/common/widgets/app_design_system.dart';
 import 'package:flutter/material.dart';
 
 class AppButton extends StatelessWidget {

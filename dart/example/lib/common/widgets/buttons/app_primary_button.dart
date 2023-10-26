@@ -1,5 +1,5 @@
-import 'package:app/common/util/colors_context_extension.dart';
-import 'package:app/design_system_old/widgets/buttons/app_button.dart';
+import 'package:app/common/colors.dart';
+import 'package:app/common/widgets/buttons/app_button.dart';
 import 'package:flutter/material.dart';
 
 class AppPrimaryButton extends StatelessWidget {
@@ -26,8 +26,8 @@ class AppPrimaryButton extends StatelessWidget {
       onPressed: onPressed,
       leadingIcon: leadingIcon,
       trailingIcon: trailingIcon,
-      backgroundColor: colors.bgInfoPrimary,
-      textColor: colors.fgInversePrimary,
+      backgroundColor: colors.backgroundInfoPrimary,
+      textColor: colors.foregroundInversePrimary,
     );
   }
 }

@@ -46,5 +46,5 @@ analyzer:
   exclude:
     - "**.g.dart"
     - lib/resources/l10n/*
-    - lib/design_system_old/**
+    # - lib/design_system_old/**
     - generator/**

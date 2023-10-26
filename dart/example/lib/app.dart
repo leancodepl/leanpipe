@@ -1,5 +1,5 @@
+import 'package:app/common/colors.dart';
 import 'package:app/common/config/app_global_keys.dart';
-import 'package:app/design_system/styleguide/colors.dart';
 import 'package:app/navigation/router.dart';
 import 'package:app/resources/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';

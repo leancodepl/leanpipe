@@ -1,4 +1,4 @@
-import 'package:app/design_system/styleguide/colors.dart';
+import 'package:app/common/colors.dart';
 import 'package:flutter/material.dart';
 
 class AppAddFloatingButton extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'package:app/design_system_old/widgets/app_text.dart';
+import 'package:app/common/widgets/app_text.dart';
 import 'package:flutter/material.dart';
 
 class AppFormField extends StatelessWidget {

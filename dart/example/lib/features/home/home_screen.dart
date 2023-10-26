@@ -1,7 +1,6 @@
-import 'package:app/design_system/styleguide/colors.dart';
-import 'package:app/design_system/styleguide/typography.dart';
-import 'package:app/design_system/widgets/divider.dart';
-import 'package:app/design_system/widgets/text.dart';
+import 'package:app/common/colors.dart';
+import 'package:app/common/widgets/app_design_system.dart';
+import 'package:app/common/widgets/app_divider.dart';
 import 'package:app/navigation/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -38,7 +37,7 @@ class _Tile extends StatelessWidget {
       tileColor: colors.foregroundAccentTertiary,
       title: AppText(
         label,
-        style: AppTextStyles.bodyDefault,
+        style: AppTextStyle.body,
       ),
       onTap: onTap,
     );

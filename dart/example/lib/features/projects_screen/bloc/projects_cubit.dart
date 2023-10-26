@@ -1,5 +1,5 @@
+import 'package:app/common/bloc/single_query_cubit.dart';
 import 'package:app/data/contracts.dart';
-import 'package:app/features/single_query_cubit.dart';
 import 'package:bloc_presentation/bloc_presentation.dart';
 import 'package:cqrs/cqrs.dart';
 
