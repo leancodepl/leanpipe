@@ -58,8 +58,8 @@ internal class LeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
         logger.Information(
             "Published notification {NotificationType} to {GroupCount} groups of topic {TopicType}",
             payload.NotificationType,
-            payload.TopicType,
-            keys.Count()
+            keys.Count(),
+            payload.TopicType
         );
     }
 }
