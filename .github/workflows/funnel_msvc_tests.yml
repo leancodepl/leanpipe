@@ -1,0 +1,38 @@
+name: Funnel in µsvc tests
+
+on: push
+
+jobs:
+  setup-cluster-and-test:
+    name: Setup cluster & test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./publisher
+    env:
+      DOTNET_VERSION: 8.0.100-rc.1.23463.5
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Setup kube tools
+        uses: yokawasa/action-setup-kube-tools@v0.9.3
+        with:
+          tilt: v0.33.6
+          helm: v3.11.1
+          setup-tools: |
+            tilt
+            helm
+      - name: Create test cluster
+        uses: AbsaOSS/k3d-action@v2
+        with: 
+          cluster-name: testapp
+          args: --config=publisher/funnel_cluster_tests_env/k8s/k3d.yaml
+      - name: Run Tilt CI with tests
+        run: tilt ci --context k3d-testapp -f funnel_cluster_tests_env/Tiltfile
