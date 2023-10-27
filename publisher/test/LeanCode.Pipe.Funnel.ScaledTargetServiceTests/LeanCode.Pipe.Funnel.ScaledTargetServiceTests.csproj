@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <AssemblyName>MultipleTargetServicesTests</AssemblyName>
+    <AssemblyName>ScaledTargetServiceTests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../LeanCode.Pipe.Funnel.TestApp1/LeanCode.Pipe.Funnel.TestApp1.csproj" />
-    <ProjectReference Include="../LeanCode.Pipe.Funnel.TestApp2/LeanCode.Pipe.Funnel.TestApp2.csproj" />
     <ProjectReference Include="../../src/LeanCode.Pipe.TestClient/LeanCode.Pipe.TestClient.csproj" />
   </ItemGroup>
 

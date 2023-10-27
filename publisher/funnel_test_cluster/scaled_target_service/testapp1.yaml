@@ -1,9 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: testapp2-svc
+  name: scaled-target-service-testapp1-svc
+  namespace: scaled-target-service
   labels:
-    app: testapp2
+    app: scaled-target-service-testapp1
 spec:
   ports:
     - port: 80
@@ -11,28 +12,32 @@ spec:
       protocol: TCP
   clusterIP: None
   selector:
-    app: testapp2
+    app: scaled-target-service-testapp1
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: testapp2
+  name: scaled-target-service-testapp1
+  namespace: scaled-target-service
   labels:
-    app: testapp2
+    app: scaled-target-service-testapp1
 spec:
   selector:
     matchLabels:
-      app: testapp2
-  serviceName: testapp2-svc
-  replicas: 1
+      app: scaled-target-service-testapp1
+  serviceName: scaled-target-service-testapp1-svc
+  replicas: 2
   template:
     metadata:
       labels:
-        app: testapp2
+        app: scaled-target-service-testapp1
     spec:
       containers:
-        - name: testapp2
-          image: testapp2
+        - name: testapp1
+          image: testapp1
+          env:
+            - name: MassTransit__RabbitMq__Url
+              value: rabbitmq://guest:guest@rabbitmq-1.rabbitmq-svc.default.svc.cluster.local/
           ports:
             - containerPort: 8080
             - containerPort: 22

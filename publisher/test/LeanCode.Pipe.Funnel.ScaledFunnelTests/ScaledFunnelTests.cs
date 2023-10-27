@@ -5,14 +5,14 @@ using LeanCode.Pipe.TestClient;
 using Microsoft.AspNetCore.Http.Connections;
 using Xunit;
 
-namespace LeanCode.Pipe.Funnel.ScaledServiceTests;
+namespace LeanCode.Pipe.Funnel.ScaledFunnelTests;
 
 public class ScaledFunnelTests : IAsyncLifetime
 {
     private readonly LeanPipeTestClient leanPipeAClient =
         new(
             new(
-                "http://testapp-funnel-0.testapp-funnel-svc.default.svc.cluster.local:8080/leanpipe"
+                "http://scaled-funnel-funnel-0.scaled-funnel-funnel-svc.scaled-funnel.svc.cluster.local:8080/leanpipe"
             ),
             new(typeof(Topic1)),
             cfg =>
@@ -25,7 +25,7 @@ public class ScaledFunnelTests : IAsyncLifetime
     private readonly LeanPipeTestClient leanPipeBClient =
         new(
             new(
-                "http://testapp-funnel-1.testapp-funnel-svc.default.svc.cluster.local:8080/leanpipe"
+                "http://scaled-funnel-funnel-1.scaled-funnel-funnel-svc.scaled-funnel.svc.cluster.local:8080/leanpipe"
             ),
             new(typeof(Topic1)),
             cfg =>
@@ -38,7 +38,9 @@ public class ScaledFunnelTests : IAsyncLifetime
     private readonly HttpClient testApp1Client =
         new()
         {
-            BaseAddress = new("http://testapp1-0.testapp1-svc.default.svc.cluster.local:8080"),
+            BaseAddress = new(
+                "http://scaled-funnel-testapp1-0.scaled-funnel-testapp1-svc.scaled-funnel.svc.cluster.local:8080"
+            ),
         };
 
     [Fact]

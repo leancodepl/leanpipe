@@ -1,15 +1,16 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: scaled-service-tests
+  name: no-scaling-tests
+  namespace: no-scaling
   labels:
-    app: scaled-service-tests
+    app: no-scaling-tests
 spec:
   template:
     spec:
       restartPolicy: Never
       containers:
-      - name: scaled-service-tests
-        image: scaled_service_tests
+      - name: no-scaling-tests
+        image: no_scaling_tests
         ports:
           - containerPort: 22

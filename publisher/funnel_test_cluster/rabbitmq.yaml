@@ -1,17 +1,34 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-svc
+  labels:
+    app: rabbitmq
+spec:
+  ports:
+    - port: 5672
+      name: port1
+    - port: 15672
+      name: port2
+  clusterIP: None
+  selector:
+    app: rabbitmq
+---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: rabbitmq
   labels:
     app: rabbitmq
 spec:
-  replicas: 1
   selector:
     matchLabels:
       app: rabbitmq
+  serviceName: rabbitmq-svc
+# A replica for different test configuration
+  replicas: 4
   template:
     metadata:
-      name: rabbitmq
       labels:
         app: rabbitmq
     spec:
@@ -21,19 +38,3 @@ spec:
           ports:
             - containerPort: 5672
             - containerPort: 15672
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: rabbitmq-svc
-  labels:
-    app: rabbitmq
-spec:
-  type: ClusterIP
-  ports:
-    - port: 5672
-      name: port1
-    - port: 15672
-      name: port2
-  selector:
-    app: rabbitmq

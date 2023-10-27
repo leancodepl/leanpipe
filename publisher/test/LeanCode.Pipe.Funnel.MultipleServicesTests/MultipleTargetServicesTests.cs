@@ -6,14 +6,14 @@ using LeanCode.Pipe.TestClient;
 using Microsoft.AspNetCore.Http.Connections;
 using Xunit;
 
-namespace LeanCode.Pipe.Funnel.MultipleTargetServicesTests;
+namespace LeanCode.Pipe.Funnel.MultipleServicesTests;
 
 public class MultipleTargetServicesTests : IAsyncLifetime
 {
     private readonly LeanPipeTestClient leanPipeClient =
         new(
             new(
-                "http://testapp-funnel-0.testapp-funnel-svc.default.svc.cluster.local:8080/leanpipe"
+                "http://multiple-services-funnel-0.multiple-services-funnel-svc.multiple-services.svc.cluster.local:8080/leanpipe"
             ),
             new(typeof(Topic1), typeof(Topic2)),
             cfg =>
@@ -26,13 +26,17 @@ public class MultipleTargetServicesTests : IAsyncLifetime
     private readonly HttpClient testApp1Client =
         new()
         {
-            BaseAddress = new("http://testapp1-0.testapp1-svc.default.svc.cluster.local:8080"),
+            BaseAddress = new(
+                "http://multiple-services-testapp1-0.multiple-services-testapp1-svc.multiple-services.svc.cluster.local:8080"
+            ),
         };
 
     private readonly HttpClient testApp2Client =
         new()
         {
-            BaseAddress = new("http://testapp2-0.testapp2-svc.default.svc.cluster.local:8080"),
+            BaseAddress = new(
+                "http://multiple-services-testapp2-0.multiple-services-testapp2-svc.multiple-services.svc.cluster.local:8080"
+            ),
         };
 
     [Fact]

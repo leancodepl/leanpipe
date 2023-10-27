@@ -21,7 +21,7 @@ services.AddMassTransit(cfg =>
     cfg.UsingRabbitMq(
         (ctx, cfg) =>
         {
-            cfg.Host("rabbitmq://guest:guest@rabbitmq-svc.default.svc.cluster.local/");
+            cfg.Host(appBuilder.Configuration.GetValue<string>("MassTransit:RabbitMq:Url"));
             cfg.ConfigureEndpoints(ctx);
         }
     );

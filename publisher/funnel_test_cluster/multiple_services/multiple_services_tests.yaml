@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: multiple-services-tests
+  namespace: multiple-services
+  labels:
+    app: multiple-services-tests
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: multiple-services-tests
+        image: multiple_services_tests
+        ports:
+          - containerPort: 22
