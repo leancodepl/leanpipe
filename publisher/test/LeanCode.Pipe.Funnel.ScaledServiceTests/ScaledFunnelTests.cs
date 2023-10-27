@@ -69,6 +69,9 @@ public class ScaledFunnelTests : IAsyncLifetime
         (await funnelBNotification)
             .Should()
             .BeEquivalentTo(expectedNotification, opts => opts.RespectingRuntimeTypes());
+
+        await leanPipeAClient.UnsubscribeSuccessAsync(topic);
+        await leanPipeBClient.UnsubscribeSuccessAsync(topic);
     }
 
     public Task InitializeAsync() => Task.CompletedTask;
