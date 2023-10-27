@@ -8,7 +8,7 @@ using Xunit;
 
 namespace LeanCode.Pipe.Funnel.MultipleTargetServicesTests;
 
-public class MultipleTargetServicesTests
+public class MultipleTargetServicesTests : IAsyncLifetime
 {
     private readonly LeanPipeTestClient leanPipeClient =
         new(
@@ -122,5 +122,14 @@ public class MultipleTargetServicesTests
             .BeEquivalentTo(expectedNotification2, opts => opts.RespectingRuntimeTypes());
 
         await leanPipeClient.UnsubscribeSuccessAsync(topic2);
+    }
+
+    public Task InitializeAsync() => Task.CompletedTask;
+
+    public async Task DisposeAsync()
+    {
+        await leanPipeClient.DisposeAsync();
+        testApp1Client.Dispose();
+        testApp2Client.Dispose();
     }
 }

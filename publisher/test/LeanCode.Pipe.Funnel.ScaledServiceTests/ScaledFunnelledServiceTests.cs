@@ -7,7 +7,7 @@ using Xunit;
 
 namespace LeanCode.Pipe.Funnel.ScaledServiceTests;
 
-public class ScaledFunnelledServiceTests
+public class ScaledFunnelledServiceTests : IAsyncLifetime
 {
     private readonly LeanPipeTestClient leanPipeClient =
         new(
@@ -64,5 +64,14 @@ public class ScaledFunnelledServiceTests
         (await instanceBNotification)
             .Should()
             .BeEquivalentTo(expectedNotification, opts => opts.RespectingRuntimeTypes());
+    }
+
+    public Task InitializeAsync() => Task.CompletedTask;
+
+    public async Task DisposeAsync()
+    {
+        await leanPipeClient.DisposeAsync();
+        testApp1AClient.Dispose();
+        testApp1BClient.Dispose();
     }
 }
