@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <AssemblyName>ScaledServiceTests</AssemblyName>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

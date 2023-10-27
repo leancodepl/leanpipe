@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <AssemblyName>MultipleTargetServicesTests</AssemblyName>
-    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
