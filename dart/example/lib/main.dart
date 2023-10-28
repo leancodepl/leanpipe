@@ -7,8 +7,14 @@ import 'package:intl/intl_standalone.dart'
     if (dart.library.html) 'package:intl/intl_browser.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-Future<void> mainCommon(AppConfig config) async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  final config = AppConfig(
+    apiUri: Uri.parse('https://exampleapp.test.lncd.pl/api/'),
+    pipeUri: Uri.parse('https://exampleapp.test.lncd.pl/leanpipe'),
+    kratosUri: Uri.parse('https://auth.exampleapp.test.lncd.pl'),
+  );
 
   runApp(await prepareApp(config));
 }

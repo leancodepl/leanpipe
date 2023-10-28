@@ -4,4 +4,4 @@ A simple app showing how to integrate Leanpipe into a project.
 
 ## Getting Started
 
-All files under `lib/common` are only there to make the app work and they are irrelevant in terms of Leanpipe.
+All files under `lib/common`, `lib/navigation` and `lib/resources/` are only there to make the app work and they are irrelevant in terms of Leanpipe.
