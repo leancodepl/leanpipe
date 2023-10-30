@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dart-client-tests
+  labels:
+    app: dart-client-tests
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: tests
+          image: tests
