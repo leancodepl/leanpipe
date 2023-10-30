@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>TestApp2</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/LeanCode.Pipe/LeanCode.Pipe.csproj" />
+
+    <PackageReference Include="MassTransit.RabbitMQ" />
+  </ItemGroup>
+
+</Project>

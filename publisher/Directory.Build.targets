@@ -11,6 +11,7 @@
     <PackageReference Update="LeanCode.IntegrationTestHelpers" Version="$(CoreLibVersion)" />
     <PackageReference Update="LeanCode.Logging" Version="$(CoreLibVersion)" />
 
+    <PackageReference Update="MassTransit.RabbitMQ" Version="8.1.1" />
     <PackageReference Update="MassTransit.SignalR" Version="8.1.1" />
 
     <PackageReference Update="Microsoft.AspNetCore.SignalR.Client" Version="8.0.0-rc.1.23421.29" />
