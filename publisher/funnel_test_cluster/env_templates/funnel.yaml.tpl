@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: $ENV_NAME_KEBABC-funnel-svc
-  namespace: $ENV_NAME_KEBABC
+  name: $ENV_NAME-funnel-svc
+  namespace: $ENV_NAME
   labels:
-    app: $ENV_NAME_KEBABC-funnel
+    app: $ENV_NAME-funnel
 spec:
   ports:
     - port: 80
@@ -12,25 +12,25 @@ spec:
       protocol: TCP
   clusterIP: None
   selector:
-    app: $ENV_NAME_KEBABC-funnel
+    app: $ENV_NAME-funnel
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: $ENV_NAME_KEBABC-funnel
-  namespace: $ENV_NAME_KEBABC
+  name: $ENV_NAME-funnel
+  namespace: $ENV_NAME
   labels:
-    app: $ENV_NAME_KEBABC-funnel
+    app: $ENV_NAME-funnel
 spec:
   selector:
     matchLabels:
-      app: $ENV_NAME_KEBABC-funnel
-  serviceName: $ENV_NAME_KEBABC-funnel-svc
+      app: $ENV_NAME-funnel
+  serviceName: $ENV_NAME-funnel-svc
   replicas: $FUNNEL_REPLICAS
   template:
     metadata:
       labels:
-        app: $ENV_NAME_KEBABC-funnel
+        app: $ENV_NAME-funnel
     spec:
       containers:
         - name: leanpipe-funnel

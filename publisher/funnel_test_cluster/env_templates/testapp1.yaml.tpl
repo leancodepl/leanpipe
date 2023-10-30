@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: $ENV_NAME_KEBABC-testapp1-svc
-  namespace: $ENV_NAME_KEBABC
+  name: $ENV_NAME-testapp1-svc
+  namespace: $ENV_NAME
   labels:
-    app: $ENV_NAME_KEBABC-testapp1
+    app: $ENV_NAME-testapp1
 spec:
   ports:
     - port: 80
@@ -12,25 +12,25 @@ spec:
       protocol: TCP
   clusterIP: None
   selector:
-    app: $ENV_NAME_KEBABC-testapp1
+    app: $ENV_NAME-testapp1
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: $ENV_NAME_KEBABC-testapp1
-  namespace: $ENV_NAME_KEBABC
+  name: $ENV_NAME-testapp1
+  namespace: $ENV_NAME
   labels:
-    app: $ENV_NAME_KEBABC-testapp1
+    app: $ENV_NAME-testapp1
 spec:
   selector:
     matchLabels:
-      app: $ENV_NAME_KEBABC-testapp1
-  serviceName: $ENV_NAME_KEBABC-testapp1-svc
+      app: $ENV_NAME-testapp1
+  serviceName: $ENV_NAME-testapp1-svc
   replicas: $TESTAPP1_REPLICAS
   template:
     metadata:
       labels:
-        app: $ENV_NAME_KEBABC-testapp1
+        app: $ENV_NAME-testapp1
     spec:
       containers:
         - name: testapp1
