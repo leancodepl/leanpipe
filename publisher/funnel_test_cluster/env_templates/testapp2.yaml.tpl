@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: scaled-target-service-testapp1-svc
-  namespace: scaled-target-service
+  name: $ENV_NAME_KEBABC-testapp2-svc
+  namespace: $ENV_NAME_KEBABC
   labels:
-    app: scaled-target-service-testapp1
+    app: $ENV_NAME_KEBABC-testapp2
 spec:
   ports:
     - port: 80
@@ -12,32 +12,32 @@ spec:
       protocol: TCP
   clusterIP: None
   selector:
-    app: scaled-target-service-testapp1
+    app: $ENV_NAME_KEBABC-testapp2
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: scaled-target-service-testapp1
-  namespace: scaled-target-service
+  name: $ENV_NAME_KEBABC-testapp2
+  namespace: $ENV_NAME_KEBABC
   labels:
-    app: scaled-target-service-testapp1
+    app: $ENV_NAME_KEBABC-testapp2
 spec:
   selector:
     matchLabels:
-      app: scaled-target-service-testapp1
-  serviceName: scaled-target-service-testapp1-svc
-  replicas: 2
+      app: $ENV_NAME_KEBABC-testapp2
+  serviceName: $ENV_NAME_KEBABC-testapp2-svc
+  replicas: 1
   template:
     metadata:
       labels:
-        app: scaled-target-service-testapp1
+        app: $ENV_NAME_KEBABC-testapp2
     spec:
       containers:
-        - name: testapp1
-          image: testapp1
+        - name: testapp2
+          image: testapp2
           env:
             - name: MassTransit__RabbitMq__Url
-              value: rabbitmq://guest:guest@rabbitmq-1.rabbitmq-svc.default.svc.cluster.local/
+              value: rabbitmq://guest:guest@rabbitmq-$RABBITMQ_INSTANCE.rabbitmq-svc.default.svc.cluster.local/
           ports:
             - containerPort: 8080
             - containerPort: 22

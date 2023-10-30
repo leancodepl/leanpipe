@@ -41,5 +41,7 @@ jobs:
         with: 
           cluster-name: testapp
           args: --config=publisher/funnel_test_cluster/k3d.yaml
+      - name: Make the script files executable
+        run: chmod +x funnel_test_cluster/subst_tpl_envs.sh
       - name: Run Tilt CI with tests
         run: tilt ci --context k3d-testapp -f funnel_test_cluster/Tiltfile

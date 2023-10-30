@@ -1,16 +1,16 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: no-scaling-tests
-  namespace: no-scaling
+  name: $ENV_NAME_KEBABC-tests
+  namespace: $ENV_NAME_KEBABC
   labels:
-    app: no-scaling-tests
+    app: $ENV_NAME_KEBABC-tests
 spec:
   template:
     spec:
       restartPolicy: Never
       containers:
-      - name: no-scaling-tests
-        image: no_scaling_tests
+      - name: $ENV_NAME_KEBABC-tests
+        image: $TESTS_NAME
         ports:
           - containerPort: 22

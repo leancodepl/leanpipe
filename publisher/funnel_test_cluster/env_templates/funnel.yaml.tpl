@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: scaled-funnel-funnel-svc
-  namespace: scaled-funnel
+  name: $ENV_NAME_KEBABC-funnel-svc
+  namespace: $ENV_NAME_KEBABC
   labels:
-    app: scaled-funnel-funnel
+    app: $ENV_NAME_KEBABC-funnel
 spec:
   ports:
     - port: 80
@@ -12,32 +12,32 @@ spec:
       protocol: TCP
   clusterIP: None
   selector:
-    app: scaled-funnel-funnel
+    app: $ENV_NAME_KEBABC-funnel
 ---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: scaled-funnel-funnel
-  namespace: scaled-funnel
+  name: $ENV_NAME_KEBABC-funnel
+  namespace: $ENV_NAME_KEBABC
   labels:
-    app: scaled-funnel-funnel
+    app: $ENV_NAME_KEBABC-funnel
 spec:
   selector:
     matchLabels:
-      app: scaled-funnel-funnel
-  serviceName: scaled-funnel-funnel-svc
-  replicas: 2
+      app: $ENV_NAME_KEBABC-funnel
+  serviceName: $ENV_NAME_KEBABC-funnel-svc
+  replicas: $FUNNEL_REPLICAS
   template:
     metadata:
       labels:
-        app: scaled-funnel-funnel
+        app: $ENV_NAME_KEBABC-funnel
     spec:
       containers:
         - name: leanpipe-funnel
           image: testapp_funnel
           env:
             - name: MassTransit__RabbitMq__Url
-              value: rabbitmq://guest:guest@rabbitmq-2.rabbitmq-svc.default.svc.cluster.local/
+              value: rabbitmq://guest:guest@rabbitmq-$RABBITMQ_INSTANCE.rabbitmq-svc.default.svc.cluster.local/
           ports:
             - containerPort: 8080
             - containerPort: 22
