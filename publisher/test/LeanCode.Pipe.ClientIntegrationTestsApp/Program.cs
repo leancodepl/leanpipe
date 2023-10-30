@@ -1,20 +1,25 @@
 using LeanCode.Components;
 using LeanCode.Contracts.Security;
 using LeanCode.CQRS.Security;
+using LeanCode.Logging;
 using LeanCode.Pipe;
 using LeanCode.Pipe.ClientIntegrationTestsApp;
 using LeanCode.Pipe.Funnel.FunnelledService;
 using LeanCode.Pipe.Funnel.Instance;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http.Connections;
 
 var appBuilder = WebApplication.CreateBuilder(args);
-appBuilder.Logging.SetMinimumLevel(LogLevel.Debug);
+var hostBuilder = appBuilder.Host;
+
+hostBuilder.ConfigureDefaultLogging("TestApp", new[] { typeof(Program).Assembly });
 
 var services = appBuilder.Services;
 var leanPipeTypes = TypesCatalog.Of<Topic>();
 
-if (!appBuilder.Configuration.GetValue<bool>("EnableFunnel"))
+var enableFunnel = appBuilder.Configuration.GetValue<bool>("EnableFunnel");
+if (!enableFunnel)
 {
     services.AddLeanPipe(leanPipeTypes, leanPipeTypes);
 }
@@ -23,10 +28,18 @@ else // We mimic Funnel behaviour on a single instance
     services.AddLeanPipeFunnel();
     services.AddFunnelledLeanPipe(leanPipeTypes, leanPipeTypes);
 
-    services.AddMassTransitTestHarness(cfg =>
+    services.AddOptions<MassTransitHostOptions>().Configure(opts => opts.WaitUntilStarted = true);
+    services.AddMassTransit(cfg =>
     {
         cfg.ConfigureLeanPipeFunnelConsumers();
         cfg.AddFunnelledLeanPipeConsumers("ClientIntegrationTestsApp", leanPipeTypes.Assemblies);
+
+        cfg.UsingInMemory(
+            (ctx, cfg) =>
+            {
+                cfg.ConfigureEndpoints(ctx);
+            }
+        );
     });
 }
 
@@ -43,12 +56,26 @@ services
         null
     );
 
+services.AddHealthChecks();
+
 using var app = appBuilder.Build();
 
 app.UseRouting();
 app.UseAuthentication();
 
-app.MapLeanPipe("/leanpipe");
+app.MapHealthChecks("/health/live");
+app.MapHealthChecks("/health/ready", new() { Predicate = check => check.Tags.Contains("ready") });
+
+app.MapLeanPipe(
+    "/leanpipe",
+    opts =>
+    {
+        if (enableFunnel)
+        {
+            opts.Transports = HttpTransportType.WebSockets;
+        }
+    }
+);
 
 app.MapPost(
     "/publish",
@@ -59,3 +86,5 @@ app.MapPost(
             ctx.RequestAborted
         )
 );
+
+app.Run();
