@@ -7,7 +7,7 @@ namespace LeanCode.Pipe.ClientIntegrationTestsApp;
 
 public class TestAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
-    public const string SchemeName = "Test";
+    public const string SchemeName = "Test authentication";
     public const string CorrectAuthHeaderValue = "1234";
 
     public TestAuthenticationHandler(
