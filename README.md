@@ -5,22 +5,33 @@ Notifying is backed up by [SignalR](https://dotnet.microsoft.com/en-us/apps/aspn
 
 > Postmen have a legendary aura. A ring at the doorbell may inflame a sense of expectation, suspense, secrecy, hazard or even intrigue. Ringing twice may imply a warning that trouble is on the way or an appeal to make the coast clear. ~ "The postman always rings twice", Erik Pevernagie
 
-## LeanPipe parts
+## Core concepts
 
-In order to receive notifications via LeanPipe one would need a publisher server and at least one of the provided clients.
+Backend defines **Topics** including parameters they have and **Notifications** that may be received by the clients that **Subscribe** to them.
+LeanPipe Backend, which also handles **Publishing** notifications to topics, is called the **Publisher**.
+End clients that subscribe to topics and then receive notifications are just **Clients**.
 
-### [LeanPipe publisher](publisher/README.md)
+The topics may require some arbitrary permissions from the clients that subscribe to them.
 
-LeanPipe part that handles clients subscriptions to the topics and allows publishing to them.
+Before subscribing to any topic the SignalR Connection to the Publisher is established by the Client.
 
-### LeanPipe clients
-The clients allow subscribing to various notification topics and receive real time, strongly typed notifications published by the publisher on the topic.
+## LeanPipe core parts
 
-Existing LeanPipe clients:
+In order to setup real time notifications via LeanPipe in an app one would need a Publisher server and at least one of the provided clients.
 
-1. Dart [TBD]
+### Publisher
+
+Handles clients subscriptions to the topics and allows publishing to them.
+
+Available as a library for monolithic architectures and also as a microservice friendly reverse proxy called the Funnel.
+
+See more [here](publisher/README.md).
+
+### Client SDKs
+
+The clients allow subscribing to various notification topics and receive real time, strongly typed notifications published on the topic.
+
+Supported LeanPipe client SDKs:
+
+1. [Dart](dart/README.md)
 2. TypeScript [TBD]
-
-## LeanPipe concepts
-
-[TODO]
