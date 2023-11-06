@@ -3,8 +3,7 @@ include('../../publisher/client_integration_tests_cluster/Tiltfile')
 docker_build(
   'tests',
   'app',
-  dockerfile='Dockerfile',
-  only = ['out/testapp'], # ??
+  dockerfile='tests.dockerfile'
 )
 
 k8s_yaml('tests.yaml')
