@@ -1,11 +1,11 @@
 include('../../publisher/client_integration_tests_cluster/Tiltfile')
 
-#docker_build(
-#  'tests',
-#  '.',
-#  dockerfile='tests.dockerfile',
-#  only = ['out/testapp'], # ??
-#)
+docker_build(
+  'tests',
+  'app',
+  dockerfile='Dockerfile',
+  only = ['out/testapp'], # ??
+)
 
 k8s_yaml('tests.yaml')
 #k8s_resource('dart-client-tests', resource_deps=['testapp-funneldisabled', 'testapp-funnelenabled'])

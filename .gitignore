@@ -2,3 +2,6 @@
 **/.idea/
 
 **/out/
+
+# macOS junk
+*.DS_Store
