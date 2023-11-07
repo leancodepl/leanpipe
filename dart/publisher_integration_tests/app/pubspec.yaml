@@ -1,12 +1,18 @@
 name: publisher_client_integration_tests
 description: Leanpipe publisher and dart client integration test
 version: 1.0.0
+publish_to: "none"
 
 environment:
   sdk: ^3.1.3
 
 dependencies:
   test: ^1.21.0
+  leancode_pipe:
+    git:
+      url: git@github.com:leancodepl/leanpipe.git
+      ref: e6721c5a37771f6df007eb543caadd2c392e61e3
+      path: dart
 
 dev_dependencies:
   lints: ^2.0.0

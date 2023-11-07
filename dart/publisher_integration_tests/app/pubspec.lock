@@ -73,6 +73,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  equatable:
+    dependency: transitive
+    description:
+      name: equatable
+      sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.5"
   file:
     dependency: transitive
     description:
@@ -97,6 +105,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.2"
+  http:
+    dependency: transitive
+    description:
+      name: http
+      sha256: "759d1a329847dd0f39226c688d3e06a6b8679668e350e2891a6474f8b4bb8525"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   http_multi_server:
     dependency: transitive
     description:
@@ -129,6 +145,23 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.7"
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      sha256: b10a7b2ff83d83c777edba3c6a0f97045ddadd56c944e1a23a3fdf43a1bf4467
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.8.1"
+  leancode_pipe:
+    dependency: "direct main"
+    description:
+      path: dart
+      ref: e6721c5a37771f6df007eb543caadd2c392e61e3
+      resolved-ref: e6721c5a37771f6df007eb543caadd2c392e61e3
+      url: "git@github.com:leancodepl/leanpipe.git"
+    source: git
+    version: "0.1.0"
   lints:
     dependency: "direct dev"
     description:
@@ -209,6 +242,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  rxdart:
+    dependency: transitive
+    description:
+      name: rxdart
+      sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.27.7"
   shelf:
     dependency: transitive
     description:
@@ -241,6 +282,15 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  signalr_core:
+    dependency: transitive
+    description:
+      path: "."
+      ref: "feature/bump-dart-and-package-versions"
+      resolved-ref: d32848eaa8c0d0073c49cefa39feb20181fd44ad
+      url: "https://github.com/RCSandberg/signalr_core.git"
+    source: git
+    version: "1.1.1"
   source_map_stack_trace:
     dependency: transitive
     description:
@@ -265,6 +315,23 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
+  sse:
+    dependency: transitive
+    description:
+      name: sse
+      sha256: "3ff9088cac3f45aa8b91336f1962e3ea6c81baaba0bbba361c05f8aa7fb59442"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.2"
+  sse_channel:
+    dependency: transitive
+    description:
+      path: "."
+      ref: "feature/bump-dart-and-package-versions"
+      resolved-ref: "50c4b76f2f37ee3d0dad6b7f46678482fdcc546c"
+      url: "https://github.com/RCSandberg/sse_channel.git"
+    source: git
+    version: "0.0.3"
   stack_trace:
     dependency: transitive
     description:
@@ -321,6 +388,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.9"
+  tuple:
+    dependency: transitive
+    description:
+      name: tuple
+      sha256: a97ce2013f240b2f3807bcbaf218765b6f301c3eff91092bcfa23a039e7dd151
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   typed_data:
     dependency: transitive
     description:
@@ -329,6 +404,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.2"
+  uuid:
+    dependency: transitive
+    description:
+      name: uuid
+      sha256: "648e103079f7c64a36dc7d39369cabb358d377078a051d6ae2ad3aa539519313"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.7"
   vm_service:
     dependency: transitive
     description:

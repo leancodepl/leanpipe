@@ -6,8 +6,6 @@ default_registry('k3d-clientintegrationtests-registry.local.lncd.pl:21345')
 local_resource(
   'build-testapp',
   'dotnet publish -o out/testapp ../test/LeanCode.Pipe.ClientIntegrationTestsApp',
-  deps=['../src', '../test/LeanCode.Pipe.ClientIntegrationTestsApp'],
-  ignore=['../**/obj', '../**/bin'],
   labels=['test-services'],
 )
 
