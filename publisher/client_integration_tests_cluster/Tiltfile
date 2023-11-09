@@ -17,7 +17,7 @@ docker_build(
 )
 
 k8s_yaml('testapp_funneldisabled.yaml')
-k8s_resource('testapp-funneldisabled', labels=['test-services'])
+k8s_resource('testapp-funneldisabled', labels=['test-services'], port_forwards="5151:8080")
 
 k8s_yaml('testapp_funnelenabled.yaml')
 k8s_resource('testapp-funnelenabled', labels=['test-services'])
