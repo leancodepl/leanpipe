@@ -24,7 +24,7 @@ void main() {
 
   setUp(
     () {
-      const envVarName = 'TEST_ENDPOINT';
+      const envVarName = 'PUBLISHER_HOST';
       endpoint = switch (Platform.environment[envVarName]) {
         final endpoint? => endpoint,
         _ => throw StateError('Environment variable $envVarName is not set'),
@@ -44,29 +44,24 @@ void main() {
     const topic = Topic(id: '1');
 
     bool received = false;
+    bool done = false;
 
     await pipeClient.connect();
 
     final subscription = await pipeClient.subscribe(topic);
 
-    final handlerSubscription = subscription.listen((value) {
-      received = true;
-    });
+    final handlerSubscription = subscription.listen((_) => received = true)
+      ..onDone(() => done = true);
 
     await _triggerNotification(topic, endpoint);
 
     await Future.delayed(waitTime);
 
     expect(received, true);
+    expect(done, false);
 
     await subscription.unsubscribe();
-    received = false;
-
-    await _triggerNotification(topic, endpoint);
-
-    await Future.delayed(waitTime);
-
-    expect(received, false);
+    expect(done, true);
 
     await handlerSubscription.cancel();
     await pipeClient.disconnect();
