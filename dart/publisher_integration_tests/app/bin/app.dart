@@ -1,14 +1,15 @@
 import 'package:leancode_pipe/leancode_pipe/pipe_client.dart';
+import 'package:publisher_client_integration_tests/topic.dart';
 import 'package:test/test.dart';
 
 final funnelDisabledEndpoint =
-    Uri.parse('testapp-funneldisabled-svc.default.cluster.local')
+    Uri.parse('http://testapp-funneldisabled-svc.default.svc.cluster.local/')
         .resolve('leanpipe')
         .toString();
-final funnelEnabledEndpoint =
-    Uri.parse('testapp-funnelenabled-svc.default.cluster.local')
-        .resolve('leanpipe')
-        .toString();
+final funnelEnabledEndpoint = Uri.parse(
+        'localhost:8080/testapp-funnelenabled-svc.default.svc.cluster.local')
+    .resolve('leanpipe')
+    .toString();
 
 const testAccessToken = '1234';
 
@@ -24,7 +25,11 @@ void main() {
     },
   );
 
-  test('calculate', () {});
+  test('subscribe', () async {
+    await pipeClient.connect();
+
+    await pipeClient.subscribe(Topic(id: '1'));
+  });
 
   print('test passed');
 }

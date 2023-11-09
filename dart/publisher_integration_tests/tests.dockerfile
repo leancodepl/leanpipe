@@ -4,6 +4,12 @@ FROM dart:stable AS build
 # Resolve app dependencies.
 WORKDIR /app
 COPY pubspec.* ./
+
+# TODO: Resolve this, it makes no sense to copy the whole package
+COPY /pipe ./pipe
+# Does not work: https://stackoverflow.com/a/24540011/13595734
+# COPY ../../ ./pipe
+
 RUN dart pub get
 
 # Copy app source code and AOT compile it.

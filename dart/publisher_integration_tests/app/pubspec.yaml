@@ -9,10 +9,7 @@ environment:
 dependencies:
   test: ^1.21.0
   leancode_pipe:
-    git:
-      url: git@github.com:leancodepl/leanpipe.git
-      ref: e6721c5a37771f6df007eb543caadd2c392e61e3
-      path: dart
+    path: pipe
 
 dev_dependencies:
   lints: ^2.0.0
