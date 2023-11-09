@@ -6,17 +6,6 @@ import 'package:publisher_client_integration_tests/topic.dart';
 import 'package:test/test.dart';
 import 'package:http/http.dart' as http;
 
-// final funnelDisabledEndpoint =
-//     Uri.parse('http://testapp-funneldisabled-svc.default.svc.cluster.local/')
-//         .resolve('leanpipe')
-//         .toString();
-// final funnelDisabledEndpoint = 'http://localhost:5151/leanpipe';
-// final funnelDisabledPostEndpoint = 'http://localhost:5151/publish';
-// final funnelEnabledEndpoint = Uri.parse(
-//         'localhost:8080/testapp-funnelenabled-svc.default.svc.cluster.local')
-//     .resolve('leanpipe')
-//     .toString();
-
 const testAccessToken = '1234';
 
 Future<void> _triggerNotification(Topic topic, String endpoint) {
