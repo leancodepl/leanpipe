@@ -7,5 +7,8 @@ include('../../publisher/client_integration_tests_cluster/Tiltfile')
 #  only = ['out/testapp'], # ??
 #)
 
-k8s_yaml('tests.yaml')
-#k8s_resource('dart-client-tests', resource_deps=['testapp-funneldisabled', 'testapp-funnelenabled'])
+k8s_yaml('tests_funneldisabled.yaml')
+k8s_resource('dart-client-funneldisabled-tests', resource_deps=['testapp-funneldisabled'], labels=['tests'])
+
+k8s_yaml('tests_funnelenabled.yaml')
+k8s_resource('dart-client-funnelenabled-tests', resource_deps=['testapp-funnelenabled'], labels=['tests'])

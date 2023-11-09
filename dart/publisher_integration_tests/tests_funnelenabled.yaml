@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dart-client-funnelenabled-tests
+  labels:
+    app: dart-client-funnelenabled-tests
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: tests
+          image: tests
+          env:
+            - name: PUBLISHER_HOST
+              value: http://testapp-funnelenabled-svc.default.svc.cluster.local
