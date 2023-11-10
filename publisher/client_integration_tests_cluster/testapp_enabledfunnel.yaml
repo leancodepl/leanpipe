@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: testapp-funnelenabled
+  name: testapp-enabledfunnel
   labels:
-    app: testapp-funnelenabled
+    app: testapp-enabledfunnel
 spec:
   selector:
     matchLabels:
-      app: testapp-funnelenabled
+      app: testapp-enabledfunnel
   replicas: 1
   template:
     metadata:
       labels:
-        app: testapp-funnelenabled
+        app: testapp-enabledfunnel
     spec:
       containers:
         - name: testapp
@@ -41,9 +41,9 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: testapp-funnelenabled-svc
+  name: testapp-enabledfunnel-svc
   labels:
-    app: testapp-funnelenabled
+    app: testapp-enabledfunnel
 spec:
   type: ClusterIP
   ports:
@@ -51,4 +51,4 @@ spec:
       targetPort: 8080
       protocol: TCP
   selector:
-    app: testapp-funnelenabled
+    app: testapp-enabledfunnel

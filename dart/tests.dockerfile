@@ -10,10 +10,6 @@ RUN dart pub get
 
 RUN dart compile exe bin/app.dart -o bin/executable
 
-WORKDIR /
-
-RUN ls
-
 # Build minimal serving image from AOT-compiled executable and required system
 # libraries and configuration files stored in `/runtime/` from the build stage.
 FROM scratch

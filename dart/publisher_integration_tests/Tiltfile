@@ -6,8 +6,8 @@ docker_build(
   dockerfile='../tests.dockerfile'
 )
 
-k8s_yaml('tests_funneldisabled.yaml')
-k8s_resource('dart-client-funneldisabled-tests', resource_deps=['testapp-funneldisabled'], labels=['tests'])
+k8s_yaml('tests_disabledfunnel.yaml')
+k8s_resource('dart-client-disabledfunnel-tests', resource_deps=['testapp-disabledfunnel'], labels=['tests'])
 
-k8s_yaml('tests_funnelenabled.yaml')
-k8s_resource('dart-client-funnelenabled-tests', resource_deps=['testapp-funnelenabled'], labels=['tests'])
+k8s_yaml('tests_enabledfunnel.yaml')
+k8s_resource('dart-client-enabledfunnel-tests', resource_deps=['testapp-enabledfunnel'], labels=['tests'])

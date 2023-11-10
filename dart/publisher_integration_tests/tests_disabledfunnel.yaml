@@ -1,9 +1,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: dart-client-funneldisabled-tests
+  name: dart-client-disabledfunnel-tests
   labels:
-    app: dart-client-funneldisabled-tests
+    app: dart-client-disabledfunnel-tests
 spec:
   template:
     spec:
@@ -13,4 +13,4 @@ spec:
           image: tests
           env:
             - name: PUBLISHER_HOST
-              value: http://testapp-funneldisabled-svc.default.svc.cluster.local
+              value: http://testapp-disabledfunnel-svc.default.svc.cluster.local
