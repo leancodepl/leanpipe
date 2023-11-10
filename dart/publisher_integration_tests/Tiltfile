@@ -2,7 +2,7 @@ include('../../publisher/client_integration_tests_cluster/Tiltfile')
 
 docker_build(
   'tests',
-  '.',
+  '../',
   dockerfile='../tests.dockerfile'
 )
 

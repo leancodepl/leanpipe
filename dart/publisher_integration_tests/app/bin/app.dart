@@ -57,9 +57,8 @@ void main() {
 
     expect(received, true);
 
-    await subscription.unsubscribe();
-
     await handlerSubscription.cancel();
+    await subscription.unsubscribe();
     await pipeClient.disconnect();
   });
 }
