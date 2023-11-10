@@ -156,7 +156,7 @@ packages:
   leancode_pipe:
     dependency: "direct main"
     description:
-      path: pipe
+      path: "../.."
       relative: true
     source: path
     version: "0.1.0"

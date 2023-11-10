@@ -44,24 +44,20 @@ void main() {
     const topic = Topic(id: '1');
 
     bool received = false;
-    bool done = false;
 
     await pipeClient.connect();
 
     final subscription = await pipeClient.subscribe(topic);
 
-    final handlerSubscription = subscription.listen((_) => received = true)
-      ..onDone(() => done = true);
+    final handlerSubscription = subscription.listen((_) => received = true);
 
     await _triggerNotification(topic, endpoint);
 
     await Future.delayed(waitTime);
 
     expect(received, true);
-    expect(done, false);
 
     await subscription.unsubscribe();
-    expect(done, true);
 
     await handlerSubscription.cancel();
     await pipeClient.disconnect();

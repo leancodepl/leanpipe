@@ -9,7 +9,7 @@ environment:
 dependencies:
   test: ^1.21.0
   leancode_pipe:
-    path: pipe
+    path: ../../
   http: ^1.1.0
 
 dev_dependencies:
