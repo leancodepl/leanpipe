@@ -1,0 +1,44 @@
+name: Dart client integration tests
+
+on:
+  push:
+    branches: [ main ]
+    tags-ignore: [ "*-v*" ]
+    paths:
+      - "dart/**"
+      - "publisher/**"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - "dart/**"
+      - "publisher/**"
+
+jobs:
+  setup-cluster-and-test:
+    name: Test Dart client compliance with Publisher
+    runs-on: ubuntu-latest
+    env:
+      DOTNET_VERSION: 8.0.100-rc.1.23463.5
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      - name: Setup Tilt
+        uses: yokawasa/action-setup-kube-tools@v0.9.3
+        with:
+          tilt: v0.33.6
+          setup-tools: |
+            tilt
+      - name: Create test cluster
+        uses: AbsaOSS/k3d-action@v2
+        with: 
+          cluster-name: clientintegrationtests
+          args: --config=publisher/client_integration_tests_cluster/k3d.yaml
+      - name: Run Tilt CI with tests
+        run: tilt ci --context k3d-clientintegrationtests -f dart/publisher_integration_tests/Tiltfile
