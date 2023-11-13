@@ -5,234 +5,92 @@ default_registry('k3d-testapp-registry.local.lncd.pl:21345')
 
 # All services needed for tests
 
-local_resource(
-  'build-testappfunnel',
-  'dotnet publish -o out/testapp_funnel ../test/LeanCode.Pipe.Funnel.TestAppFunnel',
-  deps=['../src', '../test/LeanCode.Pipe.Funnel.TestAppFunnel'],
-  ignore=['../**/obj', '../**/bin'],
-  labels=['test-services'],
-)
+test_services = [
+  ['testapp_funnel', 'TestAppFunnel'],
+  ['testapp1', 'TestApp1'],
+  ['testapp2', 'TestApp2'],
+]
 
-local_resource(
-  'build-testapp1',
-  'dotnet publish -o out/testapp1 ../test/LeanCode.Pipe.Funnel.TestApp1',
-  deps=['src', '../test/LeanCode.Pipe.Funnel.TestApp1'],
-  ignore=['../**/obj', '../**/bin'],
-  labels=['test-services'],
-)
+for test_service_lower, test_service_pascal in test_services:
+  local_resource(
+    'build-%s' % test_service_lower,
+    'dotnet publish -o out/%s ../test/LeanCode.Pipe.Funnel.%s' % (test_service_lower, test_service_pascal),
+    deps=['../src', '../test/LeanCode.Pipe.Funnel.%s' % test_service_pascal],
+    ignore=['../**/obj', '../**/bin'],
+    labels=['test-services'],
+  )
 
-local_resource(
-  'build-testapp2',
-  'dotnet publish -o out/testapp2 ../test/LeanCode.Pipe.Funnel.TestApp2',
-  deps=['src', '../test/LeanCode.Pipe.Funnel.TestApp2'],
-  ignore=['../**/obj', '../**/bin'],
-  labels=['test-services'],
-)
-
-docker_build(
-  'testapp_funnel',
-  '.',
-  dockerfile='testapp_funnel.dockerfile',
-  only = ['out/testapp_funnel'],
-)
-
-docker_build(
-  'testapp1',
-  '.',
-  dockerfile='testapp1.dockerfile',
-  only = ['out/testapp1'],
-)
-
-docker_build(
-  'testapp2',
-  '.',
-  dockerfile='testapp2.dockerfile',
-  only = ['out/testapp2'],
-)
+  docker_build(
+    test_service_lower,
+    '.',
+    dockerfile='%s.dockerfile' % test_service_lower,
+    only = ['out/%s' % test_service_lower],
+  )
 
 k8s_yaml('rabbitmq.yaml')
 k8s_resource('rabbitmq', labels=['test-services'])
 
-# No scaling tests
-
-namespace_create('no-scaling')
-
-local_resource(
-  'build-no-scaling-tests',
-  'dotnet publish -o out/no_scaling_tests ../test/LeanCode.Pipe.Funnel.NoScalingTests',
-  deps=[
+def test_setup_and_run(kebab_name, snake_name, pascal_name, with_testapp2=False):
+  test_build_deps = [
     '../src',
     '../test/LeanCode.Pipe.Funnel.TestAppFunnel',
     '../test/LeanCode.Pipe.Funnel.TestApp1',
-    '../test/LeanCode.Pipe.Funnel.NoScalingTests' ],
-  ignore=['../**/obj', '../**/bin'],
-  labels=['no-scaling-tests']
-)
+    '../test/LeanCode.Pipe.Funnel.%s' % pascal_name
+  ]
 
-docker_build(
-  'no_scaling_tests',
-  '.',
-  dockerfile='no_scaling/tests.dockerfile',
-  only = ['out/no_scaling_tests']
-)
+  if (with_testapp2):
+    test_build_deps.append('../test/LeanCode.Pipe.Funnel.TestApp2')
 
-k8s_yaml(local('./subst_tpl_envs.sh no_scaling funnel.yaml'))
-k8s_resource(
-  'no-scaling-funnel',
-  resource_deps=['rabbitmq'],
-  labels=['no-scaling-tests']
-)
+  local_resource(
+    'build-%s-tests' % kebab_name,
+    'dotnet publish -o out/%s_tests ../test/LeanCode.Pipe.Funnel.%sTests' % (snake_name, pascal_name),
+    deps=test_build_deps,
+    ignore=['../**/obj', '../**/bin'],
+    labels=['%s-tests' % kebab_name]
+  )
 
-k8s_yaml(local('./subst_tpl_envs.sh no_scaling testapp1.yaml'))
-k8s_resource(
-  'no-scaling-testapp1',
-  resource_deps=['rabbitmq'],
-  labels=['no-scaling-tests']
-)
+  namespace_create(kebab_name)
 
-k8s_yaml(local('./subst_tpl_envs.sh no_scaling tests.yaml'))
-k8s_resource(
-  'no-scaling-tests',
-  resource_deps=['no-scaling-funnel', 'no-scaling-testapp1'],
-  labels=['no-scaling-tests']
-)
+  k8s_yaml(local('./subst_tpl_envs.sh %s funnel.yaml' % snake_name))
+  k8s_resource(
+    '%s-funnel' % kebab_name,
+    resource_deps=['rabbitmq'],
+    labels=['%s-tests' % kebab_name],
+  )
 
-# Scaled target service tests
+  k8s_yaml(local('./subst_tpl_envs.sh %s testapp1.yaml' % snake_name))
+  k8s_resource(
+    '%s-testapp1' % kebab_name,
+    resource_deps=['rabbitmq'],
+    labels=['%s-tests' % kebab_name],
+  )
 
-namespace_create('scaled-target-service')
+  test_deps = ['%s-funnel' % kebab_name, '%s-testapp1' % kebab_name]
 
-local_resource(
-  'build-scaled-target-service-tests',
-  'dotnet publish -o out/scaled_target_service_tests ../test/LeanCode.Pipe.Funnel.ScaledTargetServiceTests',
-  deps=[
-    '../src',
-    '../test/LeanCode.Pipe.Funnel.TestAppFunnel',
-    '../test/LeanCode.Pipe.Funnel.TestApp1',
-    '../test/LeanCode.Pipe.Funnel.ScaledTargetServiceTests' ],
-  ignore=['../**/obj', '../**/bin'],
-  labels=['scaled-target-service-tests']
-)
+  if (with_testapp2):
+    test_deps.append('%s-testapp2' % kebab_name)
 
-docker_build(
-  'scaled_target_service_tests',
-  '.',
-  dockerfile='scaled_target_service/tests.dockerfile',
-  only = ['out/scaled_target_service_tests']
-)
+    k8s_yaml(local('./subst_tpl_envs.sh %s testapp2.yaml' % snake_name))
+    k8s_resource(
+      '%s-testapp2' % kebab_name,
+      resource_deps=['rabbitmq'],
+      labels=['%s-tests' % kebab_name],
+    )
 
-k8s_yaml(local('./subst_tpl_envs.sh scaled_target_service funnel.yaml'))
-k8s_resource(
-  'scaled-target-service-funnel',
-  resource_deps=['rabbitmq'],
-  labels=['scaled-target-service-tests']
-)
+  docker_build(
+    '%s_tests' % snake_name,
+    '.',
+    dockerfile='%s/tests.dockerfile' % snake_name,
+    only = ['out/%s_tests' % snake_name],
+  )
+  k8s_yaml(local('./subst_tpl_envs.sh %s tests.yaml' % snake_name))
+  k8s_resource(
+    '%s-tests' % kebab_name,
+    resource_deps=test_deps,
+    labels=['%s-tests' % kebab_name],
+  )
 
-k8s_yaml(local('./subst_tpl_envs.sh scaled_target_service testapp1.yaml'))
-k8s_resource(
-  'scaled-target-service-testapp1',
-  resource_deps=['rabbitmq'],
-  labels=['scaled-target-service-tests']
-)
-
-k8s_yaml(local('./subst_tpl_envs.sh scaled_target_service tests.yaml'))
-k8s_resource(
-  'scaled-target-service-tests',
-  resource_deps=['scaled-target-service-funnel', 'scaled-target-service-testapp1'],
-  labels=['scaled-target-service-tests']
-)
-
-# Scaled funnel tests
-
-namespace_create('scaled-funnel')
-
-local_resource(
-  'build-scaled-funnel-tests',
-  'dotnet publish -o out/scaled_funnel_tests ../test/LeanCode.Pipe.Funnel.ScaledFunnelTests',
-  deps=[
-    '../src',
-    '../test/LeanCode.Pipe.Funnel.TestAppFunnel',
-    '../test/LeanCode.Pipe.Funnel.TestApp1',
-    '../test/LeanCode.Pipe.Funnel.ScaledFunnelTests' ],
-  ignore=['../**/obj', '../**/bin'],
-  labels=['scaled-funnel-tests']
-)
-
-docker_build(
-  'scaled_funnel_tests',
-  '.',
-  dockerfile='scaled_funnel/tests.dockerfile',
-  only = ['out/scaled_funnel_tests']
-)
-
-k8s_yaml(local('./subst_tpl_envs.sh scaled_funnel funnel.yaml'))
-k8s_resource(
-  'scaled-funnel-funnel',
-  resource_deps=['rabbitmq'],
-  labels=['scaled-funnel-tests']
-)
-
-k8s_yaml(local('./subst_tpl_envs.sh scaled_funnel testapp1.yaml'))
-k8s_resource(
-  'scaled-funnel-testapp1',
-  resource_deps=['rabbitmq'],
-  labels=['scaled-funnel-tests']
-)
-
-k8s_yaml(local('./subst_tpl_envs.sh scaled_funnel tests.yaml'))
-k8s_resource(
-  'scaled-funnel-tests',
-  resource_deps=['scaled-funnel-funnel', 'scaled-funnel-testapp1'],
-  labels=['scaled-funnel-tests']
-)
-
-# Multiple services tests
-
-namespace_create('multiple-services')
-
-local_resource(
-  'build-multiple-services-tests',
-  'dotnet publish -o out/multiple_services_tests ../test/LeanCode.Pipe.Funnel.MultipleServicesTests',
-  deps=[
-    '../src',
-    '../test/LeanCode.Pipe.Funnel.TestAppFunnel',
-    '../test/LeanCode.Pipe.Funnel.TestApp1',
-    '../test/LeanCode.Pipe.Funnel.TestApp2',
-    '../test/LeanCode.Pipe.Funnel.MultipleServicesTests' ],
-  ignore=['../**/obj', '../**/bin'],
-  labels=['multiple-services-tests']
-)
-
-docker_build(
-  'multiple_services_tests',
-  '.',
-  dockerfile='multiple_services/tests.dockerfile',
-  only = ['out/multiple_services_tests']
-)
-
-k8s_yaml(local('./subst_tpl_envs.sh multiple_services funnel.yaml'))
-k8s_resource(
-  'multiple-services-funnel',
-  resource_deps=['rabbitmq'],
-  labels=['multiple-services-tests']
-)
-
-k8s_yaml(local('./subst_tpl_envs.sh multiple_services testapp1.yaml'))
-k8s_resource(
-  'multiple-services-testapp1',
-  resource_deps=['rabbitmq'],
-  labels=['multiple-services-tests']
-)
-
-k8s_yaml(local('./subst_tpl_envs.sh multiple_services testapp2.yaml'))
-k8s_resource(
-  'multiple-services-testapp2',
-  resource_deps=['rabbitmq'],
-  labels=['multiple-services-tests']
-)
-
-k8s_yaml(local('./subst_tpl_envs.sh multiple_services tests.yaml'))
-k8s_resource(
-  'multiple-services-tests',
-  resource_deps=['multiple-services-funnel', 'multiple-services-testapp1', 'multiple-services-testapp2'],
-  labels=['multiple-services-tests']
-)
+test_setup_and_run('no-scaling', 'no_scaling', 'NoScaling')
+test_setup_and_run('scaled-target-service', 'scaled_target_service', 'ScaledTargetService')
+test_setup_and_run('scaled-funnel', 'scaled_funnel', 'ScaledFunnel')
+test_setup_and_run('multiple-services', 'multiple_services', 'MultipleServices', True)
