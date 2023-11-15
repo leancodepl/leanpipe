@@ -62,8 +62,5 @@ void main() {
     await handlerSubscription.cancel();
     await subscription.unsubscribe();
     await pipeClient.disconnect();
-
-    // TODO: This shouldn't be necessary. Something is after connection is alive probably.
-    exit(0);
   });
 }
