@@ -6,6 +6,7 @@ import 'package:publisher_client_integration_tests/topic.dart';
 import 'package:test/test.dart';
 import 'package:http/http.dart' as http;
 
+const publisherHostEnvVarName = 'PUBLISHER_HOST';
 const testAccessToken = '1234';
 
 Future<void> _triggerNotification(Topic topic, String endpoint) {
@@ -24,10 +25,11 @@ void main() {
 
   setUp(
     () {
-      const envVarName = 'PUBLISHER_HOST';
-      endpoint = switch (Platform.environment[envVarName]) {
+      endpoint = switch (Platform.environment[publisherHostEnvVarName]) {
         final endpoint? => endpoint,
-        _ => throw StateError('Environment variable $envVarName is not set'),
+        _ => throw StateError(
+            'Environment variable $publisherHostEnvVarName is not set',
+          ),
       };
 
       pipeClient = PipeClient(
