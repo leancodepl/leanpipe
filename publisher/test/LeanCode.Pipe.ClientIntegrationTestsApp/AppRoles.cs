@@ -1,4 +1,5 @@
 using LeanCode.CQRS.Security;
+using LeanCode.Pipe.ClientIntegrationTestsApp.Contracts;
 
 namespace LeanCode.Pipe.ClientIntegrationTestsApp;
 

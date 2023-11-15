@@ -4,6 +4,7 @@ using LeanCode.CQRS.Security;
 using LeanCode.Logging;
 using LeanCode.Pipe;
 using LeanCode.Pipe.ClientIntegrationTestsApp;
+using LeanCode.Pipe.ClientIntegrationTestsApp.Contracts;
 using LeanCode.Pipe.Funnel.FunnelledService;
 using LeanCode.Pipe.Funnel.Instance;
 using MassTransit;
@@ -17,16 +18,17 @@ hostBuilder.ConfigureDefaultLogging("TestApp", new[] { typeof(Program).Assembly 
 
 var services = appBuilder.Services;
 var leanPipeTypes = TypesCatalog.Of<Topic>();
+var leanPipeHandlers = TypesCatalog.Of<TopicKeys>();
 
 var enableFunnel = appBuilder.Configuration.GetValue<bool>("EnableFunnel");
 if (!enableFunnel)
 {
-    services.AddLeanPipe(leanPipeTypes, leanPipeTypes);
+    services.AddLeanPipe(leanPipeTypes, leanPipeHandlers);
 }
 else // We mimic Funnel behaviour on a single instance
 {
     services.AddLeanPipeFunnel();
-    services.AddFunnelledLeanPipe(leanPipeTypes, leanPipeTypes);
+    services.AddFunnelledLeanPipe(leanPipeTypes, leanPipeHandlers);
 
     services.AddOptions<MassTransitHostOptions>().Configure(opts => opts.WaitUntilStarted = true);
     services.AddMassTransit(cfg =>

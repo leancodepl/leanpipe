@@ -1,5 +1,7 @@
 using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text.Encodings.Web;
+using LeanCode.Pipe.ClientIntegrationTestsApp.Contracts;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 
@@ -9,6 +11,22 @@ public class TestAuthenticationHandler : AuthenticationHandler<AuthenticationSch
 {
     public const string SchemeName = "Bearer";
     public const string CorrectAuthHeaderValue = "1234";
+
+    public static readonly Guid UserId = Guid.NewGuid();
+
+    public static readonly ClaimsPrincipal User =
+        new(
+            new ClaimsIdentity(
+                new Claim[]
+                {
+                    new(AuthConfig.KnownClaims.UserId, UserId.ToString()),
+                    new(AuthConfig.KnownClaims.Role, AuthConfig.Roles.User),
+                },
+                SchemeName,
+                AuthConfig.KnownClaims.UserId,
+                AuthConfig.KnownClaims.Role
+            )
+        );
 
     public TestAuthenticationHandler(
         IOptionsMonitor<AuthenticationSchemeOptions> options,
@@ -26,9 +44,7 @@ public class TestAuthenticationHandler : AuthenticationHandler<AuthenticationSch
         {
             if (auth.Parameter == CorrectAuthHeaderValue)
             {
-                return Task.FromResult(
-                    AuthenticateResult.Success(new(AuthConfig.User, SchemeName))
-                );
+                return Task.FromResult(AuthenticateResult.Success(new(User, SchemeName)));
             }
             else
             {

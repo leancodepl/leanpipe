@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanCode.Pipe.Funnel.NoScal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanCode.Pipe.ClientIntegrationTestsApp", "test\LeanCode.Pipe.ClientIntegrationTestsApp\LeanCode.Pipe.ClientIntegrationTestsApp.csproj", "{AB12D1BD-26B1-406D-B741-74E2343B79B9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeanCode.Pipe.ClientIntegrationTestsApp.Contracts", "test\LeanCode.Pipe.ClientIntegrationTestsApp.Contracts\LeanCode.Pipe.ClientIntegrationTestsApp.Contracts.csproj", "{94F12CA3-D544-4127-9C63-764AA4A29118}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,6 +104,10 @@ Global
 		{AB12D1BD-26B1-406D-B741-74E2343B79B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB12D1BD-26B1-406D-B741-74E2343B79B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB12D1BD-26B1-406D-B741-74E2343B79B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94F12CA3-D544-4127-9C63-764AA4A29118}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94F12CA3-D544-4127-9C63-764AA4A29118}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94F12CA3-D544-4127-9C63-764AA4A29118}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94F12CA3-D544-4127-9C63-764AA4A29118}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{75B2B837-B392-4DC1-8CF7-C1B2C4E03312} = {401E8BD4-C7D7-48F2-8899-EA9859247BD7}
@@ -119,5 +125,6 @@ Global
 		{8EF7A9C2-B6A0-422A-90B5-76CB2852225D} = {2A218F39-75C1-4EE1-8614-D67AB30574F0}
 		{1F89EB12-9052-46D8-A72E-2BA6E030D3BD} = {2A218F39-75C1-4EE1-8614-D67AB30574F0}
 		{AB12D1BD-26B1-406D-B741-74E2343B79B9} = {CBE053F8-6853-4FFC-A931-84A210C5FF2C}
+		{94F12CA3-D544-4127-9C63-764AA4A29118} = {CBE053F8-6853-4FFC-A931-84A210C5FF2C}
 	EndGlobalSection
 EndGlobal

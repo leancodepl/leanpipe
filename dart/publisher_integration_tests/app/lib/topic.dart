@@ -16,7 +16,7 @@ class Topic implements leanpipe.Topic<NotificationDTO> {
   }
 
   @override
-  String getFullName() => 'LeanCode.Pipe.ClientIntegrationTestsApp.Topic';
+  String getFullName() => 'LeanCode.Pipe.ClientIntegrationTestsApp.Contracts.Topic';
 
   @override
   Map<String, dynamic> toJson() {

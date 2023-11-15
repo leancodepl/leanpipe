@@ -5,6 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="../LeanCode.Pipe.ClientIntegrationTestsApp.Contracts/LeanCode.Pipe.ClientIntegrationTestsApp.Contracts.csproj" />
+
     <ProjectReference Include="../../src/LeanCode.Pipe/LeanCode.Pipe.csproj" />
   </ItemGroup>
 

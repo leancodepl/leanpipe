@@ -1,7 +1,7 @@
 using LeanCode.Contracts;
 using LeanCode.Contracts.Security;
 
-namespace LeanCode.Pipe.ClientIntegrationTestsApp;
+namespace LeanCode.Pipe.ClientIntegrationTestsApp.Contracts;
 
 [AuthorizeWhenHasAnyOf(AuthConfig.Roles.User)]
 public class Topic : ITopic, IProduceNotification<NotificationDTO>
@@ -12,9 +12,4 @@ public class Topic : ITopic, IProduceNotification<NotificationDTO>
 public class NotificationDTO
 {
     public string Greeting { get; set; } = default!;
-}
-
-public class TopicKeys : BasicTopicKeys<Topic, NotificationDTO>
-{
-    public override IEnumerable<string> Get(Topic topic) => new[] { topic.TopicId };
 }
