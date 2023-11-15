@@ -4,3 +4,4 @@ analyzer:
   exclude:
     - "**/*.g.dart"
     - example/
+    - publisher_integration_tests/
