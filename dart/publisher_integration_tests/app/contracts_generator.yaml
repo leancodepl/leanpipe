@@ -1,0 +1,8 @@
+input:
+  project:
+    - ../../../publisher/test/LeanCode.Pipe.ClientIntegrationTestsApp.Contracts/LeanCode.Pipe.ClientIntegrationTestsApp.Contracts.csproj
+name: contracts
+include: .*
+output: lib/data
+directives: ""
+extra: ""

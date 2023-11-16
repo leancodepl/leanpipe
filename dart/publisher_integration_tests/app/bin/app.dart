@@ -1,15 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:leancode_pipe/leancode_pipe/pipe_client.dart';
-import 'package:publisher_client_integration_tests/topic.dart';
-import 'package:test/test.dart';
 import 'package:http/http.dart' as http;
+import 'package:leancode_pipe/leancode_pipe/pipe_client.dart';
+import 'package:publisher_client_integration_tests/data/contracts.dart';
+import 'package:test/test.dart';
 
 const publisherHostEnvVarName = 'PUBLISHER_HOST';
 const testAccessToken = '1234';
 
-Future<void> _triggerNotification(Topic topic, String endpoint) {
+Future<void> _triggerNotification(Topic_ topic, String endpoint) {
   final body = jsonEncode(topic.toJson());
 
   return http.post(
@@ -43,9 +43,9 @@ void main() {
       'Basic scenario: connect, subscribe, trigger notification, receive notification, unsubscribe, trigger notification, make sure nothing is received, cancel subscriptions, disconnect',
       () async {
     const waitTime = Duration(seconds: 1);
-    const topic = Topic(id: '1');
+    final topic = Topic_(topicId: '1');
 
-    bool received = false;
+    var received = false;
 
     await pipeClient.connect();
 
@@ -55,7 +55,7 @@ void main() {
 
     await _triggerNotification(topic, endpoint);
 
-    await Future.delayed(waitTime);
+    await Future<void>.delayed(waitTime);
 
     expect(received, true);
 
