@@ -335,7 +335,7 @@ packages:
       path: "packages/leancode_contracts_generator"
       ref: "5e00962971812531f97be08cf7294f5986b0587e"
       resolved-ref: "5e00962971812531f97be08cf7294f5986b0587e"
-      url: "git@github.com:leancodepl/contractsgenerator-dart.git"
+      url: "https://github.com/leancodepl/contractsgenerator-dart.git"
     source: git
     version: "0.12.0"
   leancode_lint:
