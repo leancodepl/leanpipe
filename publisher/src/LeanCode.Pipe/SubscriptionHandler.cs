@@ -39,9 +39,11 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
         CancellationToken ct
     )
     {
-        var keys = await subscribingKeys.GetForSubscribingAsync(topic, context);
+        var keys = await subscribingKeys
+            .GetForSubscribingAsync(topic, context)
+            .ConfigureAwait(false);
 
-        await subscribeContext.AddToGroupsAsync(keys, ct);
+        await subscribeContext.AddToGroupsAsync(keys, ct).ConfigureAwait(false);
 
         return keys.Any();
     }
@@ -56,9 +58,11 @@ public class KeyedSubscriptionHandler<TTopic> : ISubscriptionHandler<TTopic>
         // With this implementation there is a problem of "higher level" groups:
         // if we subscribe to topic.something and topic.something.specific,
         // then we do not know when to unsubscribe from topic.something
-        var keys = await subscribingKeys.GetForSubscribingAsync(topic, context);
+        var keys = await subscribingKeys
+            .GetForSubscribingAsync(topic, context)
+            .ConfigureAwait(false);
 
-        await subscribeContext.RemoveFromGroupsAsync(keys, ct);
+        await subscribeContext.RemoveFromGroupsAsync(keys, ct).ConfigureAwait(false);
 
         return keys.Any();
     }

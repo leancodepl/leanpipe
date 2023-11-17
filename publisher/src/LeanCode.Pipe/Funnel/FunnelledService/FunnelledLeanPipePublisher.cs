@@ -58,7 +58,7 @@ internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
                     )
             );
 
-        await Task.WhenAll(publishTasks);
+        await Task.WhenAll(publishTasks).ConfigureAwait(false);
 
         logger.Information(
             "Published notification {NotificationType} to {GroupCount} groups of topic {TopicType}",

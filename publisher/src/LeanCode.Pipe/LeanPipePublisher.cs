@@ -53,7 +53,10 @@ internal class LeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
         CancellationToken cancellationToken = default
     )
     {
-        await HubContext.Clients.Groups(keys).SendAsync("notify", payload, cancellationToken);
+        await HubContext.Clients
+            .Groups(keys)
+            .SendAsync("notify", payload, cancellationToken)
+            .ConfigureAwait(false);
 
         logger.Information(
             "Published notification {NotificationType} to {GroupCount} groups of topic {TopicType}",
@@ -83,7 +86,7 @@ public static class LeanPipePublisherExtensions
     {
         var payload = NotificationEnvelope.Create(topic, notification);
 
-        await publisher.PublishAsync(keys, payload, ct);
+        await publisher.PublishAsync(keys, payload, ct).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -102,9 +105,11 @@ public static class LeanPipePublisherExtensions
     {
         var publishingKeysProvider = publisher.GetPublishingKeysProvider<TTopic, TNotification>();
 
-        var keys = await publishingKeysProvider.GetForPublishingAsync(topic, notification, ct);
+        var keys = await publishingKeysProvider
+            .GetForPublishingAsync(topic, notification, ct)
+            .ConfigureAwait(false);
         var payload = NotificationEnvelope.Create(topic, notification);
 
-        await publisher.PublishAsync(keys, payload, ct);
+        await publisher.PublishAsync(keys, payload, ct).ConfigureAwait(false);
     }
 }

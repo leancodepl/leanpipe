@@ -58,7 +58,9 @@ public class LeanPipeSubscription
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         cts.CancelAfter(timeout ?? DefaultNotificationAwaitTimeout);
 
-        await foreach (var n in NotificationStreamAsync().WithCancellation(cts.Token))
+        await foreach (
+            var n in NotificationStreamAsync().WithCancellation(cts.Token).ConfigureAwait(false)
+        )
         {
             if (notificationPredicate(n))
             {
@@ -89,7 +91,9 @@ public class LeanPipeSubscription
             yield return n;
         }
 
-        await foreach (var n in futureNotificationsStream.WithCancellation(ct))
+        await foreach (
+            var n in futureNotificationsStream.WithCancellation(ct).ConfigureAwait(false)
+        )
         {
             yield return n;
         }

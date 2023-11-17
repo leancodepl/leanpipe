@@ -51,8 +51,8 @@ public class ScaledFunnelTests : IAsyncLifetime
             Topic1Id = nameof(Client_receives_notifications_while_connected_to_any_Funnel_instance),
         };
 
-        await leanPipeAClient.SubscribeSuccessAsync(topic);
-        await leanPipeBClient.SubscribeSuccessAsync(topic);
+        await leanPipeAClient.SubscribeSuccessAsync(topic).ConfigureAwait(false);
+        await leanPipeBClient.SubscribeSuccessAsync(topic).ConfigureAwait(false);
 
         var expectedNotification = new Notification1
         {
@@ -62,26 +62,26 @@ public class ScaledFunnelTests : IAsyncLifetime
         var funnelANotification = leanPipeAClient.WaitForNextNotificationOn(topic);
         var funnelBNotification = leanPipeBClient.WaitForNextNotificationOn(topic);
 
-        await testApp1Client.PostAsJsonAsync("/publish", topic);
+        await testApp1Client.PostAsJsonAsync("/publish", topic).ConfigureAwait(false);
 
-        (await funnelANotification)
+        (await funnelANotification.ConfigureAwait(false))
             .Should()
             .BeEquivalentTo(expectedNotification, opts => opts.RespectingRuntimeTypes());
 
-        (await funnelBNotification)
+        (await funnelBNotification.ConfigureAwait(false))
             .Should()
             .BeEquivalentTo(expectedNotification, opts => opts.RespectingRuntimeTypes());
 
-        await leanPipeAClient.UnsubscribeSuccessAsync(topic);
-        await leanPipeBClient.UnsubscribeSuccessAsync(topic);
+        await leanPipeAClient.UnsubscribeSuccessAsync(topic).ConfigureAwait(false);
+        await leanPipeBClient.UnsubscribeSuccessAsync(topic).ConfigureAwait(false);
     }
 
     public Task InitializeAsync() => Task.CompletedTask;
 
     public async Task DisposeAsync()
     {
-        await leanPipeAClient.DisposeAsync();
-        await leanPipeBClient.DisposeAsync();
+        await leanPipeAClient.DisposeAsync().ConfigureAwait(false);
+        await leanPipeBClient.DisposeAsync().ConfigureAwait(false);
         testApp1Client.Dispose();
     }
 }

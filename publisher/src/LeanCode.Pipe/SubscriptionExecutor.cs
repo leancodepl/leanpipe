@@ -50,14 +50,16 @@ public class SubscriptionExecutor : ISubscriptionExecutor
                 return SubscriptionStatus.Malformed;
             }
 
-            var authorized = await AuthorizeAsync(topic, envelope, type, context, ct);
+            var authorized = await AuthorizeAsync(topic, envelope, type, context, ct)
+                .ConfigureAwait(false);
 
             if (!authorized)
             {
                 return SubscriptionStatus.Unauthorized;
             }
 
-            var result = await HandleAsync(topic, envelope, type, context, subscribeContext, ct);
+            var result = await HandleAsync(topic, envelope, type, context, subscribeContext, ct)
+                .ConfigureAwait(false);
 
             return result ? SubscriptionStatus.Success : SubscriptionStatus.Invalid;
         }
@@ -106,7 +108,9 @@ public class SubscriptionExecutor : ISubscriptionExecutor
         CancellationToken ct
     )
     {
-        var authorized = await security.CheckIfAuthorizedAsync(topic, context.User, ct);
+        var authorized = await security
+            .CheckIfAuthorizedAsync(topic, context.User, ct)
+            .ConfigureAwait(false);
 
         if (!authorized)
         {
@@ -135,7 +139,7 @@ public class SubscriptionExecutor : ISubscriptionExecutor
                 $"The resolver for topic {envelope.TopicType} cannot be found."
             );
 
-        var result = await HandleSubscriptionOperationAsync();
+        var result = await HandleSubscriptionOperationAsync().ConfigureAwait(false);
 
         if (result)
         {

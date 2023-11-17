@@ -50,7 +50,8 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
         CancellationToken ct
     )
     {
-        var topicRecognized = await CheckTopicRecognizedAsync(envelope.TopicType, ct);
+        var topicRecognized = await CheckTopicRecognizedAsync(envelope.TopicType, ct)
+            .ConfigureAwait(false);
 
         if (!topicRecognized)
         {
@@ -62,10 +63,9 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
 
         try
         {
-            var response = await subscriberRequestClient.GetResponse<SubscriptionPipelineResult>(
-                new(envelope, type, context),
-                ct
-            );
+            var response = await subscriberRequestClient
+                .GetResponse<SubscriptionPipelineResult>(new(envelope, type, context), ct)
+                .ConfigureAwait(false);
 
             var msg = response.Message;
 
@@ -73,11 +73,15 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
             {
                 if (type == OperationType.Subscribe)
                 {
-                    await subscribeContext.AddToGroupsAsync(msg.GroupKeys, ct);
+                    await subscribeContext
+                        .AddToGroupsAsync(msg.GroupKeys, ct)
+                        .ConfigureAwait(false);
                 }
                 else
                 {
-                    await subscribeContext.RemoveFromGroupsAsync(msg.GroupKeys, ct);
+                    await subscribeContext
+                        .RemoveFromGroupsAsync(msg.GroupKeys, ct)
+                        .ConfigureAwait(false);
                 }
             }
 
@@ -119,10 +123,9 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
 
                 try
                 {
-                    await checkTopicRecognizedRequestClient.GetResponse<TopicRecognized>(
-                        new(topicType),
-                        ct
-                    );
+                    await checkTopicRecognizedRequestClient
+                        .GetResponse<TopicRecognized>(new(topicType), ct)
+                        .ConfigureAwait(false);
 
                     return true;
                 }

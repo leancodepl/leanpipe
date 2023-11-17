@@ -38,7 +38,7 @@ public class NoScalingTests : IAsyncLifetime
             Topic1Id = nameof(Subscribing_and_receiving_notifications_works),
         };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic);
+        await leanPipeClient.SubscribeSuccessAsync(topic).ConfigureAwait(false);
 
         var expectedNotification = new Notification1
         {
@@ -47,22 +47,22 @@ public class NoScalingTests : IAsyncLifetime
 
         var notification = leanPipeClient.WaitForNextNotificationOn(topic);
 
-        await testApp1Client.PostAsJsonAsync("/publish", topic);
+        await testApp1Client.PostAsJsonAsync("/publish", topic).ConfigureAwait(false);
 
-        (await notification)
+        (await notification.ConfigureAwait(false))
             .Should()
             .BeEquivalentTo(expectedNotification, opts => opts.RespectingRuntimeTypes());
 
         var instanceBNotification = leanPipeClient.WaitForNextNotificationOn(topic);
 
-        await leanPipeClient.UnsubscribeSuccessAsync(topic);
+        await leanPipeClient.UnsubscribeSuccessAsync(topic).ConfigureAwait(false);
     }
 
     public Task InitializeAsync() => Task.CompletedTask;
 
     public async Task DisposeAsync()
     {
-        await leanPipeClient.DisposeAsync();
+        await leanPipeClient.DisposeAsync().ConfigureAwait(false);
         testApp1Client.Dispose();
     }
 }

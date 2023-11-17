@@ -60,12 +60,9 @@ app.MapPost(
     {
         var topic = new SimpleTopic { TopicId = notificationData.TopicId };
 
-        await ApiHandlers.PublishGreetingOrFarewellAsync(
-            publisher,
-            topic,
-            notificationData,
-            ctx.RequestAborted
-        );
+        await ApiHandlers
+            .PublishGreetingOrFarewellAsync(publisher, topic, notificationData, ctx.RequestAborted)
+            .ConfigureAwait(false);
     }
 );
 
@@ -79,12 +76,14 @@ app.MapPost(
     {
         var topic = new MyFavouriteProjectsTopic();
 
-        await ApiHandlers.PublishProjectUpdatedOrDeletedAsync(
-            publisher,
-            topic,
-            notificationData,
-            ctx.RequestAborted
-        );
+        await ApiHandlers
+            .PublishProjectUpdatedOrDeletedAsync(
+                publisher,
+                topic,
+                notificationData,
+                ctx.RequestAborted
+            )
+            .ConfigureAwait(false);
     }
 );
 
@@ -98,12 +97,9 @@ app.MapPost(
     {
         var topic = new AuthorizedTopic { TopicId = notificationData.TopicId };
 
-        await ApiHandlers.PublishGreetingOrFarewellAsync(
-            publisher,
-            topic,
-            notificationData,
-            ctx.RequestAborted
-        );
+        await ApiHandlers
+            .PublishGreetingOrFarewellAsync(publisher, topic, notificationData, ctx.RequestAborted)
+            .ConfigureAwait(false);
     }
 );
 

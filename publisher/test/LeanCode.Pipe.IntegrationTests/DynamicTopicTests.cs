@@ -21,50 +21,58 @@ public class DynamicTopicTests : TestApplicationFactory
     {
         var topic = new MyFavouriteProjectsTopic();
 
-        await leanPipeClient.SubscribeSuccessAsync(topic);
+        await leanPipeClient.SubscribeSuccessAsync(topic).ConfigureAwait(false);
         leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
 
-        await httpClient.PublishToDynamicTopicAndAwaitNotificationAsync(
-            new()
-            {
-                ProjectId = FavouriteProjectsProvider.FavouriteProjectId1,
-                Kind = ProjectNotificationKindDTO.Updated,
-            },
-            leanPipeClient,
-            topic,
-            new ProjectUpdatedNotificationDTO
-            {
-                ProjectId = FavouriteProjectsProvider.FavouriteProjectId1,
-            }
-        );
+        await httpClient
+            .PublishToDynamicTopicAndAwaitNotificationAsync(
+                new()
+                {
+                    ProjectId = FavouriteProjectsProvider.FavouriteProjectId1,
+                    Kind = ProjectNotificationKindDTO.Updated,
+                },
+                leanPipeClient,
+                topic,
+                new ProjectUpdatedNotificationDTO
+                {
+                    ProjectId = FavouriteProjectsProvider.FavouriteProjectId1,
+                }
+            )
+            .ConfigureAwait(false);
 
-        await httpClient.PublishToDynamicTopicAndAwaitNotificationAsync(
-            new()
-            {
-                ProjectId = FavouriteProjectsProvider.FavouriteProjectId2,
-                Kind = ProjectNotificationKindDTO.Deleted,
-            },
-            leanPipeClient,
-            topic,
-            new ProjectDeletedNotificationDTO
-            {
-                ProjectId = FavouriteProjectsProvider.FavouriteProjectId2,
-            }
-        );
+        await httpClient
+            .PublishToDynamicTopicAndAwaitNotificationAsync(
+                new()
+                {
+                    ProjectId = FavouriteProjectsProvider.FavouriteProjectId2,
+                    Kind = ProjectNotificationKindDTO.Deleted,
+                },
+                leanPipeClient,
+                topic,
+                new ProjectDeletedNotificationDTO
+                {
+                    ProjectId = FavouriteProjectsProvider.FavouriteProjectId2,
+                }
+            )
+            .ConfigureAwait(false);
 
-        await httpClient.PublishToDynamicTopicAndAwaitNoNotificationsAsync(
-            new() { ProjectId = Guid.NewGuid(), Kind = ProjectNotificationKindDTO.Updated, }
-        );
+        await httpClient
+            .PublishToDynamicTopicAndAwaitNoNotificationsAsync(
+                new() { ProjectId = Guid.NewGuid(), Kind = ProjectNotificationKindDTO.Updated, }
+            )
+            .ConfigureAwait(false);
 
-        await leanPipeClient.UnsubscribeSuccessAsync(topic);
+        await leanPipeClient.UnsubscribeSuccessAsync(topic).ConfigureAwait(false);
 
-        await httpClient.PublishToDynamicTopicAndAwaitNoNotificationsAsync(
-            new()
-            {
-                ProjectId = FavouriteProjectsProvider.FavouriteProjectId1,
-                Kind = ProjectNotificationKindDTO.Deleted,
-            }
-        );
+        await httpClient
+            .PublishToDynamicTopicAndAwaitNoNotificationsAsync(
+                new()
+                {
+                    ProjectId = FavouriteProjectsProvider.FavouriteProjectId1,
+                    Kind = ProjectNotificationKindDTO.Deleted,
+                }
+            )
+            .ConfigureAwait(false);
 
         leanPipeClient.NotificationsOn(topic).Should().HaveCount(2);
     }
