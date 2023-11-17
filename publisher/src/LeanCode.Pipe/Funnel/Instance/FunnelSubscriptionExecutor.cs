@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using LeanCode.Contracts;
 using MassTransit;
 using Microsoft.Extensions.Caching.Memory;
@@ -42,6 +43,7 @@ public class FunnelSubscriptionExecutor : ISubscriptionExecutor
         this.endpointNameFormatter = endpointNameFormatter;
     }
 
+    [SuppressMessage("Design", "CA1031:Do not catch general exception types")]
     public async Task<SubscriptionStatus> ExecuteAsync(
         SubscriptionEnvelope envelope,
         OperationType type,

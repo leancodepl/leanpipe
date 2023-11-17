@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using LeanCode.Contracts;
 
@@ -33,6 +34,7 @@ public class SubscriptionExecutor : ISubscriptionExecutor
         this.security = security;
     }
 
+    [SuppressMessage("Design", "CA1031:Do not catch general exception types")]
     public async Task<SubscriptionStatus> ExecuteAsync(
         SubscriptionEnvelope envelope,
         OperationType type,
