@@ -70,16 +70,14 @@ public class SimpleTopicTests : TestApplicationFactory
 
         await leanPipeClient.SubscribeSuccessAsync(topic);
 
-        await httpClient
-            .PublishToSimpleTopicAndAwaitNoNotificationsAsync(
-                new()
-                {
-                    TopicId = otherTopic.TopicId,
-                    Kind = NotificationKindDTO.Greeting,
-                    Name = "Tester",
-                }
-            )
-            ;
+        await httpClient.PublishToSimpleTopicAndAwaitNoNotificationsAsync(
+            new()
+            {
+                TopicId = otherTopic.TopicId,
+                Kind = NotificationKindDTO.Greeting,
+                Name = "Tester",
+            }
+        );
 
         leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
         leanPipeClient.NotificationsOn(otherTopic).Should().BeEmpty();
@@ -95,36 +93,32 @@ public class SimpleTopicTests : TestApplicationFactory
         await leanPipeClient.SubscribeSuccessAsync(topic);
         leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
 
-        await httpClient
-            .PublishToSimpleTopicAndAwaitNotificationAsync(
-                new()
-                {
-                    TopicId = topic.TopicId,
-                    Kind = NotificationKindDTO.Greeting,
-                    Name = "Tester",
-                },
-                leanPipeClient,
-                topic,
-                new GreetingNotificationDTO { Greeting = "Hello Tester" }
-            )
-            ;
+        await httpClient.PublishToSimpleTopicAndAwaitNotificationAsync(
+            new()
+            {
+                TopicId = topic.TopicId,
+                Kind = NotificationKindDTO.Greeting,
+                Name = "Tester",
+            },
+            leanPipeClient,
+            topic,
+            new GreetingNotificationDTO { Greeting = "Hello Tester" }
+        );
 
         await leanPipeClient.DisconnectAsync();
         await leanPipeClient.SubscribeSuccessAsync(topic);
 
-        await httpClient
-            .PublishToSimpleTopicAndAwaitNotificationAsync(
-                new()
-                {
-                    TopicId = topic.TopicId,
-                    Kind = NotificationKindDTO.Farewell,
-                    Name = "Tester",
-                },
-                leanPipeClient,
-                topic,
-                new FarewellNotificationDTO { Farewell = "Goodbye Tester" }
-            )
-            ;
+        await httpClient.PublishToSimpleTopicAndAwaitNotificationAsync(
+            new()
+            {
+                TopicId = topic.TopicId,
+                Kind = NotificationKindDTO.Farewell,
+                Name = "Tester",
+            },
+            leanPipeClient,
+            topic,
+            new FarewellNotificationDTO { Farewell = "Goodbye Tester" }
+        );
 
         await leanPipeClient.UnsubscribeSuccessAsync(topic);
     }

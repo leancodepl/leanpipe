@@ -82,13 +82,11 @@ app.MapLeanPipe(
 app.MapPost(
     "/publish",
     async (HttpContext ctx, Topic topic, ILeanPipePublisher<Topic> publisher) =>
-        await publisher
-            .PublishAsync(
-                topic,
-                new NotificationDTO { Greeting = $"Hello from topic {topic.TopicId}" },
-                ctx.RequestAborted
-            )
-
+        await publisher.PublishAsync(
+            topic,
+            new NotificationDTO { Greeting = $"Hello from topic {topic.TopicId}" },
+            ctx.RequestAborted
+        )
 );
 
 app.Run();

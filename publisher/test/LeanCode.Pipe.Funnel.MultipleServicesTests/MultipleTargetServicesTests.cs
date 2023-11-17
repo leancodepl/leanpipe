@@ -95,8 +95,7 @@ public class MultipleTargetServicesTests : IAsyncLifetime
             await service2Notification
                 .Awaiting(x => x)
                 .Should()
-                .ThrowAsync<OperationCanceledException>()
-                ;
+                .ThrowAsync<OperationCanceledException>();
 
             service2Notification = leanPipeClient.WaitForNextNotificationOn(topic2);
             service1Notification = leanPipeClient.WaitForNextNotificationOn(
@@ -113,8 +112,7 @@ public class MultipleTargetServicesTests : IAsyncLifetime
             await service1Notification
                 .Awaiting(x => x)
                 .Should()
-                .ThrowAsync<OperationCanceledException>()
-                ;
+                .ThrowAsync<OperationCanceledException>();
         }
 
         async Task NotificationsAreNotReceivedOnTheUnsubscribedTopic()
@@ -129,8 +127,7 @@ public class MultipleTargetServicesTests : IAsyncLifetime
             await service1Notification
                 .Awaiting(x => x)
                 .Should()
-                .ThrowAsync<OperationCanceledException>()
-                ;
+                .ThrowAsync<OperationCanceledException>();
         }
 
         async Task NotificationsAreStillReceivedOnTheOtherSubscribedTopic()

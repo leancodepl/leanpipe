@@ -45,16 +45,14 @@ public class AuthorizedTopicTests : TestApplicationFactory
         var result = await leanPipeClient.SubscribeAsync(topic);
         result.Should().BeEquivalentTo(new { Status = SubscriptionStatus.Unauthorized });
 
-        await httpClient
-            .PublishToAuthorizedTopicAndAwaitNoNotificationsAsync(
-                new()
-                {
-                    TopicId = topic.TopicId,
-                    Kind = NotificationKindDTO.Greeting,
-                    Name = "Tester",
-                }
-            )
-            ;
+        await httpClient.PublishToAuthorizedTopicAndAwaitNoNotificationsAsync(
+            new()
+            {
+                TopicId = topic.TopicId,
+                Kind = NotificationKindDTO.Greeting,
+                Name = "Tester",
+            }
+        );
 
         leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
     }
@@ -67,18 +65,16 @@ public class AuthorizedTopicTests : TestApplicationFactory
 
         await leanPipeClient.SubscribeSuccessAsync(topic);
 
-        await httpClient
-            .PublishToAuthorizedTopicAndAwaitNotificationAsync(
-                new()
-                {
-                    TopicId = topic.TopicId,
-                    Kind = NotificationKindDTO.Greeting,
-                    Name = "Tester",
-                },
-                leanPipeClient,
-                topic,
-                new GreetingNotificationDTO { Greeting = "Hello Tester" }
-            )
-            ;
+        await httpClient.PublishToAuthorizedTopicAndAwaitNotificationAsync(
+            new()
+            {
+                TopicId = topic.TopicId,
+                Kind = NotificationKindDTO.Greeting,
+                Name = "Tester",
+            },
+            leanPipeClient,
+            topic,
+            new GreetingNotificationDTO { Greeting = "Hello Tester" }
+        );
     }
 }

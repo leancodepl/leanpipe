@@ -88,29 +88,25 @@ public class TestClientTests : TestApplicationFactory
             FarewellNotificationDTO
         >(topic);
 
-        await httpClient
-            .PostAndEnsureSuccessAsync(
-                PublishingExtensions.SimpleTopicPublishEndpoint,
-                new NotificationDataDTO
-                {
-                    TopicId = topic.TopicId,
-                    Kind = NotificationKindDTO.Farewell,
-                    Name = "Tester",
-                }
-            )
-            ;
+        await httpClient.PostAndEnsureSuccessAsync(
+            PublishingExtensions.SimpleTopicPublishEndpoint,
+            new NotificationDataDTO
+            {
+                TopicId = topic.TopicId,
+                Kind = NotificationKindDTO.Farewell,
+                Name = "Tester",
+            }
+        );
 
-        await httpClient
-            .PostAndEnsureSuccessAsync(
-                PublishingExtensions.SimpleTopicPublishEndpoint,
-                new NotificationDataDTO
-                {
-                    TopicId = topic.TopicId,
-                    Kind = NotificationKindDTO.Greeting,
-                    Name = "Tester",
-                }
-            )
-            ;
+        await httpClient.PostAndEnsureSuccessAsync(
+            PublishingExtensions.SimpleTopicPublishEndpoint,
+            new NotificationDataDTO
+            {
+                TopicId = topic.TopicId,
+                Kind = NotificationKindDTO.Greeting,
+                Name = "Tester",
+            }
+        );
 
         await Task.WhenAll(greetingTask, farewellTask);
         var greeting = await greetingTask;
@@ -137,17 +133,15 @@ public class TestClientTests : TestApplicationFactory
 
         var futureNotifications = leanPipeClient.FutureNotificationsOnAsync(topic);
 
-        await httpClient
-            .PostAndEnsureSuccessAsync(
-                PublishingExtensions.SimpleTopicPublishEndpoint,
-                new NotificationDataDTO
-                {
-                    TopicId = topic.TopicId,
-                    Kind = NotificationKindDTO.Greeting,
-                    Name = "Tester",
-                }
-            )
-            ;
+        await httpClient.PostAndEnsureSuccessAsync(
+            PublishingExtensions.SimpleTopicPublishEndpoint,
+            new NotificationDataDTO
+            {
+                TopicId = topic.TopicId,
+                Kind = NotificationKindDTO.Greeting,
+                Name = "Tester",
+            }
+        );
 
         var expectedGreeting = new GreetingNotificationDTO { Greeting = "Hello Tester" };
 
@@ -156,7 +150,6 @@ public class TestClientTests : TestApplicationFactory
                 .Awaiting(n => n.FirstAsync())
                 .Should()
                 .CompleteWithinAsync(LeanPipeSubscription.DefaultNotificationAwaitTimeout)
-
         ).Which
             .Should()
             .BeEquivalentTo(expectedGreeting);
@@ -172,23 +165,20 @@ public class TestClientTests : TestApplicationFactory
         var timeout = TimeSpan.FromMilliseconds(100);
         var futureNotifications = leanPipeClient.FutureNotificationsOnAsync(topic);
 
-        await httpClient
-            .PostAndEnsureSuccessAsync(
-                PublishingExtensions.SimpleTopicPublishEndpoint,
-                new NotificationDataDTO
-                {
-                    TopicId = topic.TopicId,
-                    Kind = NotificationKindDTO.Greeting,
-                    Name = "Tester",
-                }
-            )
-            ;
+        await httpClient.PostAndEnsureSuccessAsync(
+            PublishingExtensions.SimpleTopicPublishEndpoint,
+            new NotificationDataDTO
+            {
+                TopicId = topic.TopicId,
+                Kind = NotificationKindDTO.Greeting,
+                Name = "Tester",
+            }
+        );
 
         await futureNotifications
             .Awaiting(n => n.Take(2).ToListAsync(new CancellationTokenSource(timeout).Token))
             .Should()
-            .ThrowAsync<OperationCanceledException>()
-            ;
+            .ThrowAsync<OperationCanceledException>();
     }
 
     [Fact]
@@ -203,33 +193,29 @@ public class TestClientTests : TestApplicationFactory
             GreetingNotificationDTO
         >(topic);
 
-        await httpClient
-            .PostAndEnsureSuccessAsync(
-                PublishingExtensions.SimpleTopicPublishEndpoint,
-                new NotificationDataDTO
-                {
-                    TopicId = topic.TopicId,
-                    Kind = NotificationKindDTO.Greeting,
-                    Name = "Tester",
-                }
-            )
-            ;
+        await httpClient.PostAndEnsureSuccessAsync(
+            PublishingExtensions.SimpleTopicPublishEndpoint,
+            new NotificationDataDTO
+            {
+                TopicId = topic.TopicId,
+                Kind = NotificationKindDTO.Greeting,
+                Name = "Tester",
+            }
+        );
 
         await greetingTask;
 
         var allNotifications = leanPipeClient.AllNotificationsOnAsync(topic);
 
-        await httpClient
-            .PostAndEnsureSuccessAsync(
-                PublishingExtensions.SimpleTopicPublishEndpoint,
-                new NotificationDataDTO
-                {
-                    TopicId = topic.TopicId,
-                    Kind = NotificationKindDTO.Farewell,
-                    Name = "Tester",
-                }
-            )
-            ;
+        await httpClient.PostAndEnsureSuccessAsync(
+            PublishingExtensions.SimpleTopicPublishEndpoint,
+            new NotificationDataDTO
+            {
+                TopicId = topic.TopicId,
+                Kind = NotificationKindDTO.Farewell,
+                Name = "Tester",
+            }
+        );
 
         var expectedGreeting = new GreetingNotificationDTO { Greeting = "Hello Tester" };
         var expectedFarewell = new FarewellNotificationDTO { Farewell = "Goodbye Tester" };
@@ -240,7 +226,6 @@ public class TestClientTests : TestApplicationFactory
                 .Awaiting(n => n.Take(2).ToListAsync())
                 .Should()
                 .CompleteWithinAsync(LeanPipeSubscription.DefaultNotificationAwaitTimeout)
-
         ).Which
             .Should()
             .BeEquivalentTo(expectedNotifications);
@@ -256,22 +241,19 @@ public class TestClientTests : TestApplicationFactory
         var timeout = TimeSpan.FromMilliseconds(100);
         var allNotifications = leanPipeClient.AllNotificationsOnAsync(topic);
 
-        await httpClient
-            .PostAndEnsureSuccessAsync(
-                PublishingExtensions.SimpleTopicPublishEndpoint,
-                new NotificationDataDTO
-                {
-                    TopicId = topic.TopicId,
-                    Kind = NotificationKindDTO.Greeting,
-                    Name = "Tester",
-                }
-            )
-            ;
+        await httpClient.PostAndEnsureSuccessAsync(
+            PublishingExtensions.SimpleTopicPublishEndpoint,
+            new NotificationDataDTO
+            {
+                TopicId = topic.TopicId,
+                Kind = NotificationKindDTO.Greeting,
+                Name = "Tester",
+            }
+        );
 
         await allNotifications
             .Awaiting(n => n.Take(2).ToListAsync(new CancellationTokenSource(timeout).Token))
             .Should()
-            .ThrowAsync<OperationCanceledException>()
-            ;
+            .ThrowAsync<OperationCanceledException>();
     }
 }

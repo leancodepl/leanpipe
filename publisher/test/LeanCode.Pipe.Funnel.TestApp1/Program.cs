@@ -39,13 +39,11 @@ app.MapHealthChecks("/health/ready", new() { Predicate = check => check.Tags.Con
 app.MapPost(
     "/publish",
     async (HttpContext ctx, Topic1 topic, ILeanPipePublisher<Topic1> publisher) =>
-        await publisher
-            .PublishAsync(
-                topic,
-                new Notification1 { Greeting = $"Hello from topic1 {topic.Topic1Id}" },
-                ctx.RequestAborted
-            )
-
+        await publisher.PublishAsync(
+            topic,
+            new Notification1 { Greeting = $"Hello from topic1 {topic.Topic1Id}" },
+            ctx.RequestAborted
+        )
 );
 
 app.Run();
