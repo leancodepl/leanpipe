@@ -29,7 +29,7 @@ services.AddMassTransit(cfg =>
 
 services.AddHealthChecks();
 
-var app = appBuilder.Build();
+using var app = appBuilder.Build();
 
 app.UseRouting();
 

@@ -1,0 +1,23 @@
+allow_k8s_contexts('k3d-clientintegrationtests')
+default_registry('k3d-clientintegrationtests-registry.local.lncd.pl:21345')
+
+# All services needed for tests
+
+local_resource(
+  'build-testapp',
+  'dotnet publish -o out/testapp ../test/LeanCode.Pipe.ClientIntegrationTestsApp',
+  labels=['test-services'],
+)
+
+docker_build(
+  'testapp',
+  '.',
+  dockerfile='testapp.dockerfile',
+  only = ['out/testapp'],
+)
+
+k8s_yaml('testapp_disabledfunnel.yaml')
+k8s_resource('testapp-disabledfunnel', labels=['test-services'], port_forwards="5151:8080")
+
+k8s_yaml('testapp_enabledfunnel.yaml')
+k8s_resource('testapp-enabledfunnel', labels=['test-services'])

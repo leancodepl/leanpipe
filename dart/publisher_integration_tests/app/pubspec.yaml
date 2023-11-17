@@ -1,0 +1,22 @@
+name: publisher_client_integration_tests
+description: Leanpipe publisher and dart client integration test
+version: 1.0.0
+publish_to: "none"
+
+environment:
+  sdk: ">=3.1.0 <4.0.0"
+
+dependencies:
+  http: ^1.1.0
+  leancode_contracts: ^0.8.0
+  leancode_pipe:
+    path: ../../
+  test: ^1.21.0
+
+dev_dependencies:
+  leancode_contracts_generator:
+    git:
+      url: https://github.com/leancodepl/contractsgenerator-dart.git
+      ref: 5e00962971812531f97be08cf7294f5986b0587e
+      path: packages/leancode_contracts_generator
+  leancode_lint: ^7.0.0+1
