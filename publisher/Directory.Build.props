@@ -9,6 +9,7 @@
     <EmbedAllSources>true</EmbedAllSources>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>preview-All</AnalysisLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
     <Authors>LeanCode</Authors>
     <Company>LeanCode</Company>
