@@ -88,7 +88,7 @@ app.MapPost(
                 new NotificationDTO { Greeting = $"Hello from topic {topic.TopicId}" },
                 ctx.RequestAborted
             )
-            .ConfigureAwait(false)
+
 );
 
 app.Run();

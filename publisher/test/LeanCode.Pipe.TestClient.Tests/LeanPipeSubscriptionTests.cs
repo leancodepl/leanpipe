@@ -17,9 +17,7 @@ public class LeanPipeSubscriptionTests
 
         subscription.AddNotification(notification);
 
-        (
-            await notificationTask.Awaiting(t => t).Should().NotThrowAsync().ConfigureAwait(false)
-        ).Which
+        (await notificationTask.Awaiting(t => t).Should().NotThrowAsync()).Which
             .Should()
             .Be(notification);
     }
@@ -34,11 +32,7 @@ public class LeanPipeSubscriptionTests
         var notificationTask = subscription.WaitForNextNotification(timeout: timeout);
 
         // `ThrowWithinAsync<OperationCanceledException>(timeout.Add(timeout))` seems to fail though 🤨
-        await notificationTask
-            .Awaiting(t => t)
-            .Should()
-            .ThrowAsync<OperationCanceledException>()
-            .ConfigureAwait(false);
+        await notificationTask.Awaiting(t => t).Should().ThrowAsync<OperationCanceledException>();
     }
 
     private class Topic : ITopic, IProduceNotification<Notification> { }

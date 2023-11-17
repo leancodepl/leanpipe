@@ -21,7 +21,7 @@ public class DynamicTopicTests : TestApplicationFactory
     {
         var topic = new MyFavouriteProjectsTopic();
 
-        await leanPipeClient.SubscribeSuccessAsync(topic).ConfigureAwait(false);
+        await leanPipeClient.SubscribeSuccessAsync(topic);
         leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
 
         await httpClient
@@ -38,7 +38,7 @@ public class DynamicTopicTests : TestApplicationFactory
                     ProjectId = FavouriteProjectsProvider.FavouriteProjectId1,
                 }
             )
-            .ConfigureAwait(false);
+            ;
 
         await httpClient
             .PublishToDynamicTopicAndAwaitNotificationAsync(
@@ -54,15 +54,15 @@ public class DynamicTopicTests : TestApplicationFactory
                     ProjectId = FavouriteProjectsProvider.FavouriteProjectId2,
                 }
             )
-            .ConfigureAwait(false);
+            ;
 
         await httpClient
             .PublishToDynamicTopicAndAwaitNoNotificationsAsync(
                 new() { ProjectId = Guid.NewGuid(), Kind = ProjectNotificationKindDTO.Updated, }
             )
-            .ConfigureAwait(false);
+            ;
 
-        await leanPipeClient.UnsubscribeSuccessAsync(topic).ConfigureAwait(false);
+        await leanPipeClient.UnsubscribeSuccessAsync(topic);
 
         await httpClient
             .PublishToDynamicTopicAndAwaitNoNotificationsAsync(
@@ -72,7 +72,7 @@ public class DynamicTopicTests : TestApplicationFactory
                     Kind = ProjectNotificationKindDTO.Deleted,
                 }
             )
-            .ConfigureAwait(false);
+            ;
 
         leanPipeClient.NotificationsOn(topic).Should().HaveCount(2);
     }

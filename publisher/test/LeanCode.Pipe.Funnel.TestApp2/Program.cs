@@ -45,7 +45,7 @@ app.MapPost(
                 new Notification2 { Farewell = $"Goodbye from topic2 {topic.Topic2Id}" },
                 ctx.RequestAborted
             )
-            .ConfigureAwait(false)
+
 );
 
 app.Run();

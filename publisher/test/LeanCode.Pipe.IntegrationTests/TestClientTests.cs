@@ -21,7 +21,7 @@ public class TestClientTests : TestApplicationFactory
     {
         var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic).ConfigureAwait(false);
+        await leanPipeClient.SubscribeSuccessAsync(topic);
         leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
 
         var greetingTask = leanPipeClient.WaitForNextNotificationOn<
@@ -34,33 +34,29 @@ public class TestClientTests : TestApplicationFactory
             FarewellNotificationDTO
         >(topic);
 
-        await httpClient
-            .PostAndEnsureSuccessAsync(
-                PublishingExtensions.SimpleTopicPublishEndpoint,
-                new NotificationDataDTO
-                {
-                    TopicId = topic.TopicId,
-                    Kind = NotificationKindDTO.Greeting,
-                    Name = "Tester",
-                }
-            )
-            .ConfigureAwait(false);
+        await httpClient.PostAndEnsureSuccessAsync(
+            PublishingExtensions.SimpleTopicPublishEndpoint,
+            new NotificationDataDTO
+            {
+                TopicId = topic.TopicId,
+                Kind = NotificationKindDTO.Greeting,
+                Name = "Tester",
+            }
+        );
 
-        await httpClient
-            .PostAndEnsureSuccessAsync(
-                PublishingExtensions.SimpleTopicPublishEndpoint,
-                new NotificationDataDTO
-                {
-                    TopicId = topic.TopicId,
-                    Kind = NotificationKindDTO.Farewell,
-                    Name = "Tester",
-                }
-            )
-            .ConfigureAwait(false);
+        await httpClient.PostAndEnsureSuccessAsync(
+            PublishingExtensions.SimpleTopicPublishEndpoint,
+            new NotificationDataDTO
+            {
+                TopicId = topic.TopicId,
+                Kind = NotificationKindDTO.Farewell,
+                Name = "Tester",
+            }
+        );
 
-        await Task.WhenAll(greetingTask, farewellTask).ConfigureAwait(false);
-        var greeting = await greetingTask.ConfigureAwait(false);
-        var farewell = await farewellTask.ConfigureAwait(false);
+        await Task.WhenAll(greetingTask, farewellTask);
+        var greeting = await greetingTask;
+        var farewell = await farewellTask;
 
         var expectedGreeting = new GreetingNotificationDTO { Greeting = "Hello Tester" };
         var expectedFarewell = new FarewellNotificationDTO { Farewell = "Goodbye Tester" };
@@ -79,7 +75,7 @@ public class TestClientTests : TestApplicationFactory
     {
         var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic).ConfigureAwait(false);
+        await leanPipeClient.SubscribeSuccessAsync(topic);
         leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
 
         var greetingTask = leanPipeClient.WaitForNextNotificationOn<
@@ -102,7 +98,7 @@ public class TestClientTests : TestApplicationFactory
                     Name = "Tester",
                 }
             )
-            .ConfigureAwait(false);
+            ;
 
         await httpClient
             .PostAndEnsureSuccessAsync(
@@ -114,11 +110,11 @@ public class TestClientTests : TestApplicationFactory
                     Name = "Tester",
                 }
             )
-            .ConfigureAwait(false);
+            ;
 
-        await Task.WhenAll(greetingTask, farewellTask).ConfigureAwait(false);
-        var greeting = await greetingTask.ConfigureAwait(false);
-        var farewell = await farewellTask.ConfigureAwait(false);
+        await Task.WhenAll(greetingTask, farewellTask);
+        var greeting = await greetingTask;
+        var farewell = await farewellTask;
 
         var expectedGreeting = new GreetingNotificationDTO { Greeting = "Hello Tester" };
         var expectedFarewell = new FarewellNotificationDTO { Farewell = "Goodbye Tester" };
@@ -137,7 +133,7 @@ public class TestClientTests : TestApplicationFactory
     {
         var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic).ConfigureAwait(false);
+        await leanPipeClient.SubscribeSuccessAsync(topic);
 
         var futureNotifications = leanPipeClient.FutureNotificationsOnAsync(topic);
 
@@ -151,7 +147,7 @@ public class TestClientTests : TestApplicationFactory
                     Name = "Tester",
                 }
             )
-            .ConfigureAwait(false);
+            ;
 
         var expectedGreeting = new GreetingNotificationDTO { Greeting = "Hello Tester" };
 
@@ -160,7 +156,7 @@ public class TestClientTests : TestApplicationFactory
                 .Awaiting(n => n.FirstAsync())
                 .Should()
                 .CompleteWithinAsync(LeanPipeSubscription.DefaultNotificationAwaitTimeout)
-                .ConfigureAwait(false)
+
         ).Which
             .Should()
             .BeEquivalentTo(expectedGreeting);
@@ -171,7 +167,7 @@ public class TestClientTests : TestApplicationFactory
     {
         var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic).ConfigureAwait(false);
+        await leanPipeClient.SubscribeSuccessAsync(topic);
 
         var timeout = TimeSpan.FromMilliseconds(100);
         var futureNotifications = leanPipeClient.FutureNotificationsOnAsync(topic);
@@ -186,13 +182,13 @@ public class TestClientTests : TestApplicationFactory
                     Name = "Tester",
                 }
             )
-            .ConfigureAwait(false);
+            ;
 
         await futureNotifications
             .Awaiting(n => n.Take(2).ToListAsync(new CancellationTokenSource(timeout).Token))
             .Should()
             .ThrowAsync<OperationCanceledException>()
-            .ConfigureAwait(false);
+            ;
     }
 
     [Fact]
@@ -200,7 +196,7 @@ public class TestClientTests : TestApplicationFactory
     {
         var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic).ConfigureAwait(false);
+        await leanPipeClient.SubscribeSuccessAsync(topic);
 
         var greetingTask = leanPipeClient.WaitForNextNotificationOn<
             SimpleTopic,
@@ -217,9 +213,9 @@ public class TestClientTests : TestApplicationFactory
                     Name = "Tester",
                 }
             )
-            .ConfigureAwait(false);
+            ;
 
-        await greetingTask.ConfigureAwait(false);
+        await greetingTask;
 
         var allNotifications = leanPipeClient.AllNotificationsOnAsync(topic);
 
@@ -233,7 +229,7 @@ public class TestClientTests : TestApplicationFactory
                     Name = "Tester",
                 }
             )
-            .ConfigureAwait(false);
+            ;
 
         var expectedGreeting = new GreetingNotificationDTO { Greeting = "Hello Tester" };
         var expectedFarewell = new FarewellNotificationDTO { Farewell = "Goodbye Tester" };
@@ -244,7 +240,7 @@ public class TestClientTests : TestApplicationFactory
                 .Awaiting(n => n.Take(2).ToListAsync())
                 .Should()
                 .CompleteWithinAsync(LeanPipeSubscription.DefaultNotificationAwaitTimeout)
-                .ConfigureAwait(false)
+
         ).Which
             .Should()
             .BeEquivalentTo(expectedNotifications);
@@ -255,7 +251,7 @@ public class TestClientTests : TestApplicationFactory
     {
         var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic).ConfigureAwait(false);
+        await leanPipeClient.SubscribeSuccessAsync(topic);
 
         var timeout = TimeSpan.FromMilliseconds(100);
         var allNotifications = leanPipeClient.AllNotificationsOnAsync(topic);
@@ -270,12 +266,12 @@ public class TestClientTests : TestApplicationFactory
                     Name = "Tester",
                 }
             )
-            .ConfigureAwait(false);
+            ;
 
         await allNotifications
             .Awaiting(n => n.Take(2).ToListAsync(new CancellationTokenSource(timeout).Token))
             .Should()
             .ThrowAsync<OperationCanceledException>()
-            .ConfigureAwait(false);
+            ;
     }
 }

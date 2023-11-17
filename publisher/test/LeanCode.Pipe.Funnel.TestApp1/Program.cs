@@ -45,7 +45,7 @@ app.MapPost(
                 new Notification1 { Greeting = $"Hello from topic1 {topic.Topic1Id}" },
                 ctx.RequestAborted
             )
-            .ConfigureAwait(false)
+
 );
 
 app.Run();

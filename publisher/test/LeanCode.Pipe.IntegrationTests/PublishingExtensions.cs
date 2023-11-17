@@ -124,9 +124,9 @@ public static class PublishingExtensions
             topic
         );
 
-        await PostAndEnsureSuccessAsync(client, uri, payload).ConfigureAwait(false);
+        await PostAndEnsureSuccessAsync(client, uri, payload);
 
-        (await notificationTask.ConfigureAwait(false))
+        (await notificationTask)
             .Should()
             .BeEquivalentTo(expectedNotification);
     }
@@ -138,9 +138,9 @@ public static class PublishingExtensions
         TimeSpan? awaitTime = null
     )
     {
-        await PostAndEnsureSuccessAsync(client, uri, payload).ConfigureAwait(false);
+        await PostAndEnsureSuccessAsync(client, uri, payload);
 
-        await Task.Delay(awaitTime ?? TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+        await Task.Delay(awaitTime ?? TimeSpan.FromSeconds(1));
     }
 
     public static async Task PostAndEnsureSuccessAsync<TPayload>(
@@ -149,7 +149,7 @@ public static class PublishingExtensions
         TPayload payload
     )
     {
-        using var response = await client.PostAsJsonAsync(uri, payload).ConfigureAwait(false);
+        using var response = await client.PostAsJsonAsync(uri, payload);
 
         response.EnsureSuccessStatusCode();
     }

@@ -20,7 +20,7 @@ public class EmptyTopicTests : TestApplicationFactory
     {
         var topic = new EmptyTopic();
 
-        var result = await leanPipeClient.SubscribeAsync(topic).ConfigureAwait(false);
+        var result = await leanPipeClient.SubscribeAsync(topic);
         result.Should().BeEquivalentTo(new { Status = SubscriptionStatus.Invalid });
     }
 }

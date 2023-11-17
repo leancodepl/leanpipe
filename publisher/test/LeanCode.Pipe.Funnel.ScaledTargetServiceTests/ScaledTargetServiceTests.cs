@@ -46,7 +46,7 @@ public class ScaledTargetServiceTests : IAsyncLifetime
             Topic1Id = nameof(Publishing_notifications_from_any_service_instance_works),
         };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic).ConfigureAwait(false);
+        await leanPipeClient.SubscribeSuccessAsync(topic);
 
         var expectedNotification = new Notification1
         {
@@ -55,28 +55,28 @@ public class ScaledTargetServiceTests : IAsyncLifetime
 
         var instanceANotification = leanPipeClient.WaitForNextNotificationOn(topic);
 
-        await testApp1AClient.PostAsJsonAsync("/publish", topic).ConfigureAwait(false);
+        await testApp1AClient.PostAsJsonAsync("/publish", topic);
 
-        (await instanceANotification.ConfigureAwait(false))
+        (await instanceANotification)
             .Should()
             .BeEquivalentTo(expectedNotification, opts => opts.RespectingRuntimeTypes());
 
         var instanceBNotification = leanPipeClient.WaitForNextNotificationOn(topic);
 
-        await testApp1BClient.PostAsJsonAsync("/publish", topic).ConfigureAwait(false);
+        await testApp1BClient.PostAsJsonAsync("/publish", topic);
 
-        (await instanceBNotification.ConfigureAwait(false))
+        (await instanceBNotification)
             .Should()
             .BeEquivalentTo(expectedNotification, opts => opts.RespectingRuntimeTypes());
 
-        await leanPipeClient.UnsubscribeSuccessAsync(topic).ConfigureAwait(false);
+        await leanPipeClient.UnsubscribeSuccessAsync(topic);
     }
 
     public Task InitializeAsync() => Task.CompletedTask;
 
     public async Task DisposeAsync()
     {
-        await leanPipeClient.DisposeAsync().ConfigureAwait(false);
+        await leanPipeClient.DisposeAsync();
         testApp1AClient.Dispose();
         testApp1BClient.Dispose();
     }

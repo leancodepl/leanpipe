@@ -62,7 +62,7 @@ app.MapPost(
 
         await ApiHandlers
             .PublishGreetingOrFarewellAsync(publisher, topic, notificationData, ctx.RequestAborted)
-            .ConfigureAwait(false);
+            ;
     }
 );
 
@@ -83,7 +83,7 @@ app.MapPost(
                 notificationData,
                 ctx.RequestAborted
             )
-            .ConfigureAwait(false);
+            ;
     }
 );
 
@@ -99,7 +99,7 @@ app.MapPost(
 
         await ApiHandlers
             .PublishGreetingOrFarewellAsync(publisher, topic, notificationData, ctx.RequestAborted)
-            .ConfigureAwait(false);
+            ;
     }
 );
 

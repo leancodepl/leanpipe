@@ -25,7 +25,7 @@ public class MyFavouriteProjectsTopicKeys
         (
             await favouriteProjectsProvider
                 .GetUsersFavouriteProjectsAsync(context.User)
-                .ConfigureAwait(false)
+
         ).Select(ToTopicKey);
 
     public ValueTask<IEnumerable<string>> GetForPublishingAsync(

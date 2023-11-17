@@ -19,12 +19,12 @@ public static class ApiHandlers
             case NotificationKindDTO.Greeting:
                 await publisher
                     .PublishAsync(topic, CreateGreeting(notificationData), ct)
-                    .ConfigureAwait(false);
+                    ;
                 break;
             case NotificationKindDTO.Farewell:
                 await publisher
                     .PublishAsync(topic, CreateFarewell(notificationData), ct)
-                    .ConfigureAwait(false);
+                    ;
                 break;
             default:
                 throw new InvalidOperationException(
@@ -45,12 +45,12 @@ public static class ApiHandlers
             case ProjectNotificationKindDTO.Updated:
                 await publisher
                     .PublishAsync(topic, CreateProjectUpdated(projectNotificationData), ct)
-                    .ConfigureAwait(false);
+                    ;
                 break;
             case ProjectNotificationKindDTO.Deleted:
                 await publisher
                     .PublishAsync(topic, CreateProjectDeleted(projectNotificationData), ct)
-                    .ConfigureAwait(false);
+                    ;
                 break;
             default:
                 throw new InvalidOperationException(

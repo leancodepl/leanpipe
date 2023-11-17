@@ -66,17 +66,17 @@ public class MultipleTargetServicesTests : IAsyncLifetime
             Farewell = $"Goodbye from topic2 {topic2.Topic2Id}",
         };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic1).ConfigureAwait(false);
-        await leanPipeClient.SubscribeSuccessAsync(topic2).ConfigureAwait(false);
+        await leanPipeClient.SubscribeSuccessAsync(topic1);
+        await leanPipeClient.SubscribeSuccessAsync(topic2);
 
-        await NotificationsAreReceivedOnlyOnThePublishedTopics().ConfigureAwait(false);
+        await NotificationsAreReceivedOnlyOnThePublishedTopics();
 
-        await leanPipeClient.UnsubscribeSuccessAsync(topic1).ConfigureAwait(false);
+        await leanPipeClient.UnsubscribeSuccessAsync(topic1);
 
-        await NotificationsAreNotReceivedOnTheUnsubscribedTopic().ConfigureAwait(false);
-        await NotificationsAreStillReceivedOnTheOtherSubscribedTopic().ConfigureAwait(false);
+        await NotificationsAreNotReceivedOnTheUnsubscribedTopic();
+        await NotificationsAreStillReceivedOnTheOtherSubscribedTopic();
 
-        await leanPipeClient.UnsubscribeSuccessAsync(topic2).ConfigureAwait(false);
+        await leanPipeClient.UnsubscribeSuccessAsync(topic2);
 
         async Task NotificationsAreReceivedOnlyOnThePublishedTopics()
         {
@@ -86,9 +86,9 @@ public class MultipleTargetServicesTests : IAsyncLifetime
                 timeout: TimeSpan.FromMilliseconds(500)
             );
 
-            await testApp1Client.PostAsJsonAsync("/publish", topic1).ConfigureAwait(false);
+            await testApp1Client.PostAsJsonAsync("/publish", topic1);
 
-            (await service1Notification.ConfigureAwait(false))
+            (await service1Notification)
                 .Should()
                 .BeEquivalentTo(expectedNotification1, opts => opts.RespectingRuntimeTypes());
 
@@ -96,7 +96,7 @@ public class MultipleTargetServicesTests : IAsyncLifetime
                 .Awaiting(x => x)
                 .Should()
                 .ThrowAsync<OperationCanceledException>()
-                .ConfigureAwait(false);
+                ;
 
             service2Notification = leanPipeClient.WaitForNextNotificationOn(topic2);
             service1Notification = leanPipeClient.WaitForNextNotificationOn(
@@ -104,9 +104,9 @@ public class MultipleTargetServicesTests : IAsyncLifetime
                 timeout: TimeSpan.FromMilliseconds(500)
             );
 
-            await testApp2Client.PostAsJsonAsync("/publish", topic2).ConfigureAwait(false);
+            await testApp2Client.PostAsJsonAsync("/publish", topic2);
 
-            (await service2Notification.ConfigureAwait(false))
+            (await service2Notification)
                 .Should()
                 .BeEquivalentTo(expectedNotification2, opts => opts.RespectingRuntimeTypes());
 
@@ -114,7 +114,7 @@ public class MultipleTargetServicesTests : IAsyncLifetime
                 .Awaiting(x => x)
                 .Should()
                 .ThrowAsync<OperationCanceledException>()
-                .ConfigureAwait(false);
+                ;
         }
 
         async Task NotificationsAreNotReceivedOnTheUnsubscribedTopic()
@@ -124,22 +124,22 @@ public class MultipleTargetServicesTests : IAsyncLifetime
                 timeout: TimeSpan.FromMilliseconds(500)
             );
 
-            await testApp1Client.PostAsJsonAsync("/publish", topic1).ConfigureAwait(false);
+            await testApp1Client.PostAsJsonAsync("/publish", topic1);
 
             await service1Notification
                 .Awaiting(x => x)
                 .Should()
                 .ThrowAsync<OperationCanceledException>()
-                .ConfigureAwait(false);
+                ;
         }
 
         async Task NotificationsAreStillReceivedOnTheOtherSubscribedTopic()
         {
             var service2Notification = leanPipeClient.WaitForNextNotificationOn(topic2);
 
-            await testApp2Client.PostAsJsonAsync("/publish", topic2).ConfigureAwait(false);
+            await testApp2Client.PostAsJsonAsync("/publish", topic2);
 
-            (await service2Notification.ConfigureAwait(false))
+            (await service2Notification)
                 .Should()
                 .BeEquivalentTo(expectedNotification2, opts => opts.RespectingRuntimeTypes());
         }
@@ -149,7 +149,7 @@ public class MultipleTargetServicesTests : IAsyncLifetime
 
     public async Task DisposeAsync()
     {
-        await leanPipeClient.DisposeAsync().ConfigureAwait(false);
+        await leanPipeClient.DisposeAsync();
         testApp1Client.Dispose();
         testApp2Client.Dispose();
     }
