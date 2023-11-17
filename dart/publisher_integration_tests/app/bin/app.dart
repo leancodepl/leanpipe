@@ -40,7 +40,7 @@ void main() {
   );
 
   test(
-      'Basic scenario: connect, subscribe, trigger notification, receive notification, unsubscribe, trigger notification, make sure nothing is received, cancel subscriptions, disconnect',
+      'Basic subscribing & receiving notification scenario',
       () async {
     const waitTime = Duration(seconds: 1);
     final topic = Topic_(topicId: '1');
