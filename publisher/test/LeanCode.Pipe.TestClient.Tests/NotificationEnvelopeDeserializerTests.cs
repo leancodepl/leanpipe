@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using FluentAssertions;
 using LeanCode.Contracts;
@@ -36,6 +37,7 @@ public class NotificationEnvelopeDeserializerTests
 
     public class Topic : ITopic, IProduceNotification<Notification>
     {
+        [SuppressMessage("Usage", "CA2227:Collection properties should be read only")]
         public List<string> EntityIds { get; set; } = default!;
     }
 
