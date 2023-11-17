@@ -32,7 +32,7 @@ internal class TopicDeepEqualityComparer : EqualityComparer<object>
         {
             if (x is string xString)
             {
-                return string.Equals(xString, y as string, StringComparison.InvariantCulture);
+                return string.Equals(xString, y as string, StringComparison.Ordinal);
             }
             else
             {
@@ -98,7 +98,7 @@ internal class TopicDeepEqualityComparer : EqualityComparer<object>
                         !string.Equals(
                             currentsString,
                             othersValue as string,
-                            StringComparison.InvariantCulture
+                            StringComparison.Ordinal
                         )
                     )
                     {
