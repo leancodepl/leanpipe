@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using LeanCode.Components;
 using LeanCode.Contracts.Security;
 using LeanCode.CQRS.Security;
@@ -60,9 +61,12 @@ app.MapPost(
     {
         var topic = new SimpleTopic { TopicId = notificationData.TopicId };
 
-        await ApiHandlers
-            .PublishGreetingOrFarewellAsync(publisher, topic, notificationData, ctx.RequestAborted)
-            ;
+        await ApiHandlers.PublishGreetingOrFarewellAsync(
+            publisher,
+            topic,
+            notificationData,
+            ctx.RequestAborted
+        );
     }
 );
 
@@ -76,14 +80,12 @@ app.MapPost(
     {
         var topic = new MyFavouriteProjectsTopic();
 
-        await ApiHandlers
-            .PublishProjectUpdatedOrDeletedAsync(
-                publisher,
-                topic,
-                notificationData,
-                ctx.RequestAborted
-            )
-            ;
+        await ApiHandlers.PublishProjectUpdatedOrDeletedAsync(
+            publisher,
+            topic,
+            notificationData,
+            ctx.RequestAborted
+        );
     }
 );
 
@@ -97,15 +99,18 @@ app.MapPost(
     {
         var topic = new AuthorizedTopic { TopicId = notificationData.TopicId };
 
-        await ApiHandlers
-            .PublishGreetingOrFarewellAsync(publisher, topic, notificationData, ctx.RequestAborted)
-            ;
+        await ApiHandlers.PublishGreetingOrFarewellAsync(
+            publisher,
+            topic,
+            notificationData,
+            ctx.RequestAborted
+        );
     }
 );
 
 app.Run();
 
-public partial class Program
+public sealed partial class Program
 {
     public static readonly TypesCatalog LeanPipeTypes = TypesCatalog.Of<SimpleTopic>();
 }
