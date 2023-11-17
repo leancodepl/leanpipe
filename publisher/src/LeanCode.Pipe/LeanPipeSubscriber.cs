@@ -9,7 +9,7 @@ public interface ISubscribeContext
     Task RemoveFromGroupsAsync(IEnumerable<string> groupKeys, CancellationToken ct);
 }
 
-public class LeanPipeSubscriber : Hub, ISubscribeContext
+public sealed class LeanPipeSubscriber : Hub, ISubscribeContext
 {
     private readonly ISubscriptionExecutor subscriptionExecutor;
 
