@@ -1,13 +1,19 @@
 include('../../publisher/client_integration_tests_cluster/Tiltfile')
 
+load('ext://deployment', 'job_yaml')
+
 docker_build(
   'tests',
   '../',
   dockerfile='../tests.dockerfile'
 )
 
-k8s_yaml('tests_disabledfunnel.yaml')
-k8s_resource('dart-client-disabledfunnel-tests', resource_deps=['testapp-disabledfunnel'], labels=['tests'])
+test_names = ['disabledfunnel', 'enabledfunnel']
 
-k8s_yaml('tests_enabledfunnel.yaml')
-k8s_resource('dart-client-enabledfunnel-tests', resource_deps=['testapp-enabledfunnel'], labels=['tests'])
+for test_name in test_names:
+  k8s_yaml(job_yaml(
+    'dart-client-%s-tests' % test_name,
+    'tests',
+    env=[{'name': 'PUBLISHER_HOST', 'value': 'http://testapp-%s-svc.default.svc.cluster.local' % test_name}]
+  ))
+  k8s_resource('dart-client-%s-tests' % test_name, resource_deps=['testapp-%s' % test_name], labels=['tests'])
