@@ -150,7 +150,8 @@ public class TestClientTests : TestApplicationFactory
                 .Awaiting(n => n.FirstAsync())
                 .Should()
                 .CompleteWithinAsync(LeanPipeSubscription.DefaultNotificationAwaitTimeout)
-        ).Which
+        )
+            .Which
             .Should()
             .BeEquivalentTo(expectedGreeting);
     }
@@ -226,7 +227,8 @@ public class TestClientTests : TestApplicationFactory
                 .Awaiting(n => n.Take(2).ToListAsync())
                 .Should()
                 .CompleteWithinAsync(LeanPipeSubscription.DefaultNotificationAwaitTimeout)
-        ).Which
+        )
+            .Which
             .Should()
             .BeEquivalentTo(expectedNotifications);
     }

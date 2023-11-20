@@ -85,11 +85,9 @@ public static class LeanPipeTestClientExtensions
     )
         where TTopic : ITopic
     {
-        return client.Subscriptions[topic].WaitForNextNotification(
-            notificationPredicate,
-            timeout,
-            ct
-        );
+        return client
+            .Subscriptions[topic]
+            .WaitForNextNotification(notificationPredicate, timeout, ct);
     }
 
     /// <inheritdoc cref="WaitForNextNotificationOn{TTopic}"/>
@@ -162,7 +160,8 @@ public static class LeanPipeTestClientExtensions
     )
         where TTopic : ITopic
     {
-        return client.Subscriptions
+        return client
+                .Subscriptions
                 .GetValueOrDefault(topic)
                 ?.NotificationStreamWithPreviousNotificationsAsync() ?? EmptyNotificationsStream();
     }
