@@ -166,10 +166,9 @@ public class LeanPipeTestClient : IAsyncDisposable
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         cts.CancelAfter(subscriptionCompletionTimeout);
 
-        var ctRegistration = cts.Token.Register(
+        await using var ctRegistration = cts.Token.Register(
             () => subscriptionCompletionSource.TrySetCanceled()
         );
-        await using var _ = ctRegistration;
 
         using var subscriptionResponseCallback = hubConnection.On<SubscriptionResult>(
             "subscriptionResult",
