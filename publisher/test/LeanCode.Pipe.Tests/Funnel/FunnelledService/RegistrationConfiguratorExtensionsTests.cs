@@ -152,7 +152,7 @@ public class RegistrationConfiguratorExtensionsTests
             .BeOfType<TopicExistenceCheckerDefinition>();
     }
 
-    private class TopicExistenceCheckerDefinition : ConsumerDefinition<TopicExistenceChecker>
+    private sealed class TopicExistenceCheckerDefinition : ConsumerDefinition<TopicExistenceChecker>
     {
         protected override void ConfigureConsumer(
             IReceiveEndpointConfigurator endpointConfigurator,
@@ -164,7 +164,7 @@ public class RegistrationConfiguratorExtensionsTests
         }
     }
 
-    private class FunnelledSubscriberDefinitionOverride<TTopic>
+    private sealed class FunnelledSubscriberDefinitionOverride<TTopic>
         : FunnelledSubscriberDefinition<TTopic>
         where TTopic : ITopic
     {
@@ -178,7 +178,7 @@ public class RegistrationConfiguratorExtensionsTests
         }
     }
 
-    private class WrongSubscriberDefinition { }
+    private sealed class WrongSubscriberDefinition { }
 
-    private class AnotherWrongSubscriberDefinition<T1, T2> { }
+    private sealed class AnotherWrongSubscriberDefinition<T1, T2> { }
 }

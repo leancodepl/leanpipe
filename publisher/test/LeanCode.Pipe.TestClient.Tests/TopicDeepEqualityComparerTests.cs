@@ -71,14 +71,14 @@ public class TopicDeepEqualityComparerTests
         ComparerInstance.GetHashCode(topic1).Should().NotBe(ComparerInstance.GetHashCode(topic2));
     }
 
-    private class ComplexTopic : ITopic
+    private sealed class ComplexTopic : ITopic
     {
         public Guid PrimitiveGuid { get; set; }
         public List<int> ListOfPrimitives { get; set; } = default!;
         public ComplexDTO Complex { get; set; } = default!;
     }
 
-    private class ComplexDTO
+    private sealed class ComplexDTO
     {
         public string PrimitiveString { get; set; } = default!;
     }

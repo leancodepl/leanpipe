@@ -35,9 +35,9 @@ public class LeanPipeSubscriptionTests
         await notificationTask.Awaiting(t => t).Should().ThrowAsync<OperationCanceledException>();
     }
 
-    private class Topic : ITopic, IProduceNotification<Notification> { }
+    private sealed class Topic : ITopic, IProduceNotification<Notification> { }
 
-    private class Notification
+    private sealed class Notification
     {
         public string Message { get; set; } = default!;
     }

@@ -8,9 +8,9 @@ namespace LeanCode.Pipe.IntegrationTests;
 
 public static class PublishingExtensions
 {
-    public const string SimpleTopicPublishEndpoint = "/publish_simple";
-    public const string DynamicTopicPublishEndpoint = "/publish_dynamic";
-    public const string AuthorizedTopicPublishEndpoint = "/publish_authorized";
+    public static readonly Uri SimpleTopicPublishEndpoint = new("/publish_simple");
+    public static readonly Uri DynamicTopicPublishEndpoint = new("/publish_dynamic");
+    public static readonly Uri AuthorizedTopicPublishEndpoint = new("/publish_authorized");
 
     public static Task PublishToSimpleTopicAndAwaitNotificationAsync<TNotification>(
         this HttpClient client,
@@ -111,7 +111,7 @@ public static class PublishingExtensions
         TNotification
     >(
         HttpClient client,
-        string uri,
+        Uri uri,
         TPayload payload,
         LeanPipeTestClient leanPipeClient,
         TTopic topic,
@@ -131,7 +131,7 @@ public static class PublishingExtensions
 
     private static async Task PostToPublishAndAwaitNoNotificationsAsync<TPayload>(
         HttpClient client,
-        string uri,
+        Uri uri,
         TPayload payload,
         TimeSpan? awaitTime = null
     )
@@ -143,7 +143,7 @@ public static class PublishingExtensions
 
     public static async Task PostAndEnsureSuccessAsync<TPayload>(
         this HttpClient client,
-        string uri,
+        Uri uri,
         TPayload payload
     )
     {

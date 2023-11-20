@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using LeanCode.Components;
 using LeanCode.Contracts.Security;
 using LeanCode.CQRS.Security;
@@ -109,7 +110,7 @@ app.MapPost(
 
 app.Run();
 
-public partial class Program
+public sealed partial class Program
 {
     public static readonly TypesCatalog LeanPipeTypes = TypesCatalog.Of<SimpleTopic>();
 }

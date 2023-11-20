@@ -11,21 +11,11 @@ public class Notification1 { }
 
 public class Notification2 { }
 
-public class SubscribingWithoutAllKeysKeys
-    : ISubscribingKeys<TopicWithoutAllKeys>,
-        IPublishingKeys<TopicWithoutAllKeys, Notification1>
+public class SubscribingWithoutAllKeysKeys : IPublishingKeys<TopicWithoutAllKeys, Notification1>
 {
     public ValueTask<IEnumerable<string>> GetForSubscribingAsync(
         TopicWithoutAllKeys topic,
         LeanPipeContext context
-    )
-    {
-        return new(Array.Empty<string>());
-    }
-
-    public ValueTask<IEnumerable<string>> GetForPublishingAsync(
-        TopicWithoutAllKeys topic,
-        CancellationToken ct = default
     )
     {
         return new(Array.Empty<string>());
