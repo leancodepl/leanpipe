@@ -37,7 +37,11 @@ public class NotificationEnvelopeDeserializerTests
 
     public class Topic : ITopic, IProduceNotification<Notification>
     {
-        [SuppressMessage("Usage", "CA2227:Collection properties should be read only")]
+        [SuppressMessage(
+            "Usage",
+            "CA2227:Collection properties should be read only",
+            Justification = "Not relevant for DTOs."
+        )]
         public List<string> EntityIds { get; set; } = default!;
     }
 

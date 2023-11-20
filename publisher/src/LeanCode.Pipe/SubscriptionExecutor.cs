@@ -34,7 +34,11 @@ public class SubscriptionExecutor : ISubscriptionExecutor
         this.security = security;
     }
 
-    [SuppressMessage("Design", "CA1031:Do not catch general exception types")]
+    [SuppressMessage(
+        "Design",
+        "CA1031:Do not catch general exception types",
+        Justification = "Must return, part of the pipeline."
+    )]
     public async Task<SubscriptionStatus> ExecuteAsync(
         SubscriptionEnvelope envelope,
         OperationType type,

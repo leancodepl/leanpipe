@@ -13,7 +13,11 @@ public class FavouriteProjectsProvider
         "1940c367-bd63-4344-b7c6-2bade4f14a1d"
     );
 
-    [SuppressMessage("Performance", "CA1822:Mark members as static")]
+    [SuppressMessage(
+        "Performance",
+        "CA1822:Mark members as static",
+        Justification = "This is a mock of a service."
+    )]
     public Task<List<Guid>> GetUsersFavouriteProjectsAsync(ClaimsPrincipal user) =>
         Task.FromResult(new List<Guid> { FavouriteProjectId1, FavouriteProjectId2 });
 }
