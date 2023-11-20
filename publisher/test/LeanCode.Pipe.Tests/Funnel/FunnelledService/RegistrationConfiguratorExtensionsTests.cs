@@ -41,7 +41,8 @@ public class RegistrationConfiguratorExtensionsTests
                 .ContainSingle(
                     d => d.ServiceType == typeof(FunnelledSubscriber<>).MakeGenericType(type)
                 )
-                .And.ContainSingle(
+                .And
+                .ContainSingle(
                     d =>
                         d.ServiceType
                         == typeof(FunnelledSubscriberDefinition<>).MakeGenericType(type)
@@ -72,7 +73,8 @@ public class RegistrationConfiguratorExtensionsTests
                 .NotContain(
                     d => d.ServiceType == typeof(FunnelledSubscriber<>).MakeGenericType(type)
                 )
-                .And.NotContain(
+                .And
+                .NotContain(
                     d =>
                         d.ServiceType
                         == typeof(FunnelledSubscriberDefinition<>).MakeGenericType(type)

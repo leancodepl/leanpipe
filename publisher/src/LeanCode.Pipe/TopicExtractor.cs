@@ -42,7 +42,8 @@ public class DefaultTopicExtractor : ITopicExtractor
     private ImmutableDictionary<string, Type> BuildCache()
     {
         var topicType = typeof(ITopic);
-        return types.Assemblies
+        return types
+            .Assemblies
             .SelectMany(t => t.ExportedTypes)
             .Where(t => t.IsAssignableTo(topicType) && !t.IsAbstract && !t.IsGenericType)
             .ToImmutableDictionary(t => t.FullName!, StringComparer.InvariantCulture);

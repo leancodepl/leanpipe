@@ -48,7 +48,8 @@ public class DefaultTopicExtractorTests
             .Extract(Envelope.Empty<ExternalTopic>())
             .Should()
             .NotBeNull()
-            .And.BeOfType<ExternalTopic>();
+            .And
+            .BeOfType<ExternalTopic>();
     }
 
     [Fact]
