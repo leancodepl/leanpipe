@@ -1,3 +1,5 @@
+load('ext://deployment', 'deployment_yaml', 'service_yaml')
+
 allow_k8s_contexts('k3d-clientintegrationtests')
 default_registry('k3d-clientintegrationtests-registry.local.lncd.pl:21345')
 
@@ -16,8 +18,27 @@ docker_build(
   only = ['out/testapp'],
 )
 
-k8s_yaml('testapp_disabledfunnel.yaml')
-k8s_resource('testapp-disabledfunnel', labels=['test-services'], port_forwards="5151:8080")
+test_services_names = [['disabledfunnel', 'false'], ['enabledfunnel', 'true']]
+for test_services_name, funnel_enabled in test_services_names:
+  deployment = deployment_yaml(
+    'testapp-%s' % test_services_name,
+    'testapp',
+    port = '8080',
+    env = [{ 'name': 'EnableFunnel', 'value': funnel_enabled }],
+    livenessProbe = {
+      'httpGet': { 'path': '/health/live', 'port': 8080 },
+      'initialDelaySeconds': 2,
+      'periodSeconds': 2,
+      'timeoutSeconds': 5
+    },
+    readinessProbe = {
+      'httpGet': { 'path': '/health/ready', 'port': 8080 },
+      'initialDelaySeconds': 5,
+      'periodSeconds': 2,
+      'timeoutSeconds': 5
+    }
+  )
 
-k8s_yaml('testapp_enabledfunnel.yaml')
-k8s_resource('testapp-enabledfunnel', labels=['test-services'])
+  service = service_yaml('testapp-%s' % test_services_name, ports = '80:8080')
+  k8s_yaml([deployment, service])
+  k8s_resource('testapp-%s' % test_services_name, labels=['test-services'])
