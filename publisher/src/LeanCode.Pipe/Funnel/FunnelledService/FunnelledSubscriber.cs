@@ -19,21 +19,17 @@ public class FunnelledSubscriber<TTopic> : IConsumer<ExecuteTopicsSubscriptionPi
 
         var subscribeContext = new FunnelledSubscribeContext();
 
-        var subscriptionStatus = await subscriptionExecutor
-            .ExecuteAsync(
-                msg.Envelope,
-                msg.OperationType,
-                subscribeContext,
-                msg.Context,
-                context.CancellationToken
-            )
-            .ConfigureAwait(false);
+        var subscriptionStatus = await subscriptionExecutor.ExecuteAsync(
+            msg.Envelope,
+            msg.OperationType,
+            subscribeContext,
+            msg.Context,
+            context.CancellationToken
+        );
 
-        await context
-            .RespondAsync<SubscriptionPipelineResult>(
-                new(subscriptionStatus, subscribeContext.GroupKeys?.ToList() ?? new())
-            )
-            .ConfigureAwait(false);
+        await context.RespondAsync<SubscriptionPipelineResult>(
+            new(subscriptionStatus, subscribeContext.GroupKeys?.ToList() ?? new())
+        );
     }
 }
 

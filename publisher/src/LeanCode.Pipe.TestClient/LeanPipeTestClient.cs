@@ -77,8 +77,7 @@ public class LeanPipeTestClient : IAsyncDisposable
         }
         else
         {
-            result = await ManageSubscriptionCoreAsync(topic, OperationType.Unsubscribe, ct)
-                .ConfigureAwait(false);
+            result = await ManageSubscriptionCoreAsync(topic, OperationType.Unsubscribe, ct);
         }
 
         if (result.Status == SubscriptionStatus.Success)
@@ -106,11 +105,10 @@ public class LeanPipeTestClient : IAsyncDisposable
 
         if (hubConnection.State != HubConnectionState.Connected)
         {
-            await ConnectAsync(ct).ConfigureAwait(false);
+            await ConnectAsync(ct);
         }
 
-        var result = await ManageSubscriptionCoreAsync(topic, OperationType.Subscribe, ct)
-            .ConfigureAwait(false);
+        var result = await ManageSubscriptionCoreAsync(topic, OperationType.Subscribe, ct);
 
         if (result.Status == SubscriptionStatus.Success)
         {
@@ -142,7 +140,7 @@ public class LeanPipeTestClient : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
-        await hubConnection.DisposeAsync().ConfigureAwait(false);
+        await hubConnection.DisposeAsync();
 
         GC.SuppressFinalize(this);
     }
@@ -171,7 +169,7 @@ public class LeanPipeTestClient : IAsyncDisposable
         var ctRegistration = cts.Token.Register(
             () => subscriptionCompletionSource.TrySetCanceled()
         );
-        await using var _ = ctRegistration.ConfigureAwait(false);
+        await using var _ = ctRegistration;
 
         using var subscriptionResponseCallback = hubConnection.On<SubscriptionResult>(
             "subscriptionResult",
@@ -184,24 +182,22 @@ public class LeanPipeTestClient : IAsyncDisposable
             }
         );
 
-        await hubConnection
-            .InvokeAsync(
-                operationType switch
-                {
-                    OperationType.Subscribe => nameof(LeanPipeSubscriber.Subscribe),
-                    OperationType.Unsubscribe => nameof(LeanPipeSubscriber.Unsubscribe),
-                    _
-                        => throw new ArgumentOutOfRangeException(
-                            nameof(operationType),
-                            operationType,
-                            "Pipe OperationType is out of range."
-                        ),
-                },
-                subscriptionEnvelope,
-                ct
-            )
-            .ConfigureAwait(false);
+        await hubConnection.InvokeAsync(
+            operationType switch
+            {
+                OperationType.Subscribe => nameof(LeanPipeSubscriber.Subscribe),
+                OperationType.Unsubscribe => nameof(LeanPipeSubscriber.Unsubscribe),
+                _
+                    => throw new ArgumentOutOfRangeException(
+                        nameof(operationType),
+                        operationType,
+                        "Pipe OperationType is out of range."
+                    ),
+            },
+            subscriptionEnvelope,
+            ct
+        );
 
-        return await subscriptionCompletionSource.Task.ConfigureAwait(false);
+        return await subscriptionCompletionSource.Task;
     }
 }

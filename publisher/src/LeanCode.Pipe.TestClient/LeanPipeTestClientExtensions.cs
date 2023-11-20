@@ -17,7 +17,7 @@ public static class LeanPipeTestClientExtensions
     )
         where TTopic : ITopic
     {
-        var subscriptionResult = await client.SubscribeAsync(topic, ct).ConfigureAwait(false);
+        var subscriptionResult = await client.SubscribeAsync(topic, ct);
 
         if (
             subscriptionResult.Type == OperationType.Subscribe
@@ -47,7 +47,7 @@ public static class LeanPipeTestClientExtensions
     )
         where TTopic : ITopic
     {
-        var subscriptionResult = await client.UnsubscribeAsync(topic, ct).ConfigureAwait(false);
+        var subscriptionResult = await client.UnsubscribeAsync(topic, ct);
 
         if (
             subscriptionResult.Type == OperationType.Unsubscribe
@@ -111,13 +111,12 @@ public static class LeanPipeTestClientExtensions
 
         return (TNotification)
             await WaitForNextNotificationOn(
-                    client,
-                    topic,
-                    NotificationAndTypePredicate,
-                    timeout,
-                    ct
-                )
-                .ConfigureAwait(false);
+                client,
+                topic,
+                NotificationAndTypePredicate,
+                timeout,
+                ct
+            );
 
         bool NotificationAndTypePredicate(object n) =>
             n is TNotification tn && notificationPredicate(tn);
@@ -170,7 +169,7 @@ public static class LeanPipeTestClientExtensions
 
     private static async IAsyncEnumerable<object> EmptyNotificationsStream()
     {
-        await Task.CompletedTask.ConfigureAwait(false);
+        await Task.CompletedTask;
         yield break;
     }
 }

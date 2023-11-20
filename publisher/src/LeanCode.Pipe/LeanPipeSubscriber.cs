@@ -20,19 +20,17 @@ public sealed class LeanPipeSubscriber : Hub, ISubscribeContext
 
     public async Task Subscribe(SubscriptionEnvelope envelope)
     {
-        await ExecuteAsync(envelope, OperationType.Subscribe).ConfigureAwait(false);
+        await ExecuteAsync(envelope, OperationType.Subscribe);
     }
 
     public async Task Unsubscribe(SubscriptionEnvelope envelope)
     {
-        await ExecuteAsync(envelope, OperationType.Unsubscribe).ConfigureAwait(false);
+        await ExecuteAsync(envelope, OperationType.Unsubscribe);
     }
 
     private async Task NotifyResultAsync(SubscriptionResult result)
     {
-        await Clients.Caller
-            .SendAsync("subscriptionResult", result, Context.ConnectionAborted)
-            .ConfigureAwait(false);
+        await Clients.Caller.SendAsync("subscriptionResult", result, Context.ConnectionAborted);
     }
 
     private async Task ExecuteAsync(SubscriptionEnvelope envelope, OperationType type)
@@ -45,11 +43,15 @@ public sealed class LeanPipeSubscriber : Hub, ISubscribeContext
 
         var context = new LeanPipeContext(httpContext.User);
 
-        var subscriptionStatus = await subscriptionExecutor
-            .ExecuteAsync(envelope, type, this, context, Context.ConnectionAborted)
-            .ConfigureAwait(false);
+        var subscriptionStatus = await subscriptionExecutor.ExecuteAsync(
+            envelope,
+            type,
+            this,
+            context,
+            Context.ConnectionAborted
+        );
 
-        await NotifyResultAsync(new(envelope.Id, subscriptionStatus, type)).ConfigureAwait(false);
+        await NotifyResultAsync(new(envelope.Id, subscriptionStatus, type));
     }
 
     Task ISubscribeContext.AddToGroupsAsync(IEnumerable<string> groupKeys, CancellationToken ct)

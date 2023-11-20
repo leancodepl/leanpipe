@@ -17,7 +17,7 @@ public class TopicExistenceChecker : IConsumer<CheckIfTopicIsRecognized>
 
         if (topicExtractor.TopicExists(context.Message.TopicType))
         {
-            await context.RespondAsync<TopicRecognized>(new(topicType)).ConfigureAwait(false);
+            await context.RespondAsync<TopicRecognized>(new(topicType));
         }
     }
 }

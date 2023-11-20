@@ -36,9 +36,12 @@ public class LeanPipeSecurity
 
             if (customAuthorizer is ICustomAuthorizer authorizer)
             {
-                var authorized = await authorizer
-                    .CheckIfAuthorizedAsync(user, topic, customAuthorizerDefinition.CustomData, ct)
-                    .ConfigureAwait(false);
+                var authorized = await authorizer.CheckIfAuthorizedAsync(
+                    user,
+                    topic,
+                    customAuthorizerDefinition.CustomData,
+                    ct
+                );
 
                 if (!authorized)
                 {
