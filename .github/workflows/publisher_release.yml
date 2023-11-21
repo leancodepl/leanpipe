@@ -39,10 +39,32 @@ jobs:
         env:
           BUILD_VERSION: ${{ steps.version.outputs.version }}
         run: dotnet build --no-restore -c Release
-      - name: Test
-        env:
-          BUILD_VERSION: ${{ steps.version.outputs.version }}
-        run: dotnet test --no-build -c Release
+      - name: Test Publisher
+        run: >
+          dotnet test
+          ./test/LeanCode.Pipe.Tests/LeanCode.Pipe.Tests.csproj
+          --no-build
+          -c Release
+      - name: Test Test Client
+        run: >
+          dotnet test
+          ./test/LeanCode.Pipe.TestClient.Tests/LeanCode.Pipe.TestClient.Tests.csproj
+          --no-build
+          -c Release
+      - name: Integration test
+        run: >
+          dotnet test
+          ./test/LeanCode.Pipe.IntegrationTests/LeanCode.Pipe.IntegrationTests.csproj
+          --no-build
+          -c Release
+          -e EnableFunnel=false
+      - name: Integration test with Funnel
+        run: >
+          dotnet test
+          ./test/LeanCode.Pipe.IntegrationTests/LeanCode.Pipe.IntegrationTests.csproj
+          --no-build
+          -c Release
+          -e EnableFunnel=true
       - name: Pack Publisher
         env:
           BUILD_VERSION: ${{ steps.version.outputs.version }}
