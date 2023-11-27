@@ -94,5 +94,5 @@ function apply<T>(x: () => T) {
     return x();
 }
 
-type NotificationsUnion<T extends Record<string, unknown>> = Values<{ [TKey in keyof T]: [TKey, T[TKey]] }>;
+export type NotificationsUnion<T extends Record<string, unknown>> = Values<{ [TKey in keyof T]: [TKey, T[TKey]] }>;
 type Values<T> = T[keyof T];
