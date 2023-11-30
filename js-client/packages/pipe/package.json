@@ -1,0 +1,15 @@
+{
+  "name": "@leancodepl/pipe",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@microsoft/signalr": ">=8.0.0"
+  },
+  "peerDependencies": {
+    "lodash": ">=4.0.0",
+    "rxjs": ">=7.0.0"
+  },
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts"
+}
