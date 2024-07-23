@@ -6,11 +6,11 @@ describe("pipe", () => {
         async () => {
             const c = new Pipe({ url: "https://api.exampleapp.test.lncd.pl/leanpipe" })
 
-            const t1 = c.topic("ExampleApp.Core.Contracts.Projects.EmployeeAssignmentsTopic", {
+            const t1 = c.topic("ExampleApp.Examples.Contracts.Projects.EmployeeAssignmentsTopic", {
                 EmployeeId: "employee_01HAPJG153XZ83RR9PPRV7M894",
             })
 
-            const t2 = c.topic("ExampleApp.Core.Contracts.Projects.EmployeeAssignmentsTopic", {
+            const t2 = c.topic("ExampleApp.Examples.Contracts.Projects.EmployeeAssignmentsTopic", {
                 EmployeeId: "employee_01HAPJG153XZ83RR9PPRV7M894",
             })
 
