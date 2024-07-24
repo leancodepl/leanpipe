@@ -23,6 +23,7 @@ jobs:
         with:
           node-version-file: js-client/.nvmrc
           cache: "npm"
+          cache-dependency-path: "js-client/package-lock.json"
           registry-url: "https://registry.npmjs.org"
       - name: Install
         run: npm install
