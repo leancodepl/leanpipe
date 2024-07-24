@@ -4,6 +4,10 @@ on:
   push:
     tags: ["js-client-v*"]
 
+defaults:
+ run:
+  working-directory: js-client
+
 jobs:
   release:
     name: Release
@@ -17,7 +21,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version-file: .nvmrc
+          node-version-file: js-client/.nvmrc
           cache: "npm"
           registry-url: "https://registry.npmjs.org"
       - name: Install
