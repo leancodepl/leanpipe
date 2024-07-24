@@ -1,0 +1,40 @@
+{
+  "name": "pipe",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/pipe/src",
+  "projectType": "library",
+  "targets": {
+    "build": {
+      "executor": "@nx/rollup:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/pipe",
+        "main": "packages/pipe/src/index.ts",
+        "tsConfig": "packages/pipe/tsconfig.lib.json",
+        "assets": [],
+        "project": "packages/pipe/package.json",
+        "compiler": "swc",
+        "format": ["cjs", "esm"]
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs pipe {args.registry} {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/pipe/**/*.ts", "packages/pipe/package.json"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/pipe"],
+      "options": {
+        "jestConfig": "packages/pipe/jest.config.ts"
+      }
+    }
+  },
+  "tags": [""]
+}
