@@ -1,4 +1,4 @@
-import { HubConnection, HubConnectionBuilder } from "@microsoft/signalr"
+import { HubConnection, HubConnectionBuilder, IHttpConnectionOptions } from "@microsoft/signalr"
 import { find, matches, pull } from "lodash"
 import { Observable, ReplaySubject, fromEvent, throwError } from "rxjs"
 import { filter, first, map, share, shareReplay, switchMap, tap, timeout } from "rxjs/operators"
@@ -14,10 +14,10 @@ export class Pipe {
     #connection$
     #subscriptions: SubscriptionState[] = []
 
-    constructor({ url }: { url: string }) {
+    constructor({ url, options }: { url: string; options?: IHttpConnectionOptions }) {
         this.#connection$ = new Observable<HubConnection>(subscriber => {
             const connection = new HubConnectionBuilder()
-                .withUrl(url)
+                .withUrl(url, options ?? {})
                 .withAutomaticReconnect({
                     nextRetryDelayInMilliseconds: ({ previousRetryCount }) =>
                         [0, 500, 1000].at(previousRetryCount) ?? 2000,
