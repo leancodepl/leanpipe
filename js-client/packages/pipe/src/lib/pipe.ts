@@ -43,7 +43,7 @@ export class Pipe {
     }
 
     topic<TNotifications extends Record<string, unknown>>(topicType: string, topic: unknown) {
-        let subscription = this.#subscriptions.find(t => deepEqual(t.topic, topic) && t.topicType === topicType)
+        let subscription = this.#subscriptions.find(matchesTopic(topicType, topic))
 
         if (!subscription) {
             const finish = new ReplaySubject<() => void>(1)
@@ -75,7 +75,7 @@ export class Pipe {
                             ),
                         )
                     }),
-                    filter<NotificationEnvelope>(t => t.TopicType === topicType && deepEqual(t.Topic, topic)),
+                    filter<NotificationEnvelope>(matchesTopic(topicType, topic)),
                     map(
                         ({ NotificationType, Notification }) =>
                             [NotificationType, Notification] as NotificationsUnion<TNotifications>,
@@ -93,6 +93,13 @@ export class Pipe {
 
 function apply<T>(x: () => T) {
     return x()
+}
+
+function matchesTopic(topicType: string, topic: unknown) {
+    return (t: NotificationEnvelope | SubscriptionState) =>
+        "Topic" in t
+            ? t.TopicType === topicType && deepEqual(t.Topic, topic)
+            : t.topicType === topicType && deepEqual(t.topic, topic)
 }
 
 export type NotificationsUnion<T extends Record<string, unknown>> = Values<{ [TKey in keyof T]: [TKey, T[TKey]] }>
