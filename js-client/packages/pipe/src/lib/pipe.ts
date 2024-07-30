@@ -1,5 +1,6 @@
 import { HubConnection, HubConnectionBuilder, IHttpConnectionOptions } from "@microsoft/signalr"
-import { find, matches, pull } from "lodash"
+import deepEqual from "deep-equal"
+import { matches, pull } from "lodash"
 import { Observable, ReplaySubject, fromEvent, throwError } from "rxjs"
 import { filter, first, map, share, shareReplay, switchMap, tap, timeout } from "rxjs/operators"
 import {
@@ -42,7 +43,7 @@ export class Pipe {
     }
 
     topic<TNotifications extends Record<string, unknown>>(topicType: string, topic: unknown) {
-        let subscription = find(this.#subscriptions, { topic, topicType })
+        let subscription = this.#subscriptions.find(t => deepEqual(t.topic, topic) && t.topicType === topicType)
 
         if (!subscription) {
             const finish = new ReplaySubject<() => void>(1)
@@ -74,7 +75,7 @@ export class Pipe {
                             ),
                         )
                     }),
-                    filter<NotificationEnvelope>(matches({ TopicType: topicType, Topic: topic })),
+                    filter<NotificationEnvelope>(t => t.TopicType === topicType && deepEqual(t.Topic, topic)),
                     map(
                         ({ NotificationType, Notification }) =>
                             [NotificationType, Notification] as NotificationsUnion<TNotifications>,

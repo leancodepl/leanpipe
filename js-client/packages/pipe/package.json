@@ -3,7 +3,8 @@
   "version": "1.0.1",
   "license": "Apache-2.0",
   "dependencies": {
-    "@microsoft/signalr": ">=8.0.0"
+    "@microsoft/signalr": ">=8.0.0",
+    "deep-equal": "^2.0.0"
   },
   "peerDependencies": {
     "lodash": ">=4.0.0",
