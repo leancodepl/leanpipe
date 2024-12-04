@@ -298,6 +298,7 @@ class PipeClient {
         try {
           subscribedState = await thisTopicSubscription.stateSubject
               .doOnError((err, st) {
+                // required by API
                 // ignore: only_throw_errors
                 throw err;
               })

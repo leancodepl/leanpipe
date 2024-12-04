@@ -1,4 +1,4 @@
-FROM dart:stable AS build
+FROM dart:3.4 AS build
 
 COPY ../../ .
 
