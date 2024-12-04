@@ -25,18 +25,6 @@ for test_services_name, funnel_enabled in test_services_names:
     'testapp',
     port = '8080',
     env = [{ 'name': 'EnableFunnel', 'value': funnel_enabled }],
-    livenessProbe = {
-      'httpGet': { 'path': '/health/live', 'port': 8080 },
-      'initialDelaySeconds': 2,
-      'periodSeconds': 2,
-      'timeoutSeconds': 5
-    },
-    readinessProbe = {
-      'httpGet': { 'path': '/health/ready', 'port': 8080 },
-      'initialDelaySeconds': 5,
-      'periodSeconds': 2,
-      'timeoutSeconds': 5
-    }
   )
 
   service = service_yaml('testapp-%s' % test_services_name, ports = '80:8080')
