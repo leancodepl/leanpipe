@@ -1,6 +1,6 @@
 import 'dart:async';
 
-/// A structure representing subscription to a [Topic<Notification>].
+/// A structure representing subscription to a [Topic&lt;Notification&gt;].
 class PipeSubscription<Notification extends Object>
     extends StreamView<Notification> {
   PipeSubscription({

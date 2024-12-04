@@ -2,12 +2,12 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 
-    <CoreLibVersion>8.0.2301-preview</CoreLibVersion>
-    <MassTransitVersion>8.1.2</MassTransitVersion>
+    <CoreLibVersion>9.0.2542-preview</CoreLibVersion>
+    <MassTransitVersion>8.3.2</MassTransitVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageVersion Include="LeanCode.Contracts" Version="2.0.0-preview.3" />
+    <PackageVersion Include="LeanCode.Contracts" Version="2.0.0" />
 
     <PackageVersion Include="LeanCode.Components" Version="$(CoreLibVersion)" />
     <PackageVersion Include="LeanCode.CQRS.Security" Version="$(CoreLibVersion)" />
@@ -17,19 +17,19 @@
     <PackageVersion Include="MassTransit.RabbitMQ" Version="$(MassTransitVersion)" />
     <PackageVersion Include="MassTransit.SignalR" Version="$(MassTransitVersion)" />
 
-    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.0" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.0" />
 
     <PackageVersion Include="System.Linq.Async" Version="6.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
-    <PackageVersion Include="xunit.analyzers" Version="1.5.0" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.5.3" />
-    <PackageVersion Include="xunit" Version="2.6.1" />
-    <PackageVersion Include="FluentAssertions" Version="6.12.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageVersion Include="xunit" Version="2.9.2" />
+    <PackageVersion Include="xunit.analyzers" Version="1.17.0" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
+    <PackageVersion Include="FluentAssertions" Version="7.0.0" />
 
-    <PackageVersion Include="coverlet.collector" Version="6.0.0" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.2" />
   </ItemGroup>
 
 </Project>
