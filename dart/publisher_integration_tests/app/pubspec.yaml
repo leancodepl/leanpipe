@@ -19,4 +19,4 @@ dev_dependencies:
       url: https://github.com/leancodepl/contractsgenerator-dart.git
       ref: 5e00962971812531f97be08cf7294f5986b0587e
       path: packages/leancode_contracts_generator
-  leancode_lint: ^7.0.0+1
+  leancode_lint: 14.0.0
