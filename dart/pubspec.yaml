@@ -4,7 +4,7 @@ homepage: https://github.com/leancodepl/leanpipe/tree/main/dart
 repository: https://github.com/leancodepl/leanpipe/tree/main/dart
 publish_to: none # TODO: remove once publishable
 
-version: 0.1.0
+version: 1.0.0
 
 environment:
   sdk: ">=3.5.0 <4.0.0"
