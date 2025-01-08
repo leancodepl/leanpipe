@@ -16,12 +16,8 @@ dependencies:
   logging: ^1.2.0
   meta: ^1.9.1
   rxdart: ^0.28.0
-  # TODO: bring back pub version once merged and published
-  signalr_core:
-    git:
-      url: https://github.com/RCSandberg/signalr_core.git
-      ref: feature/bump-dart-and-package-versions
-  uuid: ^3.0.7
+  signalr_core: ^1.1.2
+  uuid: ^4.5.1
 
 dev_dependencies:
   build_runner: 2.4.11
