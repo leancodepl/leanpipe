@@ -1,8 +1,7 @@
 name: leancode_pipe
 description: A Dart client for LeanCode's LeanPipe.
 homepage: https://github.com/leancodepl/leanpipe/tree/main/dart
-repository: https://github.com/leancodepl/leanpipe/tree/main/dart
-publish_to: none # TODO: remove once publishable
+repository: https://github.com/leancodepl/leanpipe
 
 version: 1.0.0
 
