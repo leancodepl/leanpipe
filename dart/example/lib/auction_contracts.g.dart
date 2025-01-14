@@ -17,7 +17,7 @@ Map<String, dynamic> _$AuctionToJson(Auction instance) => <String, dynamic>{
     };
 
 BidPlaced _$BidPlacedFromJson(Map<String, dynamic> json) => BidPlaced(
-      amount: json['Amount'] as int,
+      amount: (json['Amount'] as num).toInt(),
       user: json['User'] as String,
     );
 

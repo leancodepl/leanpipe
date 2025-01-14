@@ -12,7 +12,7 @@ part of 'screen_cubit.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#custom-getters-and-methods');
+    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
 mixin _$DraftScreenState {
@@ -61,7 +61,9 @@ mixin _$DraftScreenState {
   }) =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DraftScreenState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $DraftScreenStateCopyWith<DraftScreenState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -85,6 +87,8 @@ class _$DraftScreenStateCopyWithImpl<$Res, $Val extends DraftScreenState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of DraftScreenState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -100,31 +104,33 @@ class _$DraftScreenStateCopyWithImpl<$Res, $Val extends DraftScreenState>
 }
 
 /// @nodoc
-abstract class _$$DraftScreenConnectedCopyWith<$Res>
+abstract class _$$DraftScreenConnectedImplCopyWith<$Res>
     implements $DraftScreenStateCopyWith<$Res> {
-  factory _$$DraftScreenConnectedCopyWith(_$DraftScreenConnected value,
-          $Res Function(_$DraftScreenConnected) then) =
-      __$$DraftScreenConnectedCopyWithImpl<$Res>;
+  factory _$$DraftScreenConnectedImplCopyWith(_$DraftScreenConnectedImpl value,
+          $Res Function(_$DraftScreenConnectedImpl) then) =
+      __$$DraftScreenConnectedImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String data, bool authorized});
 }
 
 /// @nodoc
-class __$$DraftScreenConnectedCopyWithImpl<$Res>
-    extends _$DraftScreenStateCopyWithImpl<$Res, _$DraftScreenConnected>
-    implements _$$DraftScreenConnectedCopyWith<$Res> {
-  __$$DraftScreenConnectedCopyWithImpl(_$DraftScreenConnected _value,
-      $Res Function(_$DraftScreenConnected) _then)
+class __$$DraftScreenConnectedImplCopyWithImpl<$Res>
+    extends _$DraftScreenStateCopyWithImpl<$Res, _$DraftScreenConnectedImpl>
+    implements _$$DraftScreenConnectedImplCopyWith<$Res> {
+  __$$DraftScreenConnectedImplCopyWithImpl(_$DraftScreenConnectedImpl _value,
+      $Res Function(_$DraftScreenConnectedImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of DraftScreenState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? data = null,
     Object? authorized = null,
   }) {
-    return _then(_$DraftScreenConnected(
+    return _then(_$DraftScreenConnectedImpl(
       data: null == data
           ? _value.data
           : data // ignore: cast_nullable_to_non_nullable
@@ -139,8 +145,9 @@ class __$$DraftScreenConnectedCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DraftScreenConnected implements DraftScreenConnected {
-  const _$DraftScreenConnected({required this.data, required this.authorized});
+class _$DraftScreenConnectedImpl implements DraftScreenConnected {
+  const _$DraftScreenConnectedImpl(
+      {required this.data, required this.authorized});
 
   @override
   final String data;
@@ -153,10 +160,10 @@ class _$DraftScreenConnected implements DraftScreenConnected {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$DraftScreenConnected &&
+            other is _$DraftScreenConnectedImpl &&
             (identical(other.data, data) || other.data == data) &&
             (identical(other.authorized, authorized) ||
                 other.authorized == authorized));
@@ -165,12 +172,15 @@ class _$DraftScreenConnected implements DraftScreenConnected {
   @override
   int get hashCode => Object.hash(runtimeType, data, authorized);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DraftScreenState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$DraftScreenConnectedCopyWith<_$DraftScreenConnected> get copyWith =>
-      __$$DraftScreenConnectedCopyWithImpl<_$DraftScreenConnected>(
-          this, _$identity);
+  _$$DraftScreenConnectedImplCopyWith<_$DraftScreenConnectedImpl>
+      get copyWith =>
+          __$$DraftScreenConnectedImplCopyWithImpl<_$DraftScreenConnectedImpl>(
+              this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -243,36 +253,43 @@ class _$DraftScreenConnected implements DraftScreenConnected {
 abstract class DraftScreenConnected implements DraftScreenState {
   const factory DraftScreenConnected(
       {required final String data,
-      required final bool authorized}) = _$DraftScreenConnected;
+      required final bool authorized}) = _$DraftScreenConnectedImpl;
 
   String get data;
   @override
   bool get authorized;
+
+  /// Create a copy of DraftScreenState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$DraftScreenConnectedCopyWith<_$DraftScreenConnected> get copyWith =>
-      throw _privateConstructorUsedError;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$DraftScreenConnectedImplCopyWith<_$DraftScreenConnectedImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class _$$DraftScreenDisconnectedCopyWith<$Res>
+abstract class _$$DraftScreenDisconnectedImplCopyWith<$Res>
     implements $DraftScreenStateCopyWith<$Res> {
-  factory _$$DraftScreenDisconnectedCopyWith(_$DraftScreenDisconnected value,
-          $Res Function(_$DraftScreenDisconnected) then) =
-      __$$DraftScreenDisconnectedCopyWithImpl<$Res>;
+  factory _$$DraftScreenDisconnectedImplCopyWith(
+          _$DraftScreenDisconnectedImpl value,
+          $Res Function(_$DraftScreenDisconnectedImpl) then) =
+      __$$DraftScreenDisconnectedImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({bool authorized, bool connecting, DraftScreenError? error});
 }
 
 /// @nodoc
-class __$$DraftScreenDisconnectedCopyWithImpl<$Res>
-    extends _$DraftScreenStateCopyWithImpl<$Res, _$DraftScreenDisconnected>
-    implements _$$DraftScreenDisconnectedCopyWith<$Res> {
-  __$$DraftScreenDisconnectedCopyWithImpl(_$DraftScreenDisconnected _value,
-      $Res Function(_$DraftScreenDisconnected) _then)
+class __$$DraftScreenDisconnectedImplCopyWithImpl<$Res>
+    extends _$DraftScreenStateCopyWithImpl<$Res, _$DraftScreenDisconnectedImpl>
+    implements _$$DraftScreenDisconnectedImplCopyWith<$Res> {
+  __$$DraftScreenDisconnectedImplCopyWithImpl(
+      _$DraftScreenDisconnectedImpl _value,
+      $Res Function(_$DraftScreenDisconnectedImpl) _then)
       : super(_value, _then);
 
+  /// Create a copy of DraftScreenState
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -280,7 +297,7 @@ class __$$DraftScreenDisconnectedCopyWithImpl<$Res>
     Object? connecting = null,
     Object? error = freezed,
   }) {
-    return _then(_$DraftScreenDisconnected(
+    return _then(_$DraftScreenDisconnectedImpl(
       authorized: null == authorized
           ? _value.authorized
           : authorized // ignore: cast_nullable_to_non_nullable
@@ -299,8 +316,8 @@ class __$$DraftScreenDisconnectedCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$DraftScreenDisconnected implements DraftScreenDisconnected {
-  const _$DraftScreenDisconnected(
+class _$DraftScreenDisconnectedImpl implements DraftScreenDisconnected {
+  const _$DraftScreenDisconnectedImpl(
       {required this.authorized, this.connecting = false, this.error});
 
   @override
@@ -317,10 +334,10 @@ class _$DraftScreenDisconnected implements DraftScreenDisconnected {
   }
 
   @override
-  bool operator ==(dynamic other) {
+  bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$DraftScreenDisconnected &&
+            other is _$DraftScreenDisconnectedImpl &&
             (identical(other.authorized, authorized) ||
                 other.authorized == authorized) &&
             (identical(other.connecting, connecting) ||
@@ -331,12 +348,14 @@ class _$DraftScreenDisconnected implements DraftScreenDisconnected {
   @override
   int get hashCode => Object.hash(runtimeType, authorized, connecting, error);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DraftScreenState
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$DraftScreenDisconnectedCopyWith<_$DraftScreenDisconnected> get copyWith =>
-      __$$DraftScreenDisconnectedCopyWithImpl<_$DraftScreenDisconnected>(
-          this, _$identity);
+  _$$DraftScreenDisconnectedImplCopyWith<_$DraftScreenDisconnectedImpl>
+      get copyWith => __$$DraftScreenDisconnectedImplCopyWithImpl<
+          _$DraftScreenDisconnectedImpl>(this, _$identity);
 
   @override
   @optionalTypeArgs
@@ -410,14 +429,17 @@ abstract class DraftScreenDisconnected implements DraftScreenState {
   const factory DraftScreenDisconnected(
       {required final bool authorized,
       final bool connecting,
-      final DraftScreenError? error}) = _$DraftScreenDisconnected;
+      final DraftScreenError? error}) = _$DraftScreenDisconnectedImpl;
 
   @override
   bool get authorized;
   bool get connecting;
   DraftScreenError? get error;
+
+  /// Create a copy of DraftScreenState
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
-  _$$DraftScreenDisconnectedCopyWith<_$DraftScreenDisconnected> get copyWith =>
-      throw _privateConstructorUsedError;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$DraftScreenDisconnectedImplCopyWith<_$DraftScreenDisconnectedImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
