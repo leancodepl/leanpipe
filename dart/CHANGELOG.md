@@ -1,8 +1,9 @@
 # Unreleased
 
 - **Breaking:** Bump minimum Dart vesion to 3.6.0
-- Bump `collection` dependency to `^1.19.0`
-- Bump `json_annotation` dependency to `^4.9.0`
+- Bump `collection` dependency to `1.19.0`
+- Bump `json_annotation` dependency to `4.9.0`
+- Bump `meta` dependency to `1.15.0`
 
 ## 1.0.0
 
