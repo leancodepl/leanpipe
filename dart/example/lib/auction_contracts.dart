@@ -6,7 +6,6 @@ part 'auction_contracts.g.dart';
 
 @JsonSerializable(fieldRename: FieldRename.pascal)
 class Auction with EquatableMixin implements Topic<AuctionNotification> {
-  // ignore: avoid_positional_boolean_parameters
   Auction(this.auctionId, this.authorized);
 
   @override
