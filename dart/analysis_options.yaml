@@ -5,3 +5,4 @@ analyzer:
     - "**/*.g.dart"
     - example/
     - publisher_integration_tests/
+    - lib/signalr_core/

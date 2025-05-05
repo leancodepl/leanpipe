@@ -9,10 +9,10 @@ import 'package:leancode_pipe/leancode_pipe/pipe_connection_state_mapper.dart';
 import 'package:leancode_pipe/leancode_pipe/pipe_error.dart';
 import 'package:leancode_pipe/leancode_pipe/pipe_subscription.dart';
 import 'package:leancode_pipe/leancode_pipe/topic_subscription.dart';
+import 'package:leancode_pipe/signalr_core/signalr_core.dart';
 import 'package:logging/logging.dart';
 import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:signalr_core/signalr_core.dart';
 import 'package:uuid/uuid.dart';
 
 typedef OnPipeAction<T> = void Function(T value);

@@ -1,9 +1,9 @@
 import 'package:leancode_pipe/leancode_pipe.dart';
 import 'package:leancode_pipe/leancode_pipe/create_hub_connection.dart';
 import 'package:leancode_pipe/leancode_pipe/pipe_connection_state_mapper.dart';
+import 'package:leancode_pipe/signalr_core/signalr_core.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:signalr_core/signalr_core.dart';
 import 'package:test/test.dart';
 import 'package:uuid/uuid.dart';
 
