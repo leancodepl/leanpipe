@@ -1,10 +1,8 @@
-# Unreleased
+# 2.0.0
 
-- Vendor `signalr_core` package (https://github.com/jamiewest/signalr_core)
 - **Breaking:** Bump minimum Dart vesion to 3.6.0
-- Bump `collection` dependency to `1.19.0`
-- Bump `json_annotation` dependency to `4.9.0`
-- Bump `meta` dependency to `1.15.0`
+- Vendor `signalr_core` package (https://github.com/jamiewest/signalr_core)
+- Bump dependencies
 
 ## 1.0.0
 
