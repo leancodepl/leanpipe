@@ -1,4 +1,4 @@
-# 2.0.0
+## 2.0.0
 
 - **Breaking:** Bump minimum Dart vesion to 3.6.0
 - Vendor `signalr_core` package (https://github.com/jamiewest/signalr_core)
