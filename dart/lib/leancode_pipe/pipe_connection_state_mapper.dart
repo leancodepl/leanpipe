@@ -1,5 +1,5 @@
 import 'package:leancode_pipe/leancode_pipe/pipe_connection_state.dart';
-import 'package:signalr_core/signalr_core.dart';
+import 'package:leancode_pipe/signalr_core/signalr_core.dart';
 
 abstract final class PipeConnectionStateMapper {
   static PipeConnectionState fromHubConnectionState(

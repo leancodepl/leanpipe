@@ -1,8 +1,8 @@
 import 'package:leancode_pipe/leancode_pipe/contracts/topic.dart';
 import 'package:leancode_pipe/leancode_pipe/pipe_client.dart';
+import 'package:leancode_pipe/signalr_core/signalr_core.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:signalr_core/signalr_core.dart';
 import 'package:uuid/uuid.dart';
 
 final class MockBehaviorSubject<T extends Object> extends Mock

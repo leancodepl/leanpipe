@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:leancode_pipe/leancode_pipe.dart';
 import 'package:leancode_pipe/leancode_pipe/contracts/contracts.dart';
+import 'package:leancode_pipe/signalr_core/signalr_core.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:signalr_core/signalr_core.dart';
 import 'package:uuid/uuid.dart';
 
 import 'mocks.dart';
