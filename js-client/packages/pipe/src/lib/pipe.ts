@@ -11,6 +11,19 @@ import {
     SubscriptionStatus,
 } from "./contract"
 
+/**
+ * Manages real-time subscriptions to topics using SignalR connections.
+ * 
+ * @param url - SignalR hub URL to connect to
+ * @param options - Optional SignalR connection configuration
+ * @example
+ * ```typescript
+ * const pipe = new Pipe({ 
+ *   url: "https://api.example.com/pipe",
+ *   options: { accessTokenFactory: () => getToken() }
+ * });
+ * ```
+ */
 export class Pipe {
     #connection$
     #subscriptions: SubscriptionState[] = []
@@ -42,6 +55,27 @@ export class Pipe {
         )
     }
 
+    /**
+     * Subscribes to a topic and returns an observable of notifications.
+     * 
+     * @template TNotifications - Type mapping of notification types to their payload types
+     * @param topicType - Type identifier for the topic
+     * @param topic - Topic parameters or filters
+     * @returns Observable that emits notification tuples [NotificationType, Notification]
+     * @throws {Error} When subscription fails or times out after 3 seconds
+     * @example
+     * ```typescript
+     * interface Notifications {
+     *   UserUpdated: { id: string; name: string };
+     *   UserDeleted: { id: string };
+     * }
+     * 
+     * const notifications$ = pipe.topic<Notifications>("User", { userId: "123" });
+     * notifications$.subscribe(([type, data]) => {
+     *   console.log(`Received ${type}:`, data);
+     * });
+     * ```
+     */
     topic<TNotifications extends Record<string, unknown>>(topicType: string, topic: unknown) {
         let subscription = this.#subscriptions.find(matchesTopic(topicType, topic))
 
@@ -91,10 +125,23 @@ export class Pipe {
     }
 }
 
+/**
+ * Applies a function and returns its result.
+ * 
+ * @param x - Function to execute
+ * @returns Result of the function execution
+ */
 function apply<T>(x: () => T) {
     return x()
 }
 
+/**
+ * Creates a predicate function that matches topics by type and content.
+ * 
+ * @param topicType - Topic type to match
+ * @param topic - Topic content to match
+ * @returns Function that returns true if topic matches
+ */
 function matchesTopic(topicType: string, topic: unknown) {
     return (t: NotificationEnvelope | SubscriptionState) =>
         "Topic" in t
@@ -102,5 +149,10 @@ function matchesTopic(topicType: string, topic: unknown) {
             : t.topicType === topicType && deepEqual(t.topic, topic)
 }
 
+/**
+ * Union type representing all possible notification tuples for a given notification mapping.
+ * 
+ * @template T - Record mapping notification types to their payload types
+ */
 export type NotificationsUnion<T extends Record<string, unknown>> = Values<{ [TKey in keyof T]: [TKey, T[TKey]] }>
 type Values<T> = T[keyof T]
