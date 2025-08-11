@@ -136,10 +136,5 @@ function matchesTopic(topicType: string, topic: unknown) {
             : t.topicType === topicType && deepEqual(t.topic, topic)
 }
 
-/**
- * Union type representing all possible notification tuples for a given notification mapping.
- * 
- * @template T - Record mapping notification types to their payload types
- */
 export type NotificationsUnion<T extends Record<string, unknown>> = Values<{ [TKey in keyof T]: [TKey, T[TKey]] }>
 type Values<T> = T[keyof T]
