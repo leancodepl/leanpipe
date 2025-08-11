@@ -1,6 +1,6 @@
-# js-client - LeanCode Pipe JavaScript/TypeScript client libraries
+# js-client - LeanPipe JavaScript/TypeScript client libraries
 
-JavaScript and TypeScript client libraries for the LeanCode Pipe real-time data streaming system. Provides type-safe, reactive clients for subscribing to server-sent data streams.
+JavaScript and TypeScript client libraries for the LeanPipe real-time data streaming system. Provides type-safe, reactive clients for subscribing to server-sent data streams.
 
 ## Installation
 
