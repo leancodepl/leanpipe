@@ -1,14 +1,6 @@
 # @leancodepl/pipe
 
-A TypeScript client for subscribing to real-time notifications using SignalR connections. Manages topic subscriptions with automatic reconnection and type-safe notification handling.
-
-## Features
-
-- **Automatic Reconnection**: Built-in SignalR reconnection with exponential backoff
-- **Type Safety**: Full TypeScript support with generic notification types
-- **Deduplication**: Automatic subscription deduplication for identical topics
-- **Error Handling**: Timeout and error handling for failed subscriptions
-- **Memory Management**: Automatic cleanup when subscriptions are unsubscribed 
+A TypeScript client for subscribing to real-time data streams using LeanPipe. Manages topic subscriptions with automatic reconnection and type-safe notification handling.
 
 ## Installation
 
@@ -23,8 +15,8 @@ npm install @leancodepl/pipe
 Creates a new pipe instance for managing topic subscriptions.
 
 **Parameters:**
-- `url` (string) - SignalR hub URL to connect to
-- `options` (IHttpConnectionOptions, optional) - Optional SignalR connection configuration
+- `url` (string) - LeanPipe publisher URL to connect to
+- `options` (IHttpConnectionOptions, optional) - Optional connection configuration
 
 **Returns:** Pipe instance
 
@@ -103,7 +95,7 @@ Types of operations that can be performed on subscriptions.
 import { Pipe } from "@leancodepl/pipe";
 
 const pipe = new Pipe({ 
-  url: "https://api.example.com/pipe" 
+  url: "https://api.example.com/leanpipe" 
 });
 
 const notifications$ = pipe.topic("User", { userId: "123" });
@@ -124,7 +116,7 @@ interface UserNotifications {
   UserCreated: { id: string; name: string };
 }
 
-const pipe = new Pipe({ url: "https://api.example.com/pipe" });
+const pipe = new Pipe({ url: "https://api.example.com/leanpipe" });
 
 const userNotifications$ = pipe.topic<UserNotifications>("User", { 
   organizationId: "org-123" 
@@ -151,7 +143,7 @@ userNotifications$.subscribe(([type, data]) => {
 import { Pipe } from "@leancodepl/pipe";
 
 const pipe = new Pipe({ 
-  url: "https://api.example.com/pipe",
+  url: "https://api.example.com/leanpipe",
   options: { 
     accessTokenFactory: () => localStorage.getItem("token") 
   }
@@ -169,7 +161,7 @@ notifications$.subscribe(([type, data]) => {
 ```typescript
 import { Pipe } from "@leancodepl/pipe";
 
-const pipe = new Pipe({ url: "https://api.example.com/pipe" });
+const pipe = new Pipe({ url: "https://api.example.com/leanpipe" });
 
 // Subscribe to user notifications
 const userNotifications$ = pipe.topic("User", { userId: "123" });

@@ -12,14 +12,14 @@ import {
 } from "./contract"
 
 /**
- * Manages real-time subscriptions to topics using SignalR connections.
+ * Manages real-time data stream subscriptions using LeanPipe.
  * 
- * @param url - SignalR hub URL to connect to
- * @param options - Optional SignalR connection configuration
+ * @param url - LeanPipe publisher URL to connect to
+ * @param options - Optional connection configuration
  * @example
  * ```typescript
  * const pipe = new Pipe({ 
- *   url: "https://api.example.com/pipe",
+ *   url: "https://api.example.com/leanpipe",
  *   options: { accessTokenFactory: () => getToken() }
  * });
  * ```
@@ -56,7 +56,7 @@ export class Pipe {
     }
 
     /**
-     * Subscribes to a topic and returns an observable of notifications.
+     * Subscribes to a data stream topic and returns an observable of notifications.
      * 
      * @template TNotifications - Type mapping of notification types to their payload types
      * @param topicType - Type identifier for the topic

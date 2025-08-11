@@ -1,11 +1,18 @@
-# js-client
+# js-client - LeanCode Pipe JavaScript/TypeScript client libraries
 
-TypeScript client libraries for the LeanCode Pipe real-time notification system. Provides type-safe, reactive clients for subscribing to server-sent notifications.
+JavaScript and TypeScript client libraries for the LeanCode Pipe real-time data streaming system. Provides type-safe, reactive clients for subscribing to server-sent data streams.
+
+## Installation
+
+### Core Package
+```bash
+npm install @leancodepl/pipe
+```
 
 ## Packages
 
 ### @leancodepl/pipe
-Real-time topic subscription client with SignalR integration.
+Real-time data streaming client for LeanPipe.
 
 For detailed API documentation and examples, see the [@leancodepl/pipe README](./packages/pipe/README.md).
 

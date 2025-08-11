@@ -18,17 +18,16 @@
   "bugs": {
     "url": "https://github.com/leancodepl/leanpipe/issues"
   },
-  "description": "Real-time topic subscription client with SignalR integration for LeanCode Pipe",
+  "description": "Real-time data streaming web client for LeanPipe",
   "keywords": [
     "realtime",
     "notifications",
-    "signalr",
+    "leanpipe",
     "websockets",
     "rxjs",
     "typescript",
     "javascript",
-    "leancode",
-    "pipe"
+    "leancode"
   ],
   "author": {
     "name": "LeanCode",
