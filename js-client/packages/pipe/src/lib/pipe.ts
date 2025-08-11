@@ -125,23 +125,10 @@ export class Pipe {
     }
 }
 
-/**
- * Applies a function and returns its result.
- * 
- * @param x - Function to execute
- * @returns Result of the function execution
- */
 function apply<T>(x: () => T) {
     return x()
 }
 
-/**
- * Creates a predicate function that matches topics by type and content.
- * 
- * @param topicType - Topic type to match
- * @param topic - Topic content to match
- * @returns Function that returns true if topic matches
- */
 function matchesTopic(topicType: string, topic: unknown) {
     return (t: NotificationEnvelope | SubscriptionState) =>
         "Topic" in t
