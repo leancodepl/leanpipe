@@ -34,4 +34,4 @@ The clients allow subscribing to various notification topics and receive real ti
 Supported LeanPipe client SDKs:
 
 1. [Dart](dart/README.md)
-2. TypeScript [TBD]
+2. [TypeScript](js-client/README.md)

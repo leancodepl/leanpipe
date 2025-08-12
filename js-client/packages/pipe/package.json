@@ -2,6 +2,38 @@
   "name": "@leancodepl/pipe",
   "version": "1.0.2",
   "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leancodepl/leanpipe.git",
+    "directory": "js-client/packages/pipe"
+  },
+  "homepage": "https://github.com/leancodepl/leanpipe",
+  "bugs": {
+    "url": "https://github.com/leancodepl/leanpipe/issues"
+  },
+  "description": "Real-time data streaming web client for LeanPipe",
+  "keywords": [
+    "realtime",
+    "notifications",
+    "leanpipe",
+    "websockets",
+    "rxjs",
+    "typescript",
+    "javascript",
+    "leancode"
+  ],
+  "author": {
+    "name": "LeanCode",
+    "url": "https://leancode.co"
+  },
+  "sideEffects": false,
   "dependencies": {
     "@microsoft/signalr": ">=8.0.0",
     "deep-equal": "^2.0.0"

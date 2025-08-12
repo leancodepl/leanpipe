@@ -11,6 +11,19 @@ import {
     SubscriptionStatus,
 } from "./contract"
 
+/**
+ * Manages real-time data stream subscriptions using LeanPipe.
+ * 
+ * @param url - LeanPipe publisher URL to connect to
+ * @param options - Optional connection configuration
+ * @example
+ * ```typescript
+ * const pipe = new Pipe({ 
+ *   url: "https://api.example.com/leanpipe",
+ *   options: { accessTokenFactory: () => getToken() }
+ * });
+ * ```
+ */
 export class Pipe {
     #connection$
     #subscriptions: SubscriptionState[] = []
@@ -42,6 +55,27 @@ export class Pipe {
         )
     }
 
+    /**
+     * Subscribes to a data stream topic and returns an observable of notifications.
+     * 
+     * @template TNotifications - Type mapping of notification types to their payload types
+     * @param topicType - Type identifier for the topic
+     * @param topic - Topic parameters or filters
+     * @returns Observable that emits notification tuples [NotificationType, Notification]
+     * @throws {Error} When subscription fails or times out after 3 seconds
+     * @example
+     * ```typescript
+     * interface Notifications {
+     *   UserUpdated: { id: string; name: string };
+     *   UserDeleted: { id: string };
+     * }
+     * 
+     * const notifications$ = pipe.topic<Notifications>("User", { userId: "123" });
+     * notifications$.subscribe(([type, data]) => {
+     *   console.log(`Received ${type}:`, data);
+     * });
+     * ```
+     */
     topic<TNotifications extends Record<string, unknown>>(topicType: string, topic: unknown) {
         let subscription = this.#subscriptions.find(matchesTopic(topicType, topic))
 
