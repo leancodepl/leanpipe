@@ -84,6 +84,6 @@ public static class RegistrationConfiguratorExtensions
     {
         var interfaces = type.GetTypeInfo().GetInterfaces();
 
-        return interfaces.Any(t => t.HasInterface(typeof(ITopic)));
+        return interfaces.Any(t => t.HasInterface<ITopic>());
     }
 }

@@ -1,0 +1,12 @@
+<Project>
+
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
+
+  <PropertyGroup>
+    <!-- CA1515: Types in applications should be internal - not applicable for test code -->
+    <!-- CS7022: Entry point conflict with test SDK - expected when using custom Program.cs for WebApplicationFactory -->
+    <NoWarn>$(NoWarn);CA1515;CS7022</NoWarn>
+  </PropertyGroup>
+
+</Project>
+

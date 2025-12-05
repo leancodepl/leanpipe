@@ -26,7 +26,7 @@ public static class LeanPipeServiceCollectionExtensions
             );
 
         services.AddTransient<LeanPipeSecurity>();
-        services.AddTransient(typeof(ISubscriptionExecutor), typeof(SubscriptionExecutor));
+        services.AddTransient<ISubscriptionExecutor, SubscriptionExecutor>();
         services.AddTransient(typeof(ISubscriptionHandler<>), typeof(KeyedSubscriptionHandler<>));
         services.AddTransient(typeof(ILeanPipePublisher<>), typeof(LeanPipePublisher<>));
         services.AddTransient<SubscriptionHandlerResolver>();
