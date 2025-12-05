@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <LangVersion>preview</LangVersion>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <Deterministic>true</Deterministic>
@@ -12,7 +12,7 @@
 
     <Authors>LeanCode</Authors>
     <Company>LeanCode</Company>
-    <Copyright>Copyright 2023 LeanCode Sp. z o.o.</Copyright>
+    <Copyright>Copyright 2025 LeanCode Sp. z o.o.</Copyright>
     <PackageProjectUrl>https://github.com/leancodepl/leanpipe</PackageProjectUrl>
     <RepositoryUrl>https://github.com/leancodepl/leanpipe</RepositoryUrl>
     <RepositoryCommit Condition="'$(GITHUB_SHA)' != ''">$(GITHUB_SHA)</RepositoryCommit>
