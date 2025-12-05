@@ -69,7 +69,10 @@ public static class RegistrationConfiguratorExtensions
             .Endpoint(e =>
             {
                 e.Temporary = true;
-                e.InstanceId = $"_{serviceName}";
+                // Include hostname to make queue unique per instance when scaling (only an issue for RabbitMQ)
+                var hostname =
+                    Environment.GetEnvironmentVariable("HOSTNAME") ?? Environment.MachineName;
+                e.InstanceId = $"_{serviceName}_{hostname}";
             });
 
         foreach (var topicType in topicTypes)
