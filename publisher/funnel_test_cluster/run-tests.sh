@@ -20,13 +20,13 @@ error() { echo -e "${RED}[ERROR]${NC} $1"; }
 check_prerequisites() {
     log "Checking prerequisites..."
     local missing=()
-    
+
     command -v k3d &> /dev/null || missing+=("k3d")
     command -v tilt &> /dev/null || missing+=("tilt")
     command -v kubectl &> /dev/null || missing+=("kubectl")
     command -v docker &> /dev/null || missing+=("docker")
     command -v dotnet &> /dev/null || missing+=("dotnet")
-    
+
     if [ ${#missing[@]} -ne 0 ]; then
         error "Missing required tools: ${missing[*]}"
         exit 1
@@ -37,7 +37,7 @@ check_prerequisites() {
 create_cluster() {
     if k3d cluster list | grep -q "^${CLUSTER_NAME} "; then
         log "Cluster '${CLUSTER_NAME}' already exists."
-        
+
         # Check if it's running
         if k3d cluster list | grep "^${CLUSTER_NAME} " | grep -q "0/1"; then
             log "Starting stopped cluster..."
@@ -47,7 +47,7 @@ create_cluster() {
         log "Creating k3d cluster '${CLUSTER_NAME}'..."
         k3d cluster create --config k3d.yaml
     fi
-    
+
     kubectl cluster-info
 }
 
@@ -58,49 +58,49 @@ cleanup_namespaces() {
 
 run_tilt() {
     log "Starting Tilt (building and deploying services)..."
-    
+
     # Kill any existing tilt processes
     pkill -f "tilt up" 2>/dev/null || true
     sleep 2
-    
+
     # Start tilt in background
     tilt up --stream &
     TILT_PID=$!
-    
+
     log "Waiting for tests to complete (timeout: ${WAIT_TIMEOUT}s)..."
-    
+
     local start_time=$(date +%s)
     local all_completed=false
-    
+
     while true; do
         local current_time=$(date +%s)
         local elapsed=$((current_time - start_time))
-        
+
         if [ $elapsed -ge $WAIT_TIMEOUT ]; then
             error "Timeout waiting for tests to complete"
             kill $TILT_PID 2>/dev/null || true
             exit 1
         fi
-        
+
         # Check if all test pods are completed
         local test_pods=$(kubectl get pods -A 2>/dev/null | grep -E "tests-" | grep -v "NAME" || true)
-        
+
         if [ -n "$test_pods" ]; then
             local total=$(echo "$test_pods" | wc -l)
             local completed=$(echo "$test_pods" | grep -c "Completed" || true)
             local errors=$(echo "$test_pods" | grep -c "Error" || true)
-            
+
             if [ "$completed" -eq 4 ] || [ $((completed + errors)) -eq 4 ]; then
                 all_completed=true
                 break
             fi
-            
+
             log "Progress: $completed/4 tests completed, $errors errors (${elapsed}s elapsed)"
         fi
-        
+
         sleep 10
     done
-    
+
     # Stop tilt
     kill $TILT_PID 2>/dev/null || true
 }
@@ -108,23 +108,23 @@ run_tilt() {
 show_results() {
     log "Test Results:"
     echo "=============================================="
-    
+
     local all_passed=true
     local namespaces=("no-scaling" "scaled-target-service" "scaled-funnel" "multiple-services")
-    
+
     for ns in "${namespaces[@]}"; do
         local pod=$(kubectl get pods -n "$ns" 2>/dev/null | grep "tests-" | head -1 | awk '{print $1}')
-        
+
         if [ -n "$pod" ]; then
             local status=$(kubectl get pod -n "$ns" "$pod" -o jsonpath='{.status.phase}' 2>/dev/null)
             local result=$(kubectl logs -n "$ns" "$pod" 2>/dev/null | grep -E "^(Passed|Failed)!" | tail -1)
-            
+
             if echo "$result" | grep -q "Passed!"; then
                 echo -e "${GREEN}✓${NC} ${ns}: ${result}"
             else
                 echo -e "${RED}✗${NC} ${ns}: ${result:-FAILED}"
                 all_passed=false
-                
+
                 # Show error details
                 echo "  Error details:"
                 kubectl logs -n "$ns" "$pod" 2>/dev/null | grep -A 5 "Error Message:" | head -10 | sed 's/^/    /'
@@ -134,9 +134,9 @@ show_results() {
             all_passed=false
         fi
     done
-    
+
     echo "=============================================="
-    
+
     if $all_passed; then
         log "All tests passed! 🎉"
         return 0
@@ -177,7 +177,7 @@ case "${1:-run}" in
         delete_cluster
         ;;
     *)
-        echo "Usage: $0 {run|results|cleanup|delete}"
+      echo "Usage: $0 {run|results|cleanup|delete}"
         echo ""
         echo "Commands:"
         echo "  run      - Create cluster, run tests, show results (default)"
@@ -190,8 +190,3 @@ case "${1:-run}" in
         exit 1
         ;;
 esac
-
-
-
-
-
