@@ -2,37 +2,42 @@ name: Dart client integration tests
 
 on:
   push:
-    branches: [ main ]
-    tags-ignore: [ "*-v*" ]
+    branches: [main]
+    tags-ignore: ["*-v*"]
     paths:
       - "dart/**"
       - "publisher/**"
   pull_request:
-    branches: [ main ]
+    branches: [main]
     paths:
       - "dart/**"
       - "publisher/**"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   setup-cluster-and-test:
     name: Test Dart client compliance with Publisher
     runs-on: ubuntu-latest
     env:
-      DOTNET_VERSION: 9.0.100
+      DOTNET_VERSION: 10.0
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
     timeout-minutes: 20
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
       - name: Setup Tilt
-        uses: yokawasa/action-setup-kube-tools@v0.9.3
+        uses: yokawasa/action-setup-kube-tools@v0.13.1
         with:
-          tilt: v0.33.6
+          tilt: v0.36.0
           setup-tools: |
             tilt
       - name: Create test cluster
@@ -42,3 +47,25 @@ jobs:
           args: --config=publisher/client_integration_tests_cluster/k3d.yaml
       - name: Run Tilt CI with tests
         run: tilt ci --context k3d-clientintegrationtests -f dart/publisher_integration_tests/Tiltfile
+      - name: Collect test logs on failure
+        if: failure()
+        run: |
+          mkdir -p test-logs
+          for test_type in disabledfunnel enabledfunnel; do
+            echo "=== dart-client-${test_type}-tests ===" >> test-logs/test-results.txt
+            pod=$(kubectl get pods -o name 2>/dev/null | grep "dart-client-${test_type}-tests" | head -1)
+            if [ -n "$pod" ]; then
+              kubectl logs $pod >> test-logs/test-results.txt 2>&1 || true
+            fi
+            echo "" >> test-logs/test-results.txt
+          done
+          kubectl get pods -A >> test-logs/pod-status.txt 2>&1 || true
+          kubectl logs deployment/testapp-disabledfunnel >> test-logs/backend-disabledfunnel.txt 2>&1 || true
+          kubectl logs deployment/testapp-enabledfunnel >> test-logs/backend-enabledfunnel.txt 2>&1 || true
+      - name: Upload test logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: dart-integration-test-logs
+          path: test-logs/
+          retention-days: 7
