@@ -84,7 +84,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v5
         with:
-          name: publisher_test_results.zip
+          name: publisher-test-results
           path: publisher/TestResults/*.trx
 
   publish-test-results:
@@ -101,16 +101,8 @@ jobs:
         uses: actions/download-artifact@v6
         with:
           path: artifacts
-      - name: Extract Artifacts
-        run: |
-          for file in artifacts/*.zip; do
-            if [[ -f "$file" ]]; then
-              dir="${file%.zip}"
-              mkdir -p "$dir"
-              unzip -d "$dir" "$file"
-            fi
-          done
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
-          trx_files: "artifacts/*/**/*.trx"
+          check_name: "Publisher Unit Test Results"
+          files: "artifacts/**/*.trx"
