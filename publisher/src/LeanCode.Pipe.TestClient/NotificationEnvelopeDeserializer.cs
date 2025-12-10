@@ -23,10 +23,10 @@ internal class NotificationEnvelopeDeserializer
     {
         if (
             typesCache.Value.Topics.TryGetValue(envelope.TopicType, out var topicType)
-            && typesCache
-                .Value
-                .Notifications
-                .TryGetValue(envelope.NotificationType, out var notificationType)
+            && typesCache.Value.Notifications.TryGetValue(
+                envelope.NotificationType,
+                out var notificationType
+            )
         )
         {
             var topic = (ITopic?)((JsonElement)envelope.Topic).Deserialize(topicType, options);
@@ -54,23 +54,18 @@ internal class NotificationEnvelopeDeserializer
     {
         var topicType = typeof(ITopic);
         var topicTypes = types
-            .Assemblies
-            .SelectMany(t => t.ExportedTypes)
+            .Assemblies.SelectMany(t => t.ExportedTypes)
             .Where(t => t.IsAssignableTo(topicType) && !t.IsAbstract && !t.IsGenericType)
             .ToImmutableDictionary(t => t.FullName!);
 
         var produceNotificationType = typeof(IProduceNotification<>);
         var notificationTypes = topicTypes
-            .Values
-            .SelectMany(
-                t =>
-                    t.GetInterfaces()
-                        .Where(
-                            i =>
-                                i.IsGenericType
-                                && i.GetGenericTypeDefinition() == produceNotificationType
-                        )
-                        .Select(i => i.GetGenericArguments()[0])
+            .Values.SelectMany(t =>
+                t.GetInterfaces()
+                    .Where(i =>
+                        i.IsGenericType && i.GetGenericTypeDefinition() == produceNotificationType
+                    )
+                    .Select(i => i.GetGenericArguments()[0])
             )
             .Distinct()
             .ToImmutableDictionary(NotificationTagGenerator.Generate);

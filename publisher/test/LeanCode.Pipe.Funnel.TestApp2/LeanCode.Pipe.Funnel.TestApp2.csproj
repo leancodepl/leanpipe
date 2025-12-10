@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <AssemblyName>TestApp2</AssemblyName>
@@ -10,5 +9,4 @@
 
     <PackageReference Include="MassTransit.RabbitMQ" />
   </ItemGroup>
-
 </Project>

@@ -10,34 +10,31 @@ namespace LeanCode.Pipe.Funnel.MultipleServicesTests;
 
 public class MultipleTargetServicesTests : IAsyncLifetime
 {
-    private readonly LeanPipeTestClient leanPipeClient =
+    private readonly LeanPipeTestClient leanPipeClient = new(
         new(
-            new(
-                "http://multiple-services-funnel-0.multiple-services-funnel-svc.multiple-services.svc.cluster.local:8080/leanpipe"
-            ),
-            new(typeof(Topic1), typeof(Topic2)),
-            cfg =>
-            {
-                cfg.Transports = HttpTransportType.WebSockets;
-                cfg.SkipNegotiation = true;
-            }
-        );
-
-    private readonly HttpClient testApp1Client =
-        new()
+            "http://multiple-services-funnel-0.multiple-services-funnel-svc.multiple-services.svc.cluster.local:8080/leanpipe"
+        ),
+        new(typeof(Topic1), typeof(Topic2)),
+        cfg =>
         {
-            BaseAddress = new(
-                "http://multiple-services-testapp1-0.multiple-services-testapp1-svc.multiple-services.svc.cluster.local:8080"
-            ),
-        };
+            cfg.Transports = HttpTransportType.WebSockets;
+            cfg.SkipNegotiation = true;
+        }
+    );
 
-    private readonly HttpClient testApp2Client =
-        new()
-        {
-            BaseAddress = new(
-                "http://multiple-services-testapp2-0.multiple-services-testapp2-svc.multiple-services.svc.cluster.local:8080"
-            ),
-        };
+    private readonly HttpClient testApp1Client = new()
+    {
+        BaseAddress = new(
+            "http://multiple-services-testapp1-0.multiple-services-testapp1-svc.multiple-services.svc.cluster.local:8080"
+        ),
+    };
+
+    private readonly HttpClient testApp2Client = new()
+    {
+        BaseAddress = new(
+            "http://multiple-services-testapp2-0.multiple-services-testapp2-svc.multiple-services.svc.cluster.local:8080"
+        ),
+    };
 
     [Fact]
     public async Task Subscribing_and_receiving_notifications_from_any_target_service_works_and_does_not_interfere_with_each_other()

@@ -1,5 +1,4 @@
 <Project>
-
   <PropertyGroup>
     <LangVersion>preview</LangVersion>
     <TargetFramework>net10.0</TargetFramework>
@@ -20,8 +19,11 @@
     <Version Condition="$(Version) == '' And '$(BUILD_VERSION)' != ''">$(BUILD_VERSION)</Version>
     <Version Condition="$(Version) == '' And '$(BUILD_VERSION)' == ''">0.0.1</Version>
 
-    <InformationalVersion Condition="'$(RepositoryCommit)' != ''">$(Version)+$(RepositoryCommit)</InformationalVersion>
-    <InformationalVersion Condition="'$(RepositoryCommit)' == ''">$(Version)+local</InformationalVersion>
+    <InformationalVersion Condition="'$(RepositoryCommit)' != ''"
+      >$(Version)+$(RepositoryCommit)</InformationalVersion
+    >
+    <InformationalVersion Condition="'$(RepositoryCommit)' == ''"
+      >$(Version)+local</InformationalVersion
+    >
   </PropertyGroup>
-
 </Project>

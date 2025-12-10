@@ -35,13 +35,10 @@ public class SubscriptionHandlerWrapperTests
         type.GetConstructors()
             .Should()
             .ContainSingle()
-            .Which
-            .GetParameters()
+            .Which.GetParameters()
             .Should()
             .ContainSingle()
-            .Which
-            .ParameterType
-            .Should()
+            .Which.ParameterType.Should()
             .Be<ISubscriptionHandler<Topic1>>();
     }
 }

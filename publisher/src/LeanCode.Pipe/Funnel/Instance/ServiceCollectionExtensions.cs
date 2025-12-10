@@ -14,8 +14,8 @@ public static class ServiceCollectionExtensions
     {
         services
             .AddSignalR()
-            .AddJsonProtocol(
-                options => options.PayloadSerializerOptions.PropertyNamingPolicy = null
+            .AddJsonProtocol(options =>
+                options.PayloadSerializerOptions.PropertyNamingPolicy = null
             );
 
         services.AddMemoryCache();

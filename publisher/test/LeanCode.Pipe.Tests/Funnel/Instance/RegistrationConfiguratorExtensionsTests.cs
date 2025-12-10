@@ -20,7 +20,6 @@ public class RegistrationConfiguratorExtensionsTests
         configurator
             .Should()
             .ContainSingle(d => d.ServiceType == typeof(HubLifetimeManager<LeanPipeSubscriber>))
-            .And
-            .ContainSingle(d => d.ServiceType == typeof(GroupConsumer<LeanPipeSubscriber>));
+            .And.ContainSingle(d => d.ServiceType == typeof(GroupConsumer<LeanPipeSubscriber>));
     }
 }

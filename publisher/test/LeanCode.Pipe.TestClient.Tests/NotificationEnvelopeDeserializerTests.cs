@@ -8,8 +8,10 @@ namespace LeanCode.Pipe.TestClient.Tests;
 
 public class NotificationEnvelopeDeserializerTests
 {
-    private static readonly NotificationEnvelopeDeserializer Deserializer =
-        new(new(typeof(Topic)), null);
+    private static readonly NotificationEnvelopeDeserializer Deserializer = new(
+        new(typeof(Topic)),
+        null
+    );
 
     [Fact]
     public void NotificationEnvelopeDeserializer_deserializes_topic_and_notification()

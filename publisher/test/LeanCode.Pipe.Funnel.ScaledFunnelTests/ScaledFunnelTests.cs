@@ -9,39 +9,36 @@ namespace LeanCode.Pipe.Funnel.ScaledFunnelTests;
 
 public class ScaledFunnelTests : IAsyncLifetime
 {
-    private readonly LeanPipeTestClient leanPipeAClient =
+    private readonly LeanPipeTestClient leanPipeAClient = new(
         new(
-            new(
-                "http://scaled-funnel-funnel-0.scaled-funnel-funnel-svc.scaled-funnel.svc.cluster.local:8080/leanpipe"
-            ),
-            new(typeof(Topic1)),
-            cfg =>
-            {
-                cfg.Transports = HttpTransportType.WebSockets;
-                cfg.SkipNegotiation = true;
-            }
-        );
-
-    private readonly LeanPipeTestClient leanPipeBClient =
-        new(
-            new(
-                "http://scaled-funnel-funnel-1.scaled-funnel-funnel-svc.scaled-funnel.svc.cluster.local:8080/leanpipe"
-            ),
-            new(typeof(Topic1)),
-            cfg =>
-            {
-                cfg.Transports = HttpTransportType.WebSockets;
-                cfg.SkipNegotiation = true;
-            }
-        );
-
-    private readonly HttpClient testApp1Client =
-        new()
+            "http://scaled-funnel-funnel-0.scaled-funnel-funnel-svc.scaled-funnel.svc.cluster.local:8080/leanpipe"
+        ),
+        new(typeof(Topic1)),
+        cfg =>
         {
-            BaseAddress = new(
-                "http://scaled-funnel-testapp1-0.scaled-funnel-testapp1-svc.scaled-funnel.svc.cluster.local:8080"
-            ),
-        };
+            cfg.Transports = HttpTransportType.WebSockets;
+            cfg.SkipNegotiation = true;
+        }
+    );
+
+    private readonly LeanPipeTestClient leanPipeBClient = new(
+        new(
+            "http://scaled-funnel-funnel-1.scaled-funnel-funnel-svc.scaled-funnel.svc.cluster.local:8080/leanpipe"
+        ),
+        new(typeof(Topic1)),
+        cfg =>
+        {
+            cfg.Transports = HttpTransportType.WebSockets;
+            cfg.SkipNegotiation = true;
+        }
+    );
+
+    private readonly HttpClient testApp1Client = new()
+    {
+        BaseAddress = new(
+            "http://scaled-funnel-testapp1-0.scaled-funnel-testapp1-svc.scaled-funnel.svc.cluster.local:8080"
+        ),
+    };
 
     [Fact]
     public async Task Client_receives_notifications_while_connected_to_any_Funnel_instance()

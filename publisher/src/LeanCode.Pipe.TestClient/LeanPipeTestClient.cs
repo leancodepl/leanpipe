@@ -14,8 +14,9 @@ namespace LeanCode.Pipe.TestClient;
 /// </summary>
 public class LeanPipeTestClient : IAsyncDisposable
 {
-    private readonly ConcurrentDictionary<ITopic, LeanPipeSubscription> subscriptions =
-        new(TopicDeepEqualityComparer.Instance);
+    private readonly ConcurrentDictionary<ITopic, LeanPipeSubscription> subscriptions = new(
+        TopicDeepEqualityComparer.Instance
+    );
 
     private readonly HubConnection hubConnection;
     private readonly NotificationEnvelopeDeserializer notificationEnvelopeDeserializer;
@@ -166,8 +167,8 @@ public class LeanPipeTestClient : IAsyncDisposable
         using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
         cts.CancelAfter(subscriptionCompletionTimeout);
 
-        await using var ctRegistration = cts.Token.Register(
-            () => subscriptionCompletionSource.TrySetCanceled()
+        await using var ctRegistration = cts.Token.Register(() =>
+            subscriptionCompletionSource.TrySetCanceled()
         );
 
         using var subscriptionResponseCallback = hubConnection.On<SubscriptionResult>(
@@ -186,12 +187,11 @@ public class LeanPipeTestClient : IAsyncDisposable
             {
                 OperationType.Subscribe => nameof(LeanPipeSubscriber.Subscribe),
                 OperationType.Unsubscribe => nameof(LeanPipeSubscriber.Unsubscribe),
-                _
-                    => throw new ArgumentOutOfRangeException(
-                        nameof(operationType),
-                        operationType,
-                        "Pipe OperationType is out of range."
-                    ),
+                _ => throw new ArgumentOutOfRangeException(
+                    nameof(operationType),
+                    operationType,
+                    "Pipe OperationType is out of range."
+                ),
             },
             subscriptionEnvelope,
             ct

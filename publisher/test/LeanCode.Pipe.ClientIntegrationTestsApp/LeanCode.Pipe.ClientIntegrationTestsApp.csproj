@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
-
   <PropertyGroup>
     <OutputType>Exe</OutputType>
   </PropertyGroup>
@@ -9,5 +8,4 @@
 
     <ProjectReference Include="../../src/LeanCode.Pipe/LeanCode.Pipe.csproj" />
   </ItemGroup>
-
 </Project>

@@ -24,5 +24,4 @@
     <ProjectReference Include="../../src/LeanCode.Pipe/LeanCode.Pipe.csproj" />
     <ProjectReference Include="../LeanCode.Pipe.Tests.Additional/LeanCode.Pipe.Tests.Additional.csproj" />
   </ItemGroup>
-
 </Project>

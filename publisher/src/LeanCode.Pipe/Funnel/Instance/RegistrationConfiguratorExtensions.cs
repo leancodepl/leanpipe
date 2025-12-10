@@ -30,8 +30,8 @@ public static class RegistrationConfiguratorExtensions
         >();
 
         configurator.AddSingleton(provider => GetMassTransitHubLifetimeManager(provider, options));
-        configurator.AddSingleton<HubLifetimeManager<LeanPipeSubscriber>>(
-            sp => sp.GetRequiredService<MassTransitHubLifetimeManager<LeanPipeSubscriber>>()
+        configurator.AddSingleton<HubLifetimeManager<LeanPipeSubscriber>>(sp =>
+            sp.GetRequiredService<MassTransitHubLifetimeManager<LeanPipeSubscriber>>()
         );
 
         configurator.AddSingleton<HubConsumerDefinition<LeanPipeSubscriber>>();

@@ -14,7 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 var appBuilder = WebApplication.CreateBuilder(args);
-appBuilder.Host.ConfigureDefaultLogging("IntegrationTests", [ typeof(Program).Assembly ]);
+appBuilder.Host.ConfigureDefaultLogging("IntegrationTests", [typeof(Program).Assembly]);
 
 var services = appBuilder.Services;
 

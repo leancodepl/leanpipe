@@ -66,8 +66,8 @@ public sealed class LeanPipeSubscriber : Hub, ISubscribeContext
         CancellationToken ct
     )
     {
-        var tasks = groupKeys.Select(
-            key => Groups.RemoveFromGroupAsync(Context.ConnectionId, key, ct)
+        var tasks = groupKeys.Select(key =>
+            Groups.RemoveFromGroupAsync(Context.ConnectionId, key, ct)
         );
 
         return Task.WhenAll(tasks);

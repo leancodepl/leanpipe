@@ -38,14 +38,11 @@ public class RegistrationConfiguratorExtensionsTests
         {
             configurator
                 .Should()
-                .ContainSingle(
-                    d => d.ServiceType == typeof(FunnelledSubscriber<>).MakeGenericType(type)
+                .ContainSingle(d =>
+                    d.ServiceType == typeof(FunnelledSubscriber<>).MakeGenericType(type)
                 )
-                .And
-                .ContainSingle(
-                    d =>
-                        d.ServiceType
-                        == typeof(FunnelledSubscriberDefinition<>).MakeGenericType(type)
+                .And.ContainSingle(d =>
+                    d.ServiceType == typeof(FunnelledSubscriberDefinition<>).MakeGenericType(type)
                 );
         }
     }
@@ -60,24 +57,17 @@ public class RegistrationConfiguratorExtensionsTests
             new[] { ThisCatalog, ExternalCatalog }.SelectMany(tc => tc.Assemblies)
         );
 
-        var incorrectTypesForConsumers = new[]
-        {
-            typeof(AbstractTopic),
-            typeof(GenericTopic<int>),
-        };
+        var incorrectTypesForConsumers = new[] { typeof(AbstractTopic), typeof(GenericTopic<int>) };
 
         foreach (var type in incorrectTypesForConsumers)
         {
             configurator
                 .Should()
-                .NotContain(
-                    d => d.ServiceType == typeof(FunnelledSubscriber<>).MakeGenericType(type)
+                .NotContain(d =>
+                    d.ServiceType == typeof(FunnelledSubscriber<>).MakeGenericType(type)
                 )
-                .And
-                .NotContain(
-                    d =>
-                        d.ServiceType
-                        == typeof(FunnelledSubscriberDefinition<>).MakeGenericType(type)
+                .And.NotContain(d =>
+                    d.ServiceType == typeof(FunnelledSubscriberDefinition<>).MakeGenericType(type)
                 );
         }
     }

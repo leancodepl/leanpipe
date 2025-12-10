@@ -35,7 +35,7 @@ using var app = appBuilder.Build();
 app.UseRouting();
 
 app.MapHealthChecks("/health/live");
-app.MapHealthChecks("/health/ready", new() { Predicate = check => check.Tags.Contains("ready"), });
+app.MapHealthChecks("/health/ready", new() { Predicate = check => check.Tags.Contains("ready") });
 
 app.MapLeanPipe(
     "/leanpipe",

@@ -14,19 +14,18 @@ public class TestAuthenticationHandler : AuthenticationHandler<AuthenticationSch
 
     public static readonly Guid UserId = Guid.NewGuid();
 
-    public static readonly ClaimsPrincipal User =
-        new(
-            new ClaimsIdentity(
-                new Claim[]
-                {
-                    new(AuthConfig.KnownClaims.UserId, UserId.ToString()),
-                    new(AuthConfig.KnownClaims.Role, AuthConfig.Roles.User),
-                },
-                SchemeName,
-                AuthConfig.KnownClaims.UserId,
-                AuthConfig.KnownClaims.Role
-            )
-        );
+    public static readonly ClaimsPrincipal User = new(
+        new ClaimsIdentity(
+            new Claim[]
+            {
+                new(AuthConfig.KnownClaims.UserId, UserId.ToString()),
+                new(AuthConfig.KnownClaims.Role, AuthConfig.Roles.User),
+            },
+            SchemeName,
+            AuthConfig.KnownClaims.UserId,
+            AuthConfig.KnownClaims.Role
+        )
+    );
 
     public TestAuthenticationHandler(
         IOptionsMonitor<AuthenticationSchemeOptions> options,
