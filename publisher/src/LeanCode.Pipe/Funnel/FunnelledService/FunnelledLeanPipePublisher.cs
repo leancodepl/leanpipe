@@ -50,12 +50,11 @@ internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
         );
 
         var publishTasks = keys.Where(k => !string.IsNullOrEmpty(k))
-            .Select(
-                k =>
-                    publishEndpoint.Publish<Group<LeanPipeSubscriber>>(
-                        new { GroupName = k, Messages = protocolDictionary },
-                        cancellationToken
-                    )
+            .Select(k =>
+                publishEndpoint.Publish<Group<LeanPipeSubscriber>>(
+                    new { GroupName = k, Messages = protocolDictionary },
+                    cancellationToken
+                )
             );
 
         await Task.WhenAll(publishTasks);

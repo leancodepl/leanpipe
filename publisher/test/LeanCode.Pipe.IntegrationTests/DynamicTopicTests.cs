@@ -53,7 +53,7 @@ public class DynamicTopicTests : TestApplicationFactory
         );
 
         await httpClient.PublishToDynamicTopicAndAwaitNoNotificationsAsync(
-            new() { ProjectId = Guid.NewGuid(), Kind = ProjectNotificationKindDTO.Updated, }
+            new() { ProjectId = Guid.NewGuid(), Kind = ProjectNotificationKindDTO.Updated }
         );
 
         await leanPipeClient.UnsubscribeSuccessAsync(topic);

@@ -21,8 +21,8 @@ public static class LeanPipeServiceCollectionExtensions
     {
         services
             .AddSignalR()
-            .AddJsonProtocol(
-                options => options.PayloadSerializerOptions.PropertyNamingPolicy = null
+            .AddJsonProtocol(options =>
+                options.PayloadSerializerOptions.PropertyNamingPolicy = null
             );
 
         services.AddTransient<LeanPipeSecurity>();
@@ -165,10 +165,13 @@ public class LeanPipeServicesBuilder
         if (implementedKeys.Count > 0 && missing.Any())
         {
             var msg = $"""
-            Topic must have implemented `IPublishingKeys` for all notification types.
-            The class `{keysType.FullName}` is missing following implementations:
-            {string.Join(", ", missing.Select(t => $"  - IPublishingKeys<{topicType.Name}, {t.Name}>"))}
-            """;
+                Topic must have implemented `IPublishingKeys` for all notification types.
+                The class `{keysType.FullName}` is missing following implementations:
+                {string.Join(
+                    ", ",
+                    missing.Select(t => $"  - IPublishingKeys<{topicType.Name}, {t.Name}>")
+                )}
+                """;
             throw new InvalidOperationException(msg);
         }
 

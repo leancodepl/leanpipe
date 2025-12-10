@@ -43,8 +43,7 @@ public class DefaultTopicExtractor : ITopicExtractor
     {
         var topicType = typeof(ITopic);
         return types
-            .Assemblies
-            .SelectMany(t => t.ExportedTypes)
+            .Assemblies.SelectMany(t => t.ExportedTypes)
             .Where(t => t.IsAssignableTo(topicType) && !t.IsAbstract && !t.IsGenericType)
             .ToImmutableDictionary(t => t.FullName!, StringComparer.InvariantCulture);
     }

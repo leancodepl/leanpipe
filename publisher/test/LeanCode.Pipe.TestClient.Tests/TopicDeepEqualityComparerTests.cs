@@ -14,7 +14,7 @@ public class TopicDeepEqualityComparerTests
         {
             PrimitiveGuid = Guid.Parse("c00d2320-3ff8-4fcb-854f-8c53d8d2637f"),
             ListOfPrimitives = new() { 1, 2 },
-            Complex = new() { PrimitiveString = "String1", },
+            Complex = new() { PrimitiveString = "String1" },
         };
 
     [Fact]

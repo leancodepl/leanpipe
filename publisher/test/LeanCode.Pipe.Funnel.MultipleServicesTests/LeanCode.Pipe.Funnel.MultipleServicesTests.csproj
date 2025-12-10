@@ -1,13 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <AssemblyName>MultipleServicesTests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk"/>
-    <PackageReference Include="xunit"/>
-    <PackageReference Include="xunit.runner.visualstudio"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="xunit" />
+    <PackageReference Include="xunit.runner.visualstudio" />
     <PackageReference Include="FluentAssertions" />
   </ItemGroup>
 
@@ -16,5 +15,4 @@
     <ProjectReference Include="../LeanCode.Pipe.Funnel.TestApp2/LeanCode.Pipe.Funnel.TestApp2.csproj" />
     <ProjectReference Include="../../src/LeanCode.Pipe.TestClient/LeanCode.Pipe.TestClient.csproj" />
   </ItemGroup>
-
 </Project>

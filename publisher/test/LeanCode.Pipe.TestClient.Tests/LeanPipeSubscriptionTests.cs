@@ -18,8 +18,7 @@ public class LeanPipeSubscriptionTests
         subscription.AddNotification(notification);
 
         (await notificationTask.Awaiting(t => t).Should().NotThrowAsync())
-            .Which
-            .Should()
+            .Which.Should()
             .Be(notification);
     }
 

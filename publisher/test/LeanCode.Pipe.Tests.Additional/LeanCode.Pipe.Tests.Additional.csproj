@@ -6,5 +6,4 @@
   <ItemGroup>
     <ProjectReference Include="../../src/LeanCode.Pipe/LeanCode.Pipe.csproj" />
   </ItemGroup>
-
 </Project>

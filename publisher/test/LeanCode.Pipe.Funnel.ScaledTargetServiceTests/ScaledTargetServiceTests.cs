@@ -9,34 +9,31 @@ namespace LeanCode.Pipe.Funnel.ScaledTargetServiceTests;
 
 public class ScaledTargetServiceTests : IAsyncLifetime
 {
-    private readonly LeanPipeTestClient leanPipeClient =
+    private readonly LeanPipeTestClient leanPipeClient = new(
         new(
-            new(
-                "http://scaled-target-service-funnel-0.scaled-target-service-funnel-svc.scaled-target-service.svc.cluster.local:8080/leanpipe"
-            ),
-            new(typeof(Topic1)),
-            cfg =>
-            {
-                cfg.Transports = HttpTransportType.WebSockets;
-                cfg.SkipNegotiation = true;
-            }
-        );
-
-    private readonly HttpClient testApp1AClient =
-        new()
+            "http://scaled-target-service-funnel-0.scaled-target-service-funnel-svc.scaled-target-service.svc.cluster.local:8080/leanpipe"
+        ),
+        new(typeof(Topic1)),
+        cfg =>
         {
-            BaseAddress = new(
-                "http://scaled-target-service-testapp1-0.scaled-target-service-testapp1-svc.scaled-target-service.svc.cluster.local:8080"
-            ),
-        };
+            cfg.Transports = HttpTransportType.WebSockets;
+            cfg.SkipNegotiation = true;
+        }
+    );
 
-    private readonly HttpClient testApp1BClient =
-        new()
-        {
-            BaseAddress = new(
-                "http://scaled-target-service-testapp1-1.scaled-target-service-testapp1-svc.scaled-target-service.svc.cluster.local:8080"
-            ),
-        };
+    private readonly HttpClient testApp1AClient = new()
+    {
+        BaseAddress = new(
+            "http://scaled-target-service-testapp1-0.scaled-target-service-testapp1-svc.scaled-target-service.svc.cluster.local:8080"
+        ),
+    };
+
+    private readonly HttpClient testApp1BClient = new()
+    {
+        BaseAddress = new(
+            "http://scaled-target-service-testapp1-1.scaled-target-service-testapp1-svc.scaled-target-service.svc.cluster.local:8080"
+        ),
+    };
 
     [Fact]
     public async Task Publishing_notifications_from_any_service_instance_works()

@@ -9,34 +9,29 @@ namespace LeanCode.Pipe.Funnel.NoScalingTests;
 
 public class NoScalingTests : IAsyncLifetime
 {
-    private readonly LeanPipeTestClient leanPipeClient =
+    private readonly LeanPipeTestClient leanPipeClient = new(
         new(
-            new(
-                "http://no-scaling-funnel-0.no-scaling-funnel-svc.no-scaling.svc.cluster.local:8080/leanpipe"
-            ),
-            new(typeof(Topic1)),
-            cfg =>
-            {
-                cfg.Transports = HttpTransportType.WebSockets;
-                cfg.SkipNegotiation = true;
-            }
-        );
-
-    private readonly HttpClient testApp1Client =
-        new()
+            "http://no-scaling-funnel-0.no-scaling-funnel-svc.no-scaling.svc.cluster.local:8080/leanpipe"
+        ),
+        new(typeof(Topic1)),
+        cfg =>
         {
-            BaseAddress = new(
-                "http://no-scaling-testapp1-0.no-scaling-testapp1-svc.no-scaling.svc.cluster.local:8080"
-            ),
-        };
+            cfg.Transports = HttpTransportType.WebSockets;
+            cfg.SkipNegotiation = true;
+        }
+    );
+
+    private readonly HttpClient testApp1Client = new()
+    {
+        BaseAddress = new(
+            "http://no-scaling-testapp1-0.no-scaling-testapp1-svc.no-scaling.svc.cluster.local:8080"
+        ),
+    };
 
     [Fact]
     public async Task Subscribing_and_receiving_notifications_works()
     {
-        var topic = new Topic1
-        {
-            Topic1Id = nameof(Subscribing_and_receiving_notifications_works),
-        };
+        var topic = new Topic1 { Topic1Id = nameof(Subscribing_and_receiving_notifications_works) };
 
         await leanPipeClient.SubscribeSuccessAsync(topic);
 
