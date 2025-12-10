@@ -105,6 +105,33 @@ The test pods can't reach the services. Check that all service pods are running:
 kubectl get pods -A
 ```
 
+**Expected result:** All pods should show `Running` or `Completed` status:
+
+```
+NAMESPACE              NAME                          READY   STATUS      RESTARTS   AGE
+no-scaling             funnel-xxx                    1/1     Running     0          2m
+no-scaling             testapp1-xxx                  1/1     Running     0          2m
+scaled-funnel          funnel-xxx                    1/1     Running     0          2m
+...
+```
+
+**If pods are not running:**
+
+1. Check pod logs for errors:
+   ```bash
+   kubectl logs -n <namespace> <pod-name>
+   ```
+
+2. Describe the pod to see events:
+   ```bash
+   kubectl describe pod -n <namespace> <pod-name>
+   ```
+
+3. Common issues:
+   - `ImagePullBackOff` - Docker image not built; run `tilt up` again
+   - `CrashLoopBackOff` - Application error; check logs
+   - `Pending` - Resource constraints; check node resources with `kubectl describe nodes`
+
 ### RabbitMQ RESOURCE_LOCKED error
 
 This indicates multiple service instances are trying to create the same exclusive queue. Ensure each instance has a unique `InstanceId` in the MassTransit configuration.
