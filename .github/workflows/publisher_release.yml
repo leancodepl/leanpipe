@@ -70,6 +70,21 @@ jobs:
           BUILD_VERSION: ${{ steps.version.outputs.version }}
         run: dotnet pack --no-build -c Release
         working-directory: ./publisher/src/LeanCode.Pipe
+      - name: Pack Funnel Core
+        env:
+          BUILD_VERSION: ${{ steps.version.outputs.version }}
+        run: dotnet pack --no-build -c Release
+        working-directory: ./publisher/src/LeanCode.Pipe.Funnel/Core
+      - name: Pack Funnel Instance
+        env:
+          BUILD_VERSION: ${{ steps.version.outputs.version }}
+        run: dotnet pack --no-build -c Release
+        working-directory: ./publisher/src/LeanCode.Pipe.Funnel/Instance
+      - name: Pack Funnel Publishing
+        env:
+          BUILD_VERSION: ${{ steps.version.outputs.version }}
+        run: dotnet pack --no-build -c Release
+        working-directory: ./publisher/src/LeanCode.Pipe.Funnel/Publishing
       - name: Pack Test Client
         env:
           BUILD_VERSION: ${{ steps.version.outputs.version }}
@@ -79,6 +94,9 @@ jobs:
         run: |
           dotnet nuget push \
             "src/LeanCode.Pipe/bin/Release/LeanCode.Pipe.${BUILD_VERSION}.nupkg" \
+            "src/LeanCode.Pipe.Funnel/Core/bin/Release/LeanCode.Pipe.Funnel.Core.${BUILD_VERSION}.nupkg" \
+            "src/LeanCode.Pipe.Funnel/Instance/bin/Release/LeanCode.Pipe.Funnel.Instance.${BUILD_VERSION}.nupkg" \
+            "src/LeanCode.Pipe.Funnel/Publishing/bin/Release/LeanCode.Pipe.Funnel.Publishing.${BUILD_VERSION}.nupkg" \
             "src/LeanCode.Pipe.TestClient/bin/Release/LeanCode.Pipe.TestClient.${BUILD_VERSION}.nupkg" \
             -k "$FEEDZ_API_KEY" \
             -s 'https://f.feedz.io/leancode/public/nuget/index.json' \

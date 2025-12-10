@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using LeanCode.Contracts;
+using LeanCode.Pipe.Funnel.Core;
 using MassTransit;
 using Microsoft.Extensions.Caching.Memory;
 

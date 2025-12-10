@@ -2,7 +2,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace LeanCode.Pipe.Funnel;
+namespace LeanCode.Pipe;
 
 internal class ClaimsPrincipalJsonConverter : JsonConverter<ClaimsPrincipal>
 {

@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../../src/LeanCode.Pipe/LeanCode.Pipe.csproj" />
+    <ProjectReference Include="../../src/LeanCode.Pipe.Funnel/Publishing/LeanCode.Pipe.Funnel.Publishing.csproj" />
 
     <PackageReference Include="MassTransit.RabbitMQ" />
   </ItemGroup>

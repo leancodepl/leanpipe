@@ -1,15 +1,15 @@
 using FluentAssertions;
 using LeanCode.Components;
 using LeanCode.Contracts;
-using LeanCode.Pipe.Funnel.FunnelledService;
+using LeanCode.Pipe.Funnel.Publishing;
 using LeanCode.Pipe.Tests.Additional;
 using MassTransit;
 using MassTransit.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
-using TopicExistenceChecker = LeanCode.Pipe.Funnel.FunnelledService.TopicExistenceChecker;
+using TopicExistenceChecker = LeanCode.Pipe.Funnel.Publishing.TopicExistenceChecker;
 
-namespace LeanCode.Pipe.Tests.Funnel.FunnelledService;
+namespace LeanCode.Pipe.Tests.Funnel.Publishing;
 
 public class RegistrationConfiguratorExtensionsTests
 {

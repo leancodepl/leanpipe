@@ -2,7 +2,6 @@ using System.Security.Claims;
 using LeanCode.Contracts;
 using LeanCode.Contracts.Security;
 using LeanCode.CQRS.Security;
-using Microsoft.AspNetCore.Http;
 
 namespace LeanCode.Pipe;
 

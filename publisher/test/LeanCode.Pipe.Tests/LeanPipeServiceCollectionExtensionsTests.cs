@@ -1,7 +1,7 @@
 using FluentAssertions;
 using LeanCode.Components;
-using LeanCode.Pipe.Funnel.FunnelledService;
 using LeanCode.Pipe.Funnel.Instance;
+using LeanCode.Pipe.Funnel.Publishing;
 using LeanCode.Pipe.Tests.Additional;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Caching.Memory;

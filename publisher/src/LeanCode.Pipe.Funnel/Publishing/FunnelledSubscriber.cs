@@ -1,7 +1,8 @@
 using LeanCode.Contracts;
+using LeanCode.Pipe.Funnel.Core;
 using MassTransit;
 
-namespace LeanCode.Pipe.Funnel.FunnelledService;
+namespace LeanCode.Pipe.Funnel.Publishing;
 
 public class FunnelledSubscriber<TTopic> : IConsumer<ExecuteTopicsSubscriptionPipeline>
     where TTopic : ITopic

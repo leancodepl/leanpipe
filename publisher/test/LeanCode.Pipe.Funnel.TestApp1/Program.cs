@@ -1,7 +1,6 @@
-using LeanCode.Logging;
 using LeanCode.Logging.AspNetCore;
 using LeanCode.Pipe;
-using LeanCode.Pipe.Funnel.FunnelledService;
+using LeanCode.Pipe.Funnel.Publishing;
 using LeanCode.Pipe.Funnel.TestApp1;
 using MassTransit;
 

@@ -1,5 +1,5 @@
 using LeanCode.Contracts;
 
-namespace LeanCode.Pipe.Funnel;
+namespace LeanCode.Pipe.Funnel.Core;
 
 public record SubscriptionPipelineResult(SubscriptionStatus Status, List<string> GroupKeys);

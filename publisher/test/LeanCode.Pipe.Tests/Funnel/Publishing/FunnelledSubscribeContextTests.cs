@@ -1,9 +1,9 @@
 using System.Collections.Immutable;
 using FluentAssertions;
-using LeanCode.Pipe.Funnel.FunnelledService;
+using LeanCode.Pipe.Funnel.Publishing;
 using Xunit;
 
-namespace LeanCode.Pipe.Tests.Funnel.FunnelledService;
+namespace LeanCode.Pipe.Tests.Funnel.Publishing;
 
 public class FunnelledSubscribeContextTests
 {

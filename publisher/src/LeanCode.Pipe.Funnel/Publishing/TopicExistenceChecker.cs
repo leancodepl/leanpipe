@@ -1,6 +1,7 @@
+using LeanCode.Pipe.Funnel.Core;
 using MassTransit;
 
-namespace LeanCode.Pipe.Funnel.FunnelledService;
+namespace LeanCode.Pipe.Funnel.Publishing;
 
 public class TopicExistenceChecker : IConsumer<CheckIfTopicIsRecognized>
 {

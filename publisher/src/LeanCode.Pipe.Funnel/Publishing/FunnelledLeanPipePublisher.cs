@@ -1,14 +1,11 @@
-using System.Collections.Immutable;
 using LeanCode.Contracts;
 using MassTransit;
 using MassTransit.SignalR.Contracts;
 using MassTransit.SignalR.Utils;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SignalR.Protocol;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
-namespace LeanCode.Pipe.Funnel.FunnelledService;
+namespace LeanCode.Pipe.Funnel.Publishing;
 
 internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
     where TTopic : ITopic

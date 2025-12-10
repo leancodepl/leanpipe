@@ -1,10 +1,9 @@
 using System.Security.Claims;
 using System.Text.Json;
 using FluentAssertions;
-using LeanCode.Pipe.Funnel;
 using Xunit;
 
-namespace LeanCode.Pipe.Tests.Funnel;
+namespace LeanCode.Pipe.Tests;
 
 public class ClaimsPrincipalJsonConverterTests
 {

@@ -1,3 +1,3 @@
-namespace LeanCode.Pipe.Funnel;
+namespace LeanCode.Pipe.Funnel.Core;
 
 public record TopicRecognized(string TopicType);

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.SignalR.Protocol;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace LeanCode.Pipe.Funnel.FunnelledService;
+namespace LeanCode.Pipe.Funnel.Publishing;
 
 public static class ServiceCollectionExtensions
 {

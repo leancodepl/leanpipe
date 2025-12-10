@@ -4,7 +4,7 @@ using MassTransit;
 using MassTransit.Internals;
 using MassTransit.Util;
 
-namespace LeanCode.Pipe.Funnel.FunnelledService;
+namespace LeanCode.Pipe.Funnel.Publishing;
 
 public static class RegistrationConfiguratorExtensions
 {

@@ -1,4 +1,4 @@
-namespace LeanCode.Pipe.Funnel.FunnelledService;
+namespace LeanCode.Pipe.Funnel.Publishing;
 
 internal class FunnelledSubscribeContext : ISubscribeContext
 {
