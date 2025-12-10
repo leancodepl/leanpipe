@@ -68,11 +68,10 @@ public static class RegistrationConfiguratorExtensions
             .AddConsumer<TopicExistenceChecker>()
             .Endpoint(e =>
             {
-                e.Temporary = true;
-                // Include hostname to make queue unique per instance when scaling (only an issue for RabbitMQ)
-                var hostname =
-                    Environment.GetEnvironmentVariable("HOSTNAME") ?? Environment.MachineName;
-                e.InstanceId = $"_{serviceName}_{hostname}";
+                // Each service gets its own queue (for fan-out across different services)
+                // but replicas of the same service share the queue (competing consumers)
+                // Don't use Temporary=true as it creates exclusive queues that break scaling on RabbitMQ
+                e.InstanceId = $"_{serviceName}";
             });
 
         foreach (var topicType in topicTypes)
