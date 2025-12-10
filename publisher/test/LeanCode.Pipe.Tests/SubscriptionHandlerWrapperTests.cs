@@ -42,6 +42,6 @@ public class SubscriptionHandlerWrapperTests
             .Which
             .ParameterType
             .Should()
-            .Be(typeof(ISubscriptionHandler<Topic1>));
+            .Be<ISubscriptionHandler<Topic1>>();
     }
 }

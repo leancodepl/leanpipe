@@ -2,6 +2,7 @@ using LeanCode.Components;
 using LeanCode.Contracts.Security;
 using LeanCode.CQRS.Security;
 using LeanCode.Logging;
+using LeanCode.Logging.AspNetCore;
 using LeanCode.Pipe;
 using LeanCode.Pipe.ClientIntegrationTestsApp;
 using LeanCode.Pipe.ClientIntegrationTestsApp.Contracts;

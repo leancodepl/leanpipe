@@ -2,8 +2,8 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 
-    <CoreLibVersion>9.0.2542-preview</CoreLibVersion>
-    <MassTransitVersion>8.3.2</MassTransitVersion>
+    <CoreLibVersion>10.0.2750-preview</CoreLibVersion>
+    <MassTransitVersion>8.5.7</MassTransitVersion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,24 +12,22 @@
     <PackageVersion Include="LeanCode.Components" Version="$(CoreLibVersion)" />
     <PackageVersion Include="LeanCode.CQRS.Security" Version="$(CoreLibVersion)" />
     <PackageVersion Include="LeanCode.IntegrationTestHelpers" Version="$(CoreLibVersion)" />
-    <PackageVersion Include="LeanCode.Logging" Version="$(CoreLibVersion)" />
+    <PackageVersion Include="LeanCode.Logging.AspNetCore" Version="$(CoreLibVersion)" />
 
     <PackageVersion Include="MassTransit.RabbitMQ" Version="$(MassTransitVersion)" />
     <PackageVersion Include="MassTransit.SignalR" Version="$(MassTransitVersion)" />
 
-    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="9.0.0" />
-
-    <PackageVersion Include="System.Linq.Async" Version="6.0.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.SignalR.Client" Version="10.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-    <PackageVersion Include="xunit" Version="2.9.2" />
-    <PackageVersion Include="xunit.analyzers" Version="1.17.0" />
-    <PackageVersion Include="xunit.runner.visualstudio" Version="2.8.2" />
-    <PackageVersion Include="FluentAssertions" Version="7.0.0" />
-
-    <PackageVersion Include="coverlet.collector" Version="6.0.2" />
+    <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <!-- Do NOT bump FluentAssertions above 7.x, the license changed -->
+    <PackageVersion Include="FluentAssertions" Version="7.2.0" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.analyzers" Version="1.26.0" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
   </ItemGroup>
 
 </Project>

@@ -14,7 +14,7 @@
     <PackageReference Include="LeanCode.Components" />
     <PackageReference Include="LeanCode.Contracts" />
     <PackageReference Include="LeanCode.CQRS.Security" />
-    <PackageReference Include="LeanCode.Logging" />
+    <PackageReference Include="LeanCode.Logging.AspNetCore" />
 
     <PackageReference Include="MassTransit.SignalR" />
   </ItemGroup>

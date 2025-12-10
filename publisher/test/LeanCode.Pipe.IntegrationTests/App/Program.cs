@@ -1,8 +1,8 @@
-using System.Diagnostics.CodeAnalysis;
 using LeanCode.Components;
 using LeanCode.Contracts.Security;
 using LeanCode.CQRS.Security;
 using LeanCode.IntegrationTestHelpers;
+using LeanCode.Logging.AspNetCore;
 using LeanCode.Pipe;
 using LeanCode.Pipe.Funnel.FunnelledService;
 using LeanCode.Pipe.Funnel.Instance;
@@ -10,13 +10,11 @@ using LeanCode.Pipe.IntegrationTests.App;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Connections;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 var appBuilder = WebApplication.CreateBuilder(args);
-appBuilder.Logging.SetMinimumLevel(LogLevel.Debug);
+appBuilder.Host.ConfigureDefaultLogging("IntegrationTests", [ typeof(Program).Assembly ]);
 
 var services = appBuilder.Services;
 

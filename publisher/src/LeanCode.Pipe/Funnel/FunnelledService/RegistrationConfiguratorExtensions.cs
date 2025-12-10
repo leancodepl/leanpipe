@@ -68,7 +68,9 @@ public static class RegistrationConfiguratorExtensions
             .AddConsumer<TopicExistenceChecker>()
             .Endpoint(e =>
             {
-                e.Temporary = true;
+                // Each service gets its own queue (for fan-out across different services)
+                // but replicas of the same service share the queue (competing consumers)
+                // Don't use Temporary=true as it creates exclusive queues that break scaling on RabbitMQ
                 e.InstanceId = $"_{serviceName}";
             });
 
@@ -84,6 +86,6 @@ public static class RegistrationConfiguratorExtensions
     {
         var interfaces = type.GetTypeInfo().GetInterfaces();
 
-        return interfaces.Any(t => t.HasInterface(typeof(ITopic)));
+        return interfaces.Any(t => t.HasInterface<ITopic>());
     }
 }

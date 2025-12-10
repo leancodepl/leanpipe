@@ -21,6 +21,6 @@ public static class ServiceCollectionExtensions
         services.AddMemoryCache();
 
         services.AddSingleton(config ?? FunnelConfiguration.Default);
-        services.AddTransient(typeof(ISubscriptionExecutor), typeof(FunnelSubscriptionExecutor));
+        services.AddTransient<ISubscriptionExecutor, FunnelSubscriptionExecutor>();
     }
 }
