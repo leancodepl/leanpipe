@@ -4,7 +4,15 @@
 ![Feedz](https://img.shields.io/feedz/v/leancode/public/LeanCode.Pipe)
 [![codecov](https://codecov.io/gh/leancodepl/leanpipe/graph/badge.svg?token=LZIAEF100M)](https://codecov.io/gh/leancodepl/leanpipe)
 
-Publisher part of the LeanPipe notification system that handles client subscription and publishes notifications on the particular topics.
+Publisher part of the LeanPipe notification system that handles client subscription
+and publishes notifications on the particular topics.
+
+> [!NOTE]
+> Standard LeanPipe requires the SignalR hub and notification publishing to happen
+> in the same process, making it suitable for monolithic applications. For non-monolithic
+> architectures (microservices, horizontally scaled services, multiple publishing services),
+> use the [Funnel](src/Funnel/README.md) - a "we have Azure SignalR Services at home"
+> solution that decouples SignalR connection handling from publishing services.
 
 ## Usage guide
 
@@ -24,7 +32,7 @@ In order to indicate which notifications can be published to topic, implement `I
 
 Although we strive for the developer experience to feel frictionless and magical, we need to know a bit about SignalR groups.
 
-That’s because topics operate on the [SignalR groups](https://learn.microsoft.com/en-us/aspnet/core/signalr/groups?view=aspnetcore-8.0) underneath, which are quite limited.
+That’s because topics operate on the [SignalR groups](https://learn.microsoft.com/en-us/aspnet/core/signalr/groups?view=aspnetcore-10.0) underneath, which are quite limited.
 You can add a connection to the group, you can remove it, and you can send a message to the group.
 You cannot list them, check their connections, even check if they exist themselves.
 Those properties are also topics instances properties.
