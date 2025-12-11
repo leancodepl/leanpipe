@@ -1,5 +1,9 @@
 # LeanPipe Funnel
 
+[![Funnel in µsvc tests](https://github.com/leancodepl/leanpipe/actions/workflows/funnel_msvc_tests.yml/badge.svg)](https://github.com/leancodepl/leanpipe/actions/workflows/funnel_msvc_tests.yml)
+[![feedz.io](https://img.shields.io/badge/endpoint.svg?url=https%3A%2F%2Ff.feedz.io%2Fleancode%2Fpublic%2Fshield%2FLeanCode.Pipe.Funnel.Instance%2Flatest)](https://f.feedz.io/leancode/public/packages/LeanCode.Pipe.Funnel.Instance/latest/download)
+[![feedz.io](https://img.shields.io/badge/endpoint.svg?url=https%3A%2F%2Ff.feedz.io%2Fleancode%2Fpublic%2Fshield%2FLeanCode.Pipe.Funnel.Publishing%2Flatest)](https://f.feedz.io/leancode/public/packages/LeanCode.Pipe.Funnel.Publishing/latest/download)
+
 > "We have Azure SignalR Services at home."
 
 The Funnel is LeanPipe's solution for scaling [SignalR-based]([signalr-docs]) notifications in distributed
@@ -341,7 +345,7 @@ builder.Services.AddMassTransit(cfg =>
 {
     // Funnel consumers for SignalR backplane synchronization
     cfg.ConfigureLeanPipeFunnelConsumers();
-    
+
     // Publishing consumers for handling subscriptions
     cfg.AddFunnelledLeanPipeConsumers("MyService", topicTypes.Assemblies);
 
@@ -378,7 +382,7 @@ public class OrderCompletedHandler
     {
         var topic = new OrderTopic { OrderId = @event.OrderId };
         var notification = new OrderStatusChanged { Status = "Completed" };
-        
+
         await publisher.PublishAsync(topic, notification, ct);
     }
 }

@@ -1,7 +1,7 @@
 # LeanPipe Publisher
 
-![Build & Release](https://github.com/leancodepl/leanpipe/actions/workflows/publisher_release.yml/badge.svg)
-![Feedz](https://img.shields.io/feedz/v/leancode/public/LeanCode.Pipe)
+[![Build & Publish to feedz](https://github.com/leancodepl/leanpipe/actions/workflows/publisher_release.yml/badge.svg)](https://github.com/leancodepl/leanpipe/actions/workflows/publisher_release.yml)
+[![feedz.io](https://img.shields.io/badge/endpoint.svg?url=https%3A%2F%2Ff.feedz.io%2Fleancode%2Fpublic%2Fshield%2FLeanCode.Pipe%2Flatest)](https://f.feedz.io/leancode/public/packages/LeanCode.Pipe/latest/download)
 [![codecov](https://codecov.io/gh/leancodepl/leanpipe/graph/badge.svg?token=LZIAEF100M)](https://codecov.io/gh/leancodepl/leanpipe)
 
 Publisher part of the LeanPipe notification system that handles client subscription
