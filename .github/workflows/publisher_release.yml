@@ -39,18 +39,11 @@ jobs:
         env:
           BUILD_VERSION: ${{ steps.version.outputs.version }}
         run: dotnet build --no-restore -c Release
-      - name: Test Publisher
-        run: >
-          dotnet test
-          ./test/LeanCode.Pipe.Tests/LeanCode.Pipe.Tests.csproj
-          --no-build
-          -c Release
-      - name: Test Test Client
-        run: >
-          dotnet test
-          ./test/LeanCode.Pipe.TestClient.Tests/LeanCode.Pipe.TestClient.Tests.csproj
-          --no-build
-          -c Release
+      - name: Unit Tests
+        run: |
+          dotnet test ./test/LeanCode.Pipe.Tests/LeanCode.Pipe.Tests.csproj --no-build -c Release
+          dotnet test ./test/Funnel.Tests/LeanCode.Pipe.Funnel.Tests/LeanCode.Pipe.Funnel.Tests.csproj --no-build -c Release
+          dotnet test ./test/LeanCode.Pipe.TestClient.Tests/LeanCode.Pipe.TestClient.Tests.csproj --no-build -c Release
       - name: Integration test
         run: >
           dotnet test
@@ -65,20 +58,17 @@ jobs:
           --no-build
           -c Release
           -e EnableFunnel=true
-      - name: Pack Publisher
+      - name: Pack NuGet packages
         env:
           BUILD_VERSION: ${{ steps.version.outputs.version }}
         run: dotnet pack --no-build -c Release
-        working-directory: ./publisher/src/LeanCode.Pipe
-      - name: Pack Test Client
-        env:
-          BUILD_VERSION: ${{ steps.version.outputs.version }}
-        run: dotnet pack --no-build -c Release
-        working-directory: ./publisher/src/LeanCode.Pipe.TestClient
       - name: Publish to Feedz
         run: |
           dotnet nuget push \
             "src/LeanCode.Pipe/bin/Release/LeanCode.Pipe.${BUILD_VERSION}.nupkg" \
+            "src/Funnel/Core/bin/Release/LeanCode.Pipe.Funnel.Core.${BUILD_VERSION}.nupkg" \
+            "src/Funnel/Instance/bin/Release/LeanCode.Pipe.Funnel.Instance.${BUILD_VERSION}.nupkg" \
+            "src/Funnel/Publishing/bin/Release/LeanCode.Pipe.Funnel.Publishing.${BUILD_VERSION}.nupkg" \
             "src/LeanCode.Pipe.TestClient/bin/Release/LeanCode.Pipe.TestClient.${BUILD_VERSION}.nupkg" \
             -k "$FEEDZ_API_KEY" \
             -s 'https://f.feedz.io/leancode/public/nuget/index.json' \

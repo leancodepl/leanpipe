@@ -20,11 +20,7 @@ public static class AuthConfig
 
     public static readonly ClaimsPrincipal User = new(
         new ClaimsIdentity(
-            new Claim[]
-            {
-                new(KnownClaims.UserId, UserId.ToString()),
-                new(KnownClaims.Role, Roles.User),
-            },
+            [new(KnownClaims.UserId, UserId.ToString()), new(KnownClaims.Role, Roles.User)],
             TestAuthenticationHandler.SchemeName,
             KnownClaims.UserId,
             KnownClaims.Role
@@ -33,7 +29,7 @@ public static class AuthConfig
 
     public static readonly ClaimsPrincipal UserWithoutRole = new(
         new ClaimsIdentity(
-            new Claim[] { new(KnownClaims.UserId, UserId.ToString()) },
+            [new(KnownClaims.UserId, UserId.ToString())],
             TestAuthenticationHandler.SchemeName,
             KnownClaims.UserId,
             KnownClaims.Role

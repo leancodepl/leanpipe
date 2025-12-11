@@ -27,6 +27,7 @@ jobs:
       DOTNET_VERSION: 10.0
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      WAIT_TIMEOUT: 600
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -43,30 +44,19 @@ jobs:
             tilt
       - name: Create test cluster
         uses: AbsaOSS/k3d-action@v2
-        with: 
+        with:
           cluster-name: testapp
           args: --config=publisher/funnel_test_cluster/k3d.yaml
       - name: Make the script files executable
-        run: chmod +x funnel_test_cluster/subst_tpl_envs.sh
-      - name: Run Tilt CI with tests
-        run: tilt ci --context k3d-testapp -f funnel_test_cluster/Tiltfile
-      - name: Collect test logs on failure
-        if: failure()
-        run: |
-          mkdir -p test-logs
-          for ns in no-scaling scaled-target-service scaled-funnel multiple-services; do
-            echo "=== Namespace: $ns ===" >> test-logs/test-results.txt
-            pod=$(kubectl get pods -n $ns -o name 2>/dev/null | grep tests | head -1)
-            if [ -n "$pod" ]; then
-              kubectl logs -n $ns $pod >> test-logs/test-results.txt 2>&1 || true
-            fi
-            echo "" >> test-logs/test-results.txt
-          done
-          kubectl get pods -A >> test-logs/pod-status.txt 2>&1 || true
+        run: chmod +x funnel_test_cluster/subst_tpl_envs.sh funnel_test_cluster/run-tests.sh
+      - name: Run tests
+        run: ./funnel_test_cluster/run-tests.sh ci
       - name: Upload test logs on failure
         if: failure()
         uses: actions/upload-artifact@v5
         with:
           name: funnel-test-logs
-          path: publisher/test-logs/
+          path: |
+            publisher/funnel_test_cluster/test-logs/
+            publisher/funnel_test_cluster/snapshot.json
           retention-days: 7

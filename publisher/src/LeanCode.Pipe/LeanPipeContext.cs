@@ -1,6 +1,5 @@
 using System.Security.Claims;
 using System.Text.Json.Serialization;
-using LeanCode.Pipe.Funnel;
 
 namespace LeanCode.Pipe;
 

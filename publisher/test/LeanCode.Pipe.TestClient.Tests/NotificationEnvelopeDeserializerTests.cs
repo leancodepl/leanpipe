@@ -16,10 +16,7 @@ public class NotificationEnvelopeDeserializerTests
     [Fact]
     public void NotificationEnvelopeDeserializer_deserializes_topic_and_notification()
     {
-        var topic = new Topic
-        {
-            EntityIds = new() { "Entity1", "Entity2" },
-        };
+        var topic = new Topic { EntityIds = ["Entity1", "Entity2"] };
 
         var notification = new Notification { EntityId = "Entity1" };
 

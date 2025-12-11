@@ -18,7 +18,7 @@ public class SubscribingWithoutAllKeysKeys : IPublishingKeys<TopicWithoutAllKeys
         LeanPipeContext context
     )
     {
-        return new(Array.Empty<string>());
+        return new([]);
     }
 
     public ValueTask<IEnumerable<string>> GetForPublishingAsync(
@@ -27,6 +27,6 @@ public class SubscribingWithoutAllKeysKeys : IPublishingKeys<TopicWithoutAllKeys
         CancellationToken ct = default
     )
     {
-        return new(Array.Empty<string>());
+        return new([]);
     }
 }

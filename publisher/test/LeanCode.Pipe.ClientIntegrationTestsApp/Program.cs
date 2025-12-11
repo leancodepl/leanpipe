@@ -1,13 +1,12 @@
 using LeanCode.Components;
 using LeanCode.Contracts.Security;
 using LeanCode.CQRS.Security;
-using LeanCode.Logging;
 using LeanCode.Logging.AspNetCore;
 using LeanCode.Pipe;
 using LeanCode.Pipe.ClientIntegrationTestsApp;
 using LeanCode.Pipe.ClientIntegrationTestsApp.Contracts;
-using LeanCode.Pipe.Funnel.FunnelledService;
 using LeanCode.Pipe.Funnel.Instance;
+using LeanCode.Pipe.Funnel.Publishing;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http.Connections;
@@ -15,7 +14,7 @@ using Microsoft.AspNetCore.Http.Connections;
 var appBuilder = WebApplication.CreateBuilder(args);
 var hostBuilder = appBuilder.Host;
 
-hostBuilder.ConfigureDefaultLogging("TestApp", new[] { typeof(Program).Assembly });
+hostBuilder.ConfigureDefaultLogging("TestApp", [typeof(Program).Assembly]);
 
 var services = appBuilder.Services;
 var leanPipeTypes = TypesCatalog.Of<Topic>();

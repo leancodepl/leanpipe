@@ -14,8 +14,8 @@ test_services = [
 for test_service_lower, test_service_pascal in test_services:
   local_resource(
     'build-%s' % test_service_lower,
-    'dotnet publish -o out/%s ../test/LeanCode.Pipe.Funnel.%s' % (test_service_lower, test_service_pascal),
-    deps=['../src', '../test/LeanCode.Pipe.Funnel.%s' % test_service_pascal],
+    'dotnet publish -o out/%s ../test/Funnel.Tests/ScalingTests/Apps/LeanCode.Pipe.Funnel.%s' % (test_service_lower, test_service_pascal),
+    deps=['../src', '../test/Funnel.Tests/ScalingTests/Apps/LeanCode.Pipe.Funnel.%s' % test_service_pascal],
     ignore=['../**/obj', '../**/bin'],
     labels=['test-services'],
   )
@@ -33,17 +33,17 @@ k8s_resource('rabbitmq', labels=['test-services'])
 def test_setup_and_run(kebab_name, snake_name, pascal_name, with_testapp2=False):
   test_build_deps = [
     '../src',
-    '../test/LeanCode.Pipe.Funnel.TestAppFunnel',
-    '../test/LeanCode.Pipe.Funnel.TestApp1',
-    '../test/LeanCode.Pipe.Funnel.%s' % pascal_name
+    '../test/Funnel.Tests/ScalingTests/Apps/LeanCode.Pipe.Funnel.TestAppFunnel',
+    '../test/Funnel.Tests/ScalingTests/Apps/LeanCode.Pipe.Funnel.TestApp1',
+    '../test/Funnel.Tests/ScalingTests/LeanCode.Pipe.Funnel.%sTests' % pascal_name
   ]
 
   if (with_testapp2):
-    test_build_deps.append('../test/LeanCode.Pipe.Funnel.TestApp2')
+    test_build_deps.append('../test/Funnel.Tests/ScalingTests/Apps/LeanCode.Pipe.Funnel.TestApp2')
 
   local_resource(
     'build-%s-tests' % kebab_name,
-    'dotnet publish -o out/%s_tests ../test/LeanCode.Pipe.Funnel.%sTests' % (snake_name, pascal_name),
+    'dotnet publish -o out/%s_tests ../test/Funnel.Tests/ScalingTests/LeanCode.Pipe.Funnel.%sTests' % (snake_name, pascal_name),
     deps=test_build_deps,
     ignore=['../**/obj', '../**/bin'],
     labels=['%s-tests' % kebab_name]

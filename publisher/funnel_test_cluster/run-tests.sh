@@ -5,7 +5,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
 CLUSTER_NAME="testapp"
-WAIT_TIMEOUT=${WAIT_TIMEOUT:-300}  # 5 minutes default
+WAIT_TIMEOUT=${WAIT_TIMEOUT:-300}  # 5 minutes default, in seconds
 
 # Colors for output
 RED='\033[0;31m'
@@ -51,58 +51,22 @@ create_cluster() {
     kubectl cluster-info
 }
 
-cleanup_namespaces() {
-    log "Cleaning up test namespaces..."
-    kubectl delete namespace no-scaling scaled-target-service scaled-funnel multiple-services --ignore-not-found 2>/dev/null || true
-}
+run_tests() {
+    log "Running tilt ci (timeout: ${WAIT_TIMEOUT}s)..."
 
-run_tilt() {
-    log "Starting Tilt (building and deploying services)..."
+    local exit_code=0
+    
+    # tilt ci handles: build, deploy, wait for completion, exit codes
+    # --output-snapshot-on-exit saves debug info for inspection on failure
+    tilt ci --timeout "${WAIT_TIMEOUT}s" --output-snapshot-on-exit snapshot.json || exit_code=$?
 
-    # Kill any existing tilt processes
-    pkill -f "tilt up" 2>/dev/null || true
-    sleep 2
+    if [ $exit_code -ne 0 ]; then
+        error "tilt ci failed with exit code $exit_code"
+        warn "Debug snapshot saved to: snapshot.json"
+        warn "View with: tilt snapshot view snapshot.json"
+    fi
 
-    # Start tilt in background
-    tilt up --stream &
-    TILT_PID=$!
-
-    log "Waiting for tests to complete (timeout: ${WAIT_TIMEOUT}s)..."
-
-    local start_time=$(date +%s)
-    local all_completed=false
-
-    while true; do
-        local current_time=$(date +%s)
-        local elapsed=$((current_time - start_time))
-
-        if [ $elapsed -ge $WAIT_TIMEOUT ]; then
-            error "Timeout waiting for tests to complete"
-            kill $TILT_PID 2>/dev/null || true
-            exit 1
-        fi
-
-        # Check if all test pods are completed
-        local test_pods=$(kubectl get pods -A 2>/dev/null | grep -E "tests-" | grep -v "NAME" || true)
-
-        if [ -n "$test_pods" ]; then
-            local total=$(echo "$test_pods" | wc -l)
-            local completed=$(echo "$test_pods" | grep -c "Completed" || true)
-            local errors=$(echo "$test_pods" | grep -c "Error" || true)
-
-            if [ "$completed" -eq 4 ] || [ $((completed + errors)) -eq 4 ]; then
-                all_completed=true
-                break
-            fi
-
-            log "Progress: $completed/4 tests completed, $errors errors (${elapsed}s elapsed)"
-        fi
-
-        sleep 10
-    done
-
-    # Stop tilt
-    kill $TILT_PID 2>/dev/null || true
+    return $exit_code
 }
 
 show_results() {
@@ -122,7 +86,7 @@ show_results() {
             if echo "$result" | grep -q "Passed!"; then
                 echo -e "${GREEN}✓${NC} ${ns}: ${result}"
             else
-                echo -e "${RED}✗${NC} ${ns}: ${result:-FAILED}"
+                echo -e "${RED}✗${NC} ${ns}: ${result:-FAILED (status: $status)}"
                 all_passed=false
 
                 # Show error details
@@ -146,9 +110,27 @@ show_results() {
     fi
 }
 
+collect_logs() {
+    log "Collecting test logs..."
+    mkdir -p test-logs
+    
+    for ns in no-scaling scaled-target-service scaled-funnel multiple-services; do
+        echo "=== Namespace: $ns ===" >> test-logs/test-results.txt
+        pod=$(kubectl get pods -n $ns -o name 2>/dev/null | grep tests | head -1)
+        if [ -n "$pod" ]; then
+            kubectl logs -n $ns $pod >> test-logs/test-results.txt 2>&1 || true
+        fi
+        echo "" >> test-logs/test-results.txt
+    done
+    
+    kubectl get pods -A >> test-logs/pod-status.txt 2>&1 || true
+    kubectl describe pods -A >> test-logs/pod-describe.txt 2>&1 || true
+    
+    log "Logs collected in test-logs/"
+}
+
 cleanup() {
     log "Cleaning up..."
-    pkill -f "tilt up" 2>/dev/null || true
     tilt down 2>/dev/null || true
 }
 
@@ -162,9 +144,32 @@ case "${1:-run}" in
     run)
         check_prerequisites
         create_cluster
-        cleanup_namespaces
-        run_tilt
-        show_results
+        
+        test_exit_code=0
+        run_tests || test_exit_code=$?
+        
+        show_results || true
+        
+        if [ $test_exit_code -ne 0 ]; then
+            collect_logs
+        fi
+        
+        exit $test_exit_code
+        ;;
+    ci)
+        # CI mode: skip cluster creation (handled by CI), just run tests
+        check_prerequisites
+        
+        test_exit_code=0
+        run_tests || test_exit_code=$?
+        
+        show_results || true
+        
+        if [ $test_exit_code -ne 0 ]; then
+            collect_logs
+        fi
+        
+        exit $test_exit_code
         ;;
     results)
         show_results
@@ -177,10 +182,11 @@ case "${1:-run}" in
         delete_cluster
         ;;
     *)
-      echo "Usage: $0 {run|results|cleanup|delete}"
+        echo "Usage: $0 {run|ci|results|cleanup|delete}"
         echo ""
         echo "Commands:"
         echo "  run      - Create cluster, run tests, show results (default)"
+        echo "  ci       - Run tests only (cluster already exists, for CI use)"
         echo "  results  - Show results from previous run"
         echo "  cleanup  - Stop Tilt and clean up deployments"
         echo "  delete   - Delete the k3d cluster entirely"

@@ -4,7 +4,7 @@ public class SimpleTopicKeys
     : BasicTopicKeys<SimpleTopic, GreetingNotificationDTO, FarewellNotificationDTO>
 {
     public override IEnumerable<string> Get(SimpleTopic topic) =>
-        new[] { $"simple_{topic.TopicId.ToString()}" };
+        [$"simple_{topic.TopicId.ToString()}"];
 }
 
 public class MyFavouriteProjectsTopicKeys
@@ -30,13 +30,13 @@ public class MyFavouriteProjectsTopicKeys
         MyFavouriteProjectsTopic topic,
         ProjectUpdatedNotificationDTO notification,
         CancellationToken ct = default
-    ) => ValueTask.FromResult((IEnumerable<string>)new[] { ToTopicKey(notification.ProjectId) });
+    ) => ValueTask.FromResult((IEnumerable<string>)[ToTopicKey(notification.ProjectId)]);
 
     public ValueTask<IEnumerable<string>> GetForPublishingAsync(
         MyFavouriteProjectsTopic topic,
         ProjectDeletedNotificationDTO notification,
         CancellationToken ct = default
-    ) => ValueTask.FromResult((IEnumerable<string>)new[] { ToTopicKey(notification.ProjectId) });
+    ) => ValueTask.FromResult((IEnumerable<string>)[ToTopicKey(notification.ProjectId)]);
 
     private static string ToTopicKey(Guid projectId) => $"favouriteproject_{projectId}";
 }
@@ -45,7 +45,7 @@ public class AuthorizedTopicKeys
     : BasicTopicKeys<AuthorizedTopic, GreetingNotificationDTO, FarewellNotificationDTO>
 {
     public override IEnumerable<string> Get(AuthorizedTopic topic) =>
-        new[] { $"authorized_{topic.TopicId.ToString()}" };
+        [$"authorized_{topic.TopicId.ToString()}"];
 }
 
 public class EmptyTopicKeys : BasicTopicKeys<EmptyTopic>

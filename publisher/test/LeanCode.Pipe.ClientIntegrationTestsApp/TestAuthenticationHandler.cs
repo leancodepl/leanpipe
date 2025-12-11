@@ -16,11 +16,10 @@ public class TestAuthenticationHandler : AuthenticationHandler<AuthenticationSch
 
     public static readonly ClaimsPrincipal User = new(
         new ClaimsIdentity(
-            new Claim[]
-            {
+            [
                 new(AuthConfig.KnownClaims.UserId, UserId.ToString()),
                 new(AuthConfig.KnownClaims.Role, AuthConfig.Roles.User),
-            },
+            ],
             SchemeName,
             AuthConfig.KnownClaims.UserId,
             AuthConfig.KnownClaims.Role

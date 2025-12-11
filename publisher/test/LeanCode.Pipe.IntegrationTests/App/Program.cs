@@ -4,8 +4,8 @@ using LeanCode.CQRS.Security;
 using LeanCode.IntegrationTestHelpers;
 using LeanCode.Logging.AspNetCore;
 using LeanCode.Pipe;
-using LeanCode.Pipe.Funnel.FunnelledService;
 using LeanCode.Pipe.Funnel.Instance;
+using LeanCode.Pipe.Funnel.Publishing;
 using LeanCode.Pipe.IntegrationTests.App;
 using MassTransit;
 using Microsoft.AspNetCore.Builder;
@@ -14,23 +14,35 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 var appBuilder = WebApplication.CreateBuilder(args);
-appBuilder.Host.ConfigureDefaultLogging("IntegrationTests", [typeof(Program).Assembly]);
+appBuilder.Host.ConfigureDefaultLogging(
+    "IntegrationTests",
+    [typeof(LeanCode.Pipe.IntegrationTests.App.Program).Assembly]
+);
 
 var services = appBuilder.Services;
 
 if (!appBuilder.Configuration.GetValue<bool>("EnableFunnel"))
 {
-    services.AddLeanPipe(LeanPipeTypes, LeanPipeTypes);
+    services.AddLeanPipe(
+        LeanCode.Pipe.IntegrationTests.App.Program.LeanPipeTypes,
+        LeanCode.Pipe.IntegrationTests.App.Program.LeanPipeTypes
+    );
 }
 else // We mimic Funnel behaviour on a single instance
 {
     services.AddLeanPipeFunnel();
-    services.AddFunnelledLeanPipe(LeanPipeTypes, LeanPipeTypes);
+    services.AddFunnelledLeanPipe(
+        LeanCode.Pipe.IntegrationTests.App.Program.LeanPipeTypes,
+        LeanCode.Pipe.IntegrationTests.App.Program.LeanPipeTypes
+    );
 
     services.AddMassTransitTestHarness(cfg =>
     {
         cfg.ConfigureLeanPipeFunnelConsumers();
-        cfg.AddFunnelledLeanPipeConsumers("TestApp", LeanPipeTypes.Assemblies);
+        cfg.AddFunnelledLeanPipeConsumers(
+            "TestApp",
+            LeanCode.Pipe.IntegrationTests.App.Program.LeanPipeTypes.Assemblies
+        );
     });
 }
 
@@ -108,7 +120,10 @@ app.MapPost(
 
 app.Run();
 
-public sealed partial class Program
+namespace LeanCode.Pipe.IntegrationTests.App
 {
-    public static readonly TypesCatalog LeanPipeTypes = TypesCatalog.Of<SimpleTopic>();
+    public sealed partial class Program
+    {
+        public static readonly TypesCatalog LeanPipeTypes = TypesCatalog.Of<SimpleTopic>();
+    }
 }
