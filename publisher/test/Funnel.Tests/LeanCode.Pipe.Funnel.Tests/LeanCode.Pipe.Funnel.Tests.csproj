@@ -28,4 +28,3 @@
     <ProjectReference Include="../../LeanCode.Pipe.Tests.Additional/LeanCode.Pipe.Tests.Additional.csproj" />
   </ItemGroup>
 </Project>
-
