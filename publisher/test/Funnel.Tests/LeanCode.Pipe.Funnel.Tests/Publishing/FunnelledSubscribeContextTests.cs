@@ -7,11 +7,7 @@ namespace LeanCode.Pipe.Funnel.Tests.Publishing;
 
 public class FunnelledSubscribeContextTests
 {
-    private static readonly ImmutableArray<string> SampleGroupKeys = new[]
-    {
-        "key1",
-        "key2",
-    }.ToImmutableArray();
+    private static readonly ImmutableArray<string> SampleGroupKeys = ["key1", "key2"];
 
     private readonly FunnelledSubscribeContext context = new();
 

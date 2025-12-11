@@ -124,8 +124,7 @@ public static class LeanPipeTestClientExtensions
     public static List<object> NotificationsOn<TTopic>(this LeanPipeTestClient client, TTopic topic)
         where TTopic : ITopic
     {
-        return client.Subscriptions.GetValueOrDefault(topic)?.ReceivedNotifications.ToList()
-            ?? new();
+        return client.Subscriptions.GetValueOrDefault(topic)?.ReceivedNotifications.ToList() ?? [];
     }
 
     /// <summary>

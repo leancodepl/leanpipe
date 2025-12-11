@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Http.Connections;
 var appBuilder = WebApplication.CreateBuilder(args);
 var hostBuilder = appBuilder.Host;
 
-hostBuilder.ConfigureDefaultLogging("TestApp", new[] { typeof(Program).Assembly });
+hostBuilder.ConfigureDefaultLogging("TestApp", [typeof(Program).Assembly]);
 
 var services = appBuilder.Services;
 var leanPipeTypes = TypesCatalog.Of<Topic>();

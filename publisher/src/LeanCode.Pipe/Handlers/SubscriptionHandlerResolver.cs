@@ -25,7 +25,7 @@ public sealed class SubscriptionHandlerResolver
         var handler = services.GetService(handlerType);
         if (handler is not null)
         {
-            var wrapper = constructor.Invoke(new[] { handler });
+            var wrapper = constructor.Invoke([handler]);
             return (ISubscriptionHandlerWrapper)wrapper;
         }
         else

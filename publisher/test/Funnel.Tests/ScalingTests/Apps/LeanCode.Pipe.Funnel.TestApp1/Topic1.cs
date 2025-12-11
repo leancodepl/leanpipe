@@ -16,5 +16,5 @@ public class Notification1
 
 public class Topic1Keys : BasicTopicKeys<Topic1, Notification1>
 {
-    public override IEnumerable<string> Get(Topic1 topic) => new[] { $"topic1_{topic.Topic1Id}" };
+    public override IEnumerable<string> Get(Topic1 topic) => [$"topic1_{topic.Topic1Id}"];
 }

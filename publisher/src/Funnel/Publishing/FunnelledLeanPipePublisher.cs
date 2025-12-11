@@ -41,10 +41,7 @@ internal class FunnelledLeanPipePublisher<TTopic> : ILeanPipePublisher<TTopic>
         CancellationToken cancellationToken = default
     )
     {
-        var protocolDictionary = new[] { hubProtocol }.ToProtocolDictionary(
-            "notify",
-            new object[] { payload }
-        );
+        var protocolDictionary = new[] { hubProtocol }.ToProtocolDictionary("notify", [payload]);
 
         var publishTasks = keys.Where(k => !string.IsNullOrEmpty(k))
             .Select(k =>

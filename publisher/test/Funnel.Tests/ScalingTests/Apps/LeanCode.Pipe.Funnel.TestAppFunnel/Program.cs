@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http.Connections;
 var appBuilder = WebApplication.CreateBuilder(args);
 var hostBuilder = appBuilder.Host;
 
-hostBuilder.ConfigureDefaultLogging("TestAppFunnel", new[] { typeof(Program).Assembly });
+hostBuilder.ConfigureDefaultLogging("TestAppFunnel", [typeof(Program).Assembly]);
 
 var services = appBuilder.Services;
 

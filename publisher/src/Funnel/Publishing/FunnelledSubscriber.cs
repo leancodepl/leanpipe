@@ -29,7 +29,7 @@ public class FunnelledSubscriber<TTopic> : IConsumer<ExecuteTopicsSubscriptionPi
         );
 
         await context.RespondAsync<SubscriptionPipelineResult>(
-            new(subscriptionStatus, subscribeContext.GroupKeys?.ToList() ?? new())
+            new(subscriptionStatus, subscribeContext.GroupKeys?.ToList() ?? [])
         );
     }
 }

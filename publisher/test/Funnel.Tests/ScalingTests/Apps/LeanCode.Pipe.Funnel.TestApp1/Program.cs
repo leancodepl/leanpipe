@@ -7,7 +7,7 @@ using MassTransit;
 var appBuilder = WebApplication.CreateBuilder(args);
 var hostBuilder = appBuilder.Host;
 
-hostBuilder.ConfigureDefaultLogging("TestApp1", new[] { typeof(Program).Assembly });
+hostBuilder.ConfigureDefaultLogging("TestApp1", [typeof(Program).Assembly]);
 
 var services = appBuilder.Services;
 
@@ -16,7 +16,7 @@ services.AddFunnelledLeanPipe(new(typeof(Topic1)), new(typeof(Topic1Keys)));
 services.AddOptions<MassTransitHostOptions>().Configure(opts => opts.WaitUntilStarted = true);
 services.AddMassTransit(cfg =>
 {
-    cfg.AddFunnelledLeanPipeConsumers("TestApp1", new[] { typeof(Program).Assembly });
+    cfg.AddFunnelledLeanPipeConsumers("TestApp1", [typeof(Program).Assembly]);
 
     cfg.UsingRabbitMq(
         (ctx, cfg) =>

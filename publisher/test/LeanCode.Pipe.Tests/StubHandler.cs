@@ -38,7 +38,7 @@ public class DummyKeys<T> : ISubscribingKeys<T>
 {
     public ValueTask<IEnumerable<string>> GetForSubscribingAsync(T topic, LeanPipeContext context)
     {
-        return new(Enumerable.Empty<string>());
+        return new([]);
     }
 
     public ValueTask<IEnumerable<string>> GetForPublishingAsync(
@@ -46,7 +46,7 @@ public class DummyKeys<T> : ISubscribingKeys<T>
         CancellationToken ct = default
     )
     {
-        return new(Enumerable.Empty<string>());
+        return new([]);
     }
 }
 
@@ -61,7 +61,7 @@ public class TopicWithAllKeysKeys
         CancellationToken ct = default
     )
     {
-        return new(Array.Empty<string>());
+        return new([]);
     }
 
     public ValueTask<IEnumerable<string>> GetForPublishingAsync(
@@ -70,6 +70,6 @@ public class TopicWithAllKeysKeys
         CancellationToken ct = default
     )
     {
-        return new(Array.Empty<string>());
+        return new([]);
     }
 }
