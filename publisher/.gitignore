@@ -240,3 +240,8 @@ packed
 .paket/Paket.Restore.targets
 
 **/BenchmarkDotNet.Artifacts
+
+# Funnel test cluster artifacts
+funnel_test_cluster/out/
+funnel_test_cluster/snapshot.json
+funnel_test_cluster/test-logs/
