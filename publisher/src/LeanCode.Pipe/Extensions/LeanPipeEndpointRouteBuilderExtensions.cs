@@ -12,17 +12,8 @@ public static class LeanPipeEndpointRouteBuilderExtensions
     /// </summary>
     public static IHubEndpointConventionBuilder MapLeanPipe(
         this IEndpointRouteBuilder endpoints,
-        [StringSyntax("Route")] string pattern
-    )
-    {
-        return endpoints.MapHub<LeanPipeSubscriber>(pattern);
-    }
-
-    /// <inheritdoc cref="MapLeanPipe(IEndpointRouteBuilder, string)"/>
-    public static IHubEndpointConventionBuilder MapLeanPipe(
-        this IEndpointRouteBuilder endpoints,
         [StringSyntax("Route")] string pattern,
-        Action<HttpConnectionDispatcherOptions>? configureOptions
+        Action<HttpConnectionDispatcherOptions>? configureOptions = null
     )
     {
         return endpoints.MapHub<LeanPipeSubscriber>(pattern, configureOptions);

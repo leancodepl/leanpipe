@@ -1,0 +1,4 @@
+[*.cs]
+# Suppress "Namespace does not match folder structure" - we intentionally use flat LeanCode.Pipe namespace
+dotnet_diagnostic.IDE0130.severity = none
+resharper_check_namespace_highlighting = none
