@@ -3,7 +3,7 @@ using FluentAssertions;
 using LeanCode.Pipe.Funnel.Publishing;
 using Xunit;
 
-namespace LeanCode.Pipe.Tests.Funnel.Publishing;
+namespace LeanCode.Pipe.Funnel.Tests.Publishing;
 
 public class FunnelledSubscribeContextTests
 {

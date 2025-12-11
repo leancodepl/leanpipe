@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace LeanCode.Pipe.Tests.Funnel.Instance;
+namespace LeanCode.Pipe.Funnel.Tests.Instance;
 
 public class RegistrationConfiguratorExtensionsTests
 {

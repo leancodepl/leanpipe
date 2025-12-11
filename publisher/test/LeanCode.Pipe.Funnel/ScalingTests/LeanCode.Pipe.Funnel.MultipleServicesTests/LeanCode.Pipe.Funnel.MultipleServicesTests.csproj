@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../LeanCode.Pipe.Funnel.TestApp1/LeanCode.Pipe.Funnel.TestApp1.csproj" />
-    <ProjectReference Include="../LeanCode.Pipe.Funnel.TestApp2/LeanCode.Pipe.Funnel.TestApp2.csproj" />
-    <ProjectReference Include="../../src/LeanCode.Pipe.TestClient/LeanCode.Pipe.TestClient.csproj" />
+    <ProjectReference Include="../Apps/LeanCode.Pipe.Funnel.TestApp1/LeanCode.Pipe.Funnel.TestApp1.csproj" />
+    <ProjectReference Include="../Apps/LeanCode.Pipe.Funnel.TestApp2/LeanCode.Pipe.Funnel.TestApp2.csproj" />
+    <ProjectReference Include="../../../../src/LeanCode.Pipe.TestClient/LeanCode.Pipe.TestClient.csproj" />
   </ItemGroup>
 </Project>

@@ -46,6 +46,15 @@ jobs:
           --settings test/coverlet.runsettings
           --logger trx
           --results-directory TestResults
+      - name: Test Funnel
+        run: >
+          dotnet test
+          ./test/LeanCode.Pipe.Funnel/LeanCode.Pipe.Funnel.Tests/LeanCode.Pipe.Funnel.Tests.csproj
+          --no-build
+          --collect "XPlat Code Coverage"
+          --settings test/coverlet.runsettings
+          --logger trx
+          --results-directory TestResults
       - name: Test Test Client
         run: >
           dotnet test

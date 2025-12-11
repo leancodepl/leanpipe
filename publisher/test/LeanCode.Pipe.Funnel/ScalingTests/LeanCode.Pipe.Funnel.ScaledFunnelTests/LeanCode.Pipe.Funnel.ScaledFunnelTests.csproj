@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <AssemblyName>NoScalingTests</AssemblyName>
+    <AssemblyName>ScaledFunnelTests</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../LeanCode.Pipe.Funnel.TestApp1/LeanCode.Pipe.Funnel.TestApp1.csproj" />
-    <ProjectReference Include="../../src/LeanCode.Pipe.TestClient/LeanCode.Pipe.TestClient.csproj" />
+    <ProjectReference Include="../Apps/LeanCode.Pipe.Funnel.TestApp1/LeanCode.Pipe.Funnel.TestApp1.csproj" />
+    <ProjectReference Include="../../../../src/LeanCode.Pipe.TestClient/LeanCode.Pipe.TestClient.csproj" />
   </ItemGroup>
 </Project>
