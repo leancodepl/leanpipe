@@ -22,8 +22,8 @@
 
   <ItemGroup>
     <ProjectReference Include="../../src/LeanCode.Pipe/LeanCode.Pipe.csproj" />
-    <ProjectReference Include="../../src/LeanCode.Pipe.Funnel/Instance/LeanCode.Pipe.Funnel.Instance.csproj" />
-    <ProjectReference Include="../../src/LeanCode.Pipe.Funnel/Publishing/LeanCode.Pipe.Funnel.Publishing.csproj" />
+    <ProjectReference Include="../../src/Funnel/Instance/LeanCode.Pipe.Funnel.Instance.csproj" />
+    <ProjectReference Include="../../src/Funnel/Publishing/LeanCode.Pipe.Funnel.Publishing.csproj" />
     <ProjectReference Include="../LeanCode.Pipe.Tests.Additional/LeanCode.Pipe.Tests.Additional.csproj" />
   </ItemGroup>
 </Project>

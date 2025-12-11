@@ -6,7 +6,7 @@
   <ItemGroup>
     <ProjectReference Include="../LeanCode.Pipe.ClientIntegrationTestsApp.Contracts/LeanCode.Pipe.ClientIntegrationTestsApp.Contracts.csproj" />
 
-    <ProjectReference Include="../../src/LeanCode.Pipe.Funnel/Instance/LeanCode.Pipe.Funnel.Instance.csproj" />
-    <ProjectReference Include="../../src/LeanCode.Pipe.Funnel/Publishing/LeanCode.Pipe.Funnel.Publishing.csproj" />
+    <ProjectReference Include="../../src/Funnel/Instance/LeanCode.Pipe.Funnel.Instance.csproj" />
+    <ProjectReference Include="../../src/Funnel/Publishing/LeanCode.Pipe.Funnel.Publishing.csproj" />
   </ItemGroup>
 </Project>
