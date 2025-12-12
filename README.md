@@ -1,5 +1,13 @@
 # LeanPipe
 
+[![Build & Publish to feedz](https://github.com/leancodepl/leanpipe/actions/workflows/publisher_release.yml/badge.svg)](https://github.com/leancodepl/leanpipe/actions/workflows/publisher_release.yml)
+[![dart test](https://github.com/leancodepl/leanpipe/actions/workflows/dart_ci.yml/badge.svg)](https://github.com/leancodepl/leanpipe/actions/workflows/dart_ci.yml)
+[![JS Release](https://github.com/leancodepl/leanpipe/actions/workflows/js_client_release.yaml/badge.svg)](https://github.com/leancodepl/leanpipe/actions/workflows/js_client_release.yaml)
+[![feedz.io](https://img.shields.io/badge/endpoint.svg?url=https%3A%2F%2Ff.feedz.io%2Fleancode%2Fpublic%2Fshield%2FLeanCode.Pipe%2Flatest)](https://f.feedz.io/leancode/public/packages/LeanCode.Pipe/latest/download)
+[![npm version](https://img.shields.io/npm/v/@leancodepl/rx-pipe-client)](https://www.npmjs.com/package/@leancodepl/rx-pipe-client)
+[![pub version](https://img.shields.io/pub/v/leancode_pipe)](https://pub.dev/packages/leancode_pipe)
+[![codecov](https://codecov.io/gh/leancodepl/leanpipe/graph/badge.svg?token=LZIAEF100M)](https://codecov.io/gh/leancodepl/leanpipe)
+
 Real time server-to-client strongly typed notifications in a pub-sub manner.
 Notifying is backed up by [SignalR](https://dotnet.microsoft.com/en-us/apps/aspnet/signalr), while seamless server to client contracts generation is handled by [LeanCode Contracts Generator](https://github.com/leancodepl/contractsgenerator).
 
