@@ -69,9 +69,9 @@ public class ScaledTargetServiceTests : IAsyncLifetime
         await leanPipeClient.UnsubscribeSuccessAsync(topic);
     }
 
-    public Task InitializeAsync() => Task.CompletedTask;
+    public ValueTask InitializeAsync() => ValueTask.CompletedTask;
 
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         await leanPipeClient.DisposeAsync();
         testApp1AClient.Dispose();

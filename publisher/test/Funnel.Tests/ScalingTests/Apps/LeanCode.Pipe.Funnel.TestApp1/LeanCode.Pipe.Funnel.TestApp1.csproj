@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
+    <IsTestProject>false</IsTestProject>
     <AssemblyName>TestApp1</AssemblyName>
   </PropertyGroup>
 

@@ -73,9 +73,9 @@ public class ScaledFunnelTests : IAsyncLifetime
         await leanPipeBClient.UnsubscribeSuccessAsync(topic);
     }
 
-    public Task InitializeAsync() => Task.CompletedTask;
+    public ValueTask InitializeAsync() => ValueTask.CompletedTask;
 
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         await leanPipeAClient.DisposeAsync();
         await leanPipeBClient.DisposeAsync();

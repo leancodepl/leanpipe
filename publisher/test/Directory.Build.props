@@ -6,4 +6,25 @@
     <!-- CS7022: Entry point conflict with test SDK - expected when using custom Program.cs for WebApplicationFactory -->
     <NoWarn>$(NoWarn);CA1515;CS7022</NoWarn>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    <!-- All arguments must be on a single line to avoid parsing issues with newlines -->
+    <!-- csharpier-ignore -->
+    <TestingPlatformCommandLineArguments>$(TestingPlatformCommandLineArguments) --report-ctrf --report-xunit-trx --coverage --ignore-exit-code 8 --results-directory $(MSBuildThisFileDirectory)/../TestResults --coverage-output-format cobertura --coverage-settings $(MSBuildThisFileDirectory)/coverage.xml --report-ctrf-filename $(MSBuildProjectName)-$([System.DateTime]::Now.ToString("HH-mm-ss")).json --report-xunit-trx-filename $(MSBuildProjectName).trx --coverage-output $(MSBuildProjectName)-$([System.DateTime]::Now.ToString("HH-mm-ss")).xml</TestingPlatformCommandLineArguments>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(IsTestProject)' != 'false'">
+    <PackageReference Include="FluentAssertions" />
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+    <PackageReference Include="xunit.v3.mtp-v2" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(IsTestProject)' != 'false'">
+    <Using Include="FluentAssertions" />
+    <Using Include="Xunit" />
+  </ItemGroup>
 </Project>
