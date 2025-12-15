@@ -1,14 +1,26 @@
 using System.Net.Http.Headers;
 using LeanCode.IntegrationTestHelpers;
+using LeanCode.Logging.AspNetCore;
 using LeanCode.Pipe.IntegrationTests.App;
 using LeanCode.Pipe.TestClient;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.Hosting;
 
 namespace LeanCode.Pipe.IntegrationTests;
 
-public class TestApplicationFactory : WebApplicationFactory<App.Program>
+public class TestApplicationFactory : WebApplicationFactory<Startup>
 {
+    protected override IHostBuilder CreateHostBuilder()
+    {
+        return Host.CreateDefaultBuilder()
+            .ConfigureDefaultLogging("IntegrationTests", [typeof(Startup).Assembly])
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+            });
+    }
+
     protected override IHost CreateHost(IHostBuilder builder)
     {
         builder.UseContentRoot(Directory.GetCurrentDirectory());
@@ -19,7 +31,7 @@ public class TestApplicationFactory : WebApplicationFactory<App.Program>
     {
         return new(
             new("http://localhost/leanpipe"),
-            App.Program.LeanPipeTypes,
+            Startup.LeanPipeTypes,
             hco =>
             {
                 hco.HttpMessageHandlerFactory = _ => Server.CreateHandler();
