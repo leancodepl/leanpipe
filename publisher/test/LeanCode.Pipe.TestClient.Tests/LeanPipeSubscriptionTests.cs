@@ -1,6 +1,4 @@
-using FluentAssertions;
 using LeanCode.Contracts;
-using Xunit;
 
 namespace LeanCode.Pipe.TestClient.Tests;
 
@@ -11,7 +9,9 @@ public class LeanPipeSubscriptionTests
     {
         var subscription = new LeanPipeSubscription(new Topic(), Guid.NewGuid());
 
-        var notificationTask = subscription.WaitForNextNotification();
+        var notificationTask = subscription.WaitForNextNotification(
+            ct: TestContext.Current.CancellationToken
+        );
 
         var notification = new Notification { Message = "Hello!" };
 
@@ -29,7 +29,10 @@ public class LeanPipeSubscriptionTests
 
         var timeout = TimeSpan.FromMilliseconds(100);
 
-        var notificationTask = subscription.WaitForNextNotification(timeout: timeout);
+        var notificationTask = subscription.WaitForNextNotification(
+            timeout: timeout,
+            ct: TestContext.Current.CancellationToken
+        );
 
         // `ThrowWithinAsync<OperationCanceledException>(timeout.Add(timeout))` seems to fail though 🤨
         await notificationTask.Awaiting(t => t).Should().ThrowAsync<OperationCanceledException>();

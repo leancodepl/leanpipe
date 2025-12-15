@@ -1,10 +1,8 @@
 using System.Net.Http.Json;
-using FluentAssertions;
 using LeanCode.Pipe.Funnel.TestApp1;
 using LeanCode.Pipe.Funnel.TestApp2;
 using LeanCode.Pipe.TestClient;
 using Microsoft.AspNetCore.Http.Connections;
-using Xunit;
 
 namespace LeanCode.Pipe.Funnel.MultipleServicesTests;
 
@@ -63,17 +61,17 @@ public class MultipleTargetServicesTests : IAsyncLifetime
             Farewell = $"Goodbye from topic2 {topic2.Topic2Id}",
         };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic1);
-        await leanPipeClient.SubscribeSuccessAsync(topic2);
+        await leanPipeClient.SubscribeSuccessAsync(topic1, TestContext.Current.CancellationToken);
+        await leanPipeClient.SubscribeSuccessAsync(topic2, TestContext.Current.CancellationToken);
 
         await NotificationsAreReceivedOnlyOnThePublishedTopics();
 
-        await leanPipeClient.UnsubscribeSuccessAsync(topic1);
+        await leanPipeClient.UnsubscribeSuccessAsync(topic1, TestContext.Current.CancellationToken);
 
         await NotificationsAreNotReceivedOnTheUnsubscribedTopic();
         await NotificationsAreStillReceivedOnTheOtherSubscribedTopic();
 
-        await leanPipeClient.UnsubscribeSuccessAsync(topic2);
+        await leanPipeClient.UnsubscribeSuccessAsync(topic2, TestContext.Current.CancellationToken);
 
         async Task NotificationsAreReceivedOnlyOnThePublishedTopics()
         {
@@ -146,5 +144,6 @@ public class MultipleTargetServicesTests : IAsyncLifetime
         await leanPipeClient.DisposeAsync();
         testApp1Client.Dispose();
         testApp2Client.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

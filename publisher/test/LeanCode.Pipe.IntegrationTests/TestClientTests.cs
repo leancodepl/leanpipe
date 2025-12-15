@@ -21,18 +21,18 @@ public class TestClientTests : TestApplicationFactory
     {
         var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic);
+        await leanPipeClient.SubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
         leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
 
         var greetingTask = leanPipeClient.WaitForNextNotificationOn<
             SimpleTopic,
             GreetingNotificationDTO
-        >(topic);
+        >(topic, ct: TestContext.Current.CancellationToken);
 
         var farewellTask = leanPipeClient.WaitForNextNotificationOn<
             SimpleTopic,
             FarewellNotificationDTO
-        >(topic);
+        >(topic, ct: TestContext.Current.CancellationToken);
 
         await httpClient.PostAndEnsureSuccessAsync(
             PublishingExtensions.SimpleTopicPublishEndpoint,
@@ -75,18 +75,18 @@ public class TestClientTests : TestApplicationFactory
     {
         var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic);
+        await leanPipeClient.SubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
         leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
 
         var greetingTask = leanPipeClient.WaitForNextNotificationOn<
             SimpleTopic,
             GreetingNotificationDTO
-        >(topic);
+        >(topic, ct: TestContext.Current.CancellationToken);
 
         var farewellTask = leanPipeClient.WaitForNextNotificationOn<
             SimpleTopic,
             FarewellNotificationDTO
-        >(topic);
+        >(topic, ct: TestContext.Current.CancellationToken);
 
         await httpClient.PostAndEnsureSuccessAsync(
             PublishingExtensions.SimpleTopicPublishEndpoint,
@@ -129,7 +129,7 @@ public class TestClientTests : TestApplicationFactory
     {
         var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic);
+        await leanPipeClient.SubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
 
         var futureNotifications = leanPipeClient.FutureNotificationsOnAsync(topic);
 
@@ -160,7 +160,7 @@ public class TestClientTests : TestApplicationFactory
     {
         var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic);
+        await leanPipeClient.SubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
 
         var timeout = TimeSpan.FromMilliseconds(100);
         var futureNotifications = leanPipeClient.FutureNotificationsOnAsync(topic);
@@ -186,12 +186,12 @@ public class TestClientTests : TestApplicationFactory
     {
         var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic);
+        await leanPipeClient.SubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
 
         var greetingTask = leanPipeClient.WaitForNextNotificationOn<
             SimpleTopic,
             GreetingNotificationDTO
-        >(topic);
+        >(topic, ct: TestContext.Current.CancellationToken);
 
         await httpClient.PostAndEnsureSuccessAsync(
             PublishingExtensions.SimpleTopicPublishEndpoint,
@@ -236,7 +236,7 @@ public class TestClientTests : TestApplicationFactory
     {
         var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic);
+        await leanPipeClient.SubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
 
         var timeout = TimeSpan.FromMilliseconds(100);
         var allNotifications = leanPipeClient.AllNotificationsOnAsync(topic);

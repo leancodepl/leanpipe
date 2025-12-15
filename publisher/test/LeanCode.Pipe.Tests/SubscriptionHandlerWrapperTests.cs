@@ -1,6 +1,3 @@
-using FluentAssertions;
-using Xunit;
-
 namespace LeanCode.Pipe.Tests;
 
 public class SubscriptionHandlerWrapperTests
@@ -11,7 +8,12 @@ public class SubscriptionHandlerWrapperTests
         var handler = new StubHandler();
         var wrapper = new SubscriptionHandlerWrapper<Topic1>(handler);
 
-        await wrapper.OnSubscribedAsync(new Topic1(), null!, null!, default);
+        await wrapper.OnSubscribedAsync(
+            new Topic1(),
+            null!,
+            null!,
+            TestContext.Current.CancellationToken
+        );
 
         handler.SubscribedCalled.Should().BeTrue();
     }
@@ -22,7 +24,12 @@ public class SubscriptionHandlerWrapperTests
         var handler = new StubHandler();
         var wrapper = new SubscriptionHandlerWrapper<Topic1>(handler);
 
-        await wrapper.OnUnsubscribedAsync(new Topic1(), null!, null!, default);
+        await wrapper.OnUnsubscribedAsync(
+            new Topic1(),
+            null!,
+            null!,
+            TestContext.Current.CancellationToken
+        );
 
         handler.UnsubscribedCalled.Should().BeTrue();
     }

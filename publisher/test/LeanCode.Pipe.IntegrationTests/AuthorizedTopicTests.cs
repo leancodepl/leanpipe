@@ -21,7 +21,10 @@ public class AuthorizedTopicTests : TestApplicationFactory
         var leanPipeClient = CreateLeanPipeTestClient(AuthenticatedAs.NotAuthenticated);
         var topic = new AuthorizedTopic { TopicId = Guid.NewGuid() };
 
-        var result = await leanPipeClient.SubscribeAsync(topic);
+        var result = await leanPipeClient.SubscribeAsync(
+            topic,
+            TestContext.Current.CancellationToken
+        );
         result.Should().BeEquivalentTo(new { Status = SubscriptionStatus.Unauthorized });
 
         await httpClient.PublishToAuthorizedTopicAndAwaitNoNotificationsAsync(
@@ -42,7 +45,10 @@ public class AuthorizedTopicTests : TestApplicationFactory
         var leanPipeClient = CreateLeanPipeTestClient(AuthenticatedAs.UserWithoutRole);
         var topic = new AuthorizedTopic { TopicId = Guid.NewGuid() };
 
-        var result = await leanPipeClient.SubscribeAsync(topic);
+        var result = await leanPipeClient.SubscribeAsync(
+            topic,
+            TestContext.Current.CancellationToken
+        );
         result.Should().BeEquivalentTo(new { Status = SubscriptionStatus.Unauthorized });
 
         await httpClient.PublishToAuthorizedTopicAndAwaitNoNotificationsAsync(
@@ -63,7 +69,7 @@ public class AuthorizedTopicTests : TestApplicationFactory
         var leanPipeClient = CreateLeanPipeTestClient(AuthenticatedAs.User);
         var topic = new AuthorizedTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic);
+        await leanPipeClient.SubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
 
         await httpClient.PublishToAuthorizedTopicAndAwaitNotificationAsync(
             new()

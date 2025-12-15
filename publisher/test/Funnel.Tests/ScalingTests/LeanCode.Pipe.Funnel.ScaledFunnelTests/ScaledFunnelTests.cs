@@ -1,9 +1,7 @@
 using System.Net.Http.Json;
-using FluentAssertions;
 using LeanCode.Pipe.Funnel.TestApp1;
 using LeanCode.Pipe.TestClient;
 using Microsoft.AspNetCore.Http.Connections;
-using Xunit;
 
 namespace LeanCode.Pipe.Funnel.ScaledFunnelTests;
 
@@ -48,18 +46,28 @@ public class ScaledFunnelTests : IAsyncLifetime
             Topic1Id = nameof(Client_receives_notifications_while_connected_to_any_Funnel_instance),
         };
 
-        await leanPipeAClient.SubscribeSuccessAsync(topic);
-        await leanPipeBClient.SubscribeSuccessAsync(topic);
+        await leanPipeAClient.SubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
+        await leanPipeBClient.SubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
 
         var expectedNotification = new Notification1
         {
             Greeting = $"Hello from topic1 {topic.Topic1Id}",
         };
 
-        var funnelANotification = leanPipeAClient.WaitForNextNotificationOn(topic);
-        var funnelBNotification = leanPipeBClient.WaitForNextNotificationOn(topic);
+        var funnelANotification = leanPipeAClient.WaitForNextNotificationOn(
+            topic,
+            ct: TestContext.Current.CancellationToken
+        );
+        var funnelBNotification = leanPipeBClient.WaitForNextNotificationOn(
+            topic,
+            ct: TestContext.Current.CancellationToken
+        );
 
-        await testApp1Client.PostAsJsonAsync("/publish", topic);
+        await testApp1Client.PostAsJsonAsync(
+            "/publish",
+            topic,
+            TestContext.Current.CancellationToken
+        );
 
         (await funnelANotification)
             .Should()
@@ -69,8 +77,8 @@ public class ScaledFunnelTests : IAsyncLifetime
             .Should()
             .BeEquivalentTo(expectedNotification, opts => opts.RespectingRuntimeTypes());
 
-        await leanPipeAClient.UnsubscribeSuccessAsync(topic);
-        await leanPipeBClient.UnsubscribeSuccessAsync(topic);
+        await leanPipeAClient.UnsubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
+        await leanPipeBClient.UnsubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
     }
 
     public ValueTask InitializeAsync() => ValueTask.CompletedTask;
@@ -80,5 +88,6 @@ public class ScaledFunnelTests : IAsyncLifetime
         await leanPipeAClient.DisposeAsync();
         await leanPipeBClient.DisposeAsync();
         testApp1Client.Dispose();
+        GC.SuppressFinalize(this);
     }
 }
