@@ -75,13 +75,21 @@ public class MultipleTargetServicesTests : IAsyncLifetime
 
         async Task NotificationsAreReceivedOnlyOnThePublishedTopics()
         {
-            var service1Notification = leanPipeClient.WaitForNextNotificationOn(topic1);
+            var service1Notification = leanPipeClient.WaitForNextNotificationOn(
+                topic1,
+                ct: TestContext.Current.CancellationToken
+            );
             var service2Notification = leanPipeClient.WaitForNextNotificationOn(
                 topic2,
-                timeout: TimeSpan.FromMilliseconds(500)
+                timeout: TimeSpan.FromMilliseconds(500),
+                ct: TestContext.Current.CancellationToken
             );
 
-            await testApp1Client.PostAsJsonAsync("/publish", topic1);
+            await testApp1Client.PostAsJsonAsync(
+                "/publish",
+                topic1,
+                TestContext.Current.CancellationToken
+            );
 
             (await service1Notification)
                 .Should()
@@ -92,13 +100,21 @@ public class MultipleTargetServicesTests : IAsyncLifetime
                 .Should()
                 .ThrowAsync<OperationCanceledException>();
 
-            service2Notification = leanPipeClient.WaitForNextNotificationOn(topic2);
+            service2Notification = leanPipeClient.WaitForNextNotificationOn(
+                topic2,
+                ct: TestContext.Current.CancellationToken
+            );
             service1Notification = leanPipeClient.WaitForNextNotificationOn(
                 topic1,
-                timeout: TimeSpan.FromMilliseconds(500)
+                timeout: TimeSpan.FromMilliseconds(500),
+                ct: TestContext.Current.CancellationToken
             );
 
-            await testApp2Client.PostAsJsonAsync("/publish", topic2);
+            await testApp2Client.PostAsJsonAsync(
+                "/publish",
+                topic2,
+                TestContext.Current.CancellationToken
+            );
 
             (await service2Notification)
                 .Should()
@@ -114,10 +130,15 @@ public class MultipleTargetServicesTests : IAsyncLifetime
         {
             var service1Notification = leanPipeClient.WaitForNextNotificationOn(
                 topic1,
-                timeout: TimeSpan.FromMilliseconds(500)
+                timeout: TimeSpan.FromMilliseconds(500),
+                ct: TestContext.Current.CancellationToken
             );
 
-            await testApp1Client.PostAsJsonAsync("/publish", topic1);
+            await testApp1Client.PostAsJsonAsync(
+                "/publish",
+                topic1,
+                TestContext.Current.CancellationToken
+            );
 
             await service1Notification
                 .Awaiting(x => x)
@@ -127,9 +148,16 @@ public class MultipleTargetServicesTests : IAsyncLifetime
 
         async Task NotificationsAreStillReceivedOnTheOtherSubscribedTopic()
         {
-            var service2Notification = leanPipeClient.WaitForNextNotificationOn(topic2);
+            var service2Notification = leanPipeClient.WaitForNextNotificationOn(
+                topic2,
+                ct: TestContext.Current.CancellationToken
+            );
 
-            await testApp2Client.PostAsJsonAsync("/publish", topic2);
+            await testApp2Client.PostAsJsonAsync(
+                "/publish",
+                topic2,
+                TestContext.Current.CancellationToken
+            );
 
             (await service2Notification)
                 .Should()

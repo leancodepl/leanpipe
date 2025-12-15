@@ -34,7 +34,8 @@ spec:
     spec:
       containers:
         - name: rabbitmq
-          image: rabbitmq:3-management
+          # Using AWS ECR public mirror to avoid Docker Hub rate limits in CI
+          image: public.ecr.aws/docker/library/rabbitmq:3-management
           ports:
             - containerPort: 5672
             - containerPort: 15672
