@@ -36,7 +36,7 @@ public class MultipleTargetServicesTests : IAsyncLifetime
         ),
     };
 
-    [Fact]
+    [Fact(Explicit = true)]
     public async Task Subscribing_and_receiving_notifications_from_any_target_service_works_and_does_not_interfere_with_each_other()
     {
         var topic1 = new Topic1

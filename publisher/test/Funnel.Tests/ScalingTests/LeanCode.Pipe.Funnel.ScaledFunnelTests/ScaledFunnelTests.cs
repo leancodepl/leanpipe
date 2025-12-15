@@ -40,7 +40,7 @@ public class ScaledFunnelTests : IAsyncLifetime
         ),
     };
 
-    [Fact]
+    [Fact(Explicit = true)]
     public async Task Client_receives_notifications_while_connected_to_any_Funnel_instance()
     {
         var topic = new Topic1

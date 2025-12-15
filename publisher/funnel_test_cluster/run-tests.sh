@@ -114,6 +114,11 @@ collect_logs() {
     log "Collecting test logs..."
     mkdir -p test-logs
 
+    # Clear previous logs
+    > test-logs/test-results.txt
+    > test-logs/pod-status.txt
+    > test-logs/pod-describe.txt
+
     for ns in no-scaling scaled-target-service scaled-funnel multiple-services; do
         echo "=== Namespace: $ns ===" >> test-logs/test-results.txt
         pod=$(kubectl get pods -n $ns -o name 2>/dev/null | grep tests | head -1)

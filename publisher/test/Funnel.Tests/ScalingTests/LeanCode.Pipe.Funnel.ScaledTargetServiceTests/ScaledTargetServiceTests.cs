@@ -35,7 +35,7 @@ public class ScaledTargetServiceTests : IAsyncLifetime
         ),
     };
 
-    [Fact]
+    [Fact(Explicit = true)]
     public async Task Publishing_notifications_from_any_service_instance_works()
     {
         var topic = new Topic1

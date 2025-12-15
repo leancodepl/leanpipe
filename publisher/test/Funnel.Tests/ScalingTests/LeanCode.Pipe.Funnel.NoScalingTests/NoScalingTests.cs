@@ -28,7 +28,7 @@ public class NoScalingTests : IAsyncLifetime
         ),
     };
 
-    [Fact]
+    [Fact(Explicit = true)]
     public async Task Subscribing_and_receiving_notifications_works()
     {
         var topic = new Topic1 { Topic1Id = nameof(Subscribing_and_receiving_notifications_works) };
