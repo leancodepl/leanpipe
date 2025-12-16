@@ -1,0 +1,38 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/src/">
+    <Project Path="src/LeanCode.Pipe.TestClient/LeanCode.Pipe.TestClient.csproj" />
+    <Project Path="src/LeanCode.Pipe/LeanCode.Pipe.csproj" />
+  </Folder>
+  <Folder Name="/src/Funnel/">
+    <Project Path="src/Funnel/Core/LeanCode.Pipe.Funnel.Core.csproj" />
+    <Project Path="src/Funnel/Instance/LeanCode.Pipe.Funnel.Instance.csproj" />
+    <Project Path="src/Funnel/Publishing/LeanCode.Pipe.Funnel.Publishing.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="test/LeanCode.Pipe.ClientIntegrationTestsApp.Contracts/LeanCode.Pipe.ClientIntegrationTestsApp.Contracts.csproj" />
+    <Project Path="test/LeanCode.Pipe.ClientIntegrationTestsApp/LeanCode.Pipe.ClientIntegrationTestsApp.csproj" />
+    <Project Path="test/LeanCode.Pipe.IntegrationTests/LeanCode.Pipe.IntegrationTests.csproj" />
+    <Project Path="test/LeanCode.Pipe.TestClient.Tests/LeanCode.Pipe.TestClient.Tests.csproj" />
+    <Project Path="test/LeanCode.Pipe.Tests.Additional/LeanCode.Pipe.Tests.Additional.csproj" />
+    <Project Path="test/LeanCode.Pipe.Tests/LeanCode.Pipe.Tests.csproj" />
+  </Folder>
+  <Folder Name="/test/Funnel.Tests/">
+    <Project Path="test/Funnel.Tests/LeanCode.Pipe.Funnel.Tests/LeanCode.Pipe.Funnel.Tests.csproj" />
+  </Folder>
+  <Folder Name="/test/Funnel.Tests/ScalingTests/">
+    <Project Path="test/Funnel.Tests/ScalingTests/LeanCode.Pipe.Funnel.MultipleServicesTests/LeanCode.Pipe.Funnel.MultipleServicesTests.csproj" />
+    <Project Path="test/Funnel.Tests/ScalingTests/LeanCode.Pipe.Funnel.NoScalingTests/LeanCode.Pipe.Funnel.NoScalingTests.csproj" />
+    <Project Path="test/Funnel.Tests/ScalingTests/LeanCode.Pipe.Funnel.ScaledFunnelTests/LeanCode.Pipe.Funnel.ScaledFunnelTests.csproj" />
+    <Project Path="test/Funnel.Tests/ScalingTests/LeanCode.Pipe.Funnel.ScaledTargetServiceTests/LeanCode.Pipe.Funnel.ScaledTargetServiceTests.csproj" />
+  </Folder>
+  <Folder Name="/test/Funnel.Tests/ScalingTests/Apps/">
+    <Project Path="test/Funnel.Tests/ScalingTests/Apps/LeanCode.Pipe.Funnel.TestApp1/LeanCode.Pipe.Funnel.TestApp1.csproj" />
+    <Project Path="test/Funnel.Tests/ScalingTests/Apps/LeanCode.Pipe.Funnel.TestApp2/LeanCode.Pipe.Funnel.TestApp2.csproj" />
+    <Project Path="test/Funnel.Tests/ScalingTests/Apps/LeanCode.Pipe.Funnel.TestAppFunnel/LeanCode.Pipe.Funnel.TestAppFunnel.csproj" />
+  </Folder>
+</Solution>
