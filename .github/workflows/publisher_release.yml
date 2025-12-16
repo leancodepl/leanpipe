@@ -41,23 +41,34 @@ jobs:
         run: dotnet build --no-restore -c Release
       - name: Unit Tests
         run: |
-          dotnet test ./test/LeanCode.Pipe.Tests/LeanCode.Pipe.Tests.csproj --no-build -c Release
-          dotnet test ./test/Funnel.Tests/LeanCode.Pipe.Funnel.Tests/LeanCode.Pipe.Funnel.Tests.csproj --no-build -c Release
-          dotnet test ./test/LeanCode.Pipe.TestClient.Tests/LeanCode.Pipe.TestClient.Tests.csproj --no-build -c Release
+          dotnet test \
+            --project ./test/LeanCode.Pipe.Tests/LeanCode.Pipe.Tests.csproj \
+            --no-build \
+            -c Release
+          dotnet test \
+            --project ./test/Funnel.Tests/LeanCode.Pipe.Funnel.Tests/LeanCode.Pipe.Funnel.Tests.csproj \
+            --no-build \
+            -c Release
+          dotnet test \
+            --project ./test/LeanCode.Pipe.TestClient.Tests/LeanCode.Pipe.TestClient.Tests.csproj \
+            --no-build \
+            -c Release
       - name: Integration test
         run: >
           dotnet test
-          ./test/LeanCode.Pipe.IntegrationTests/LeanCode.Pipe.IntegrationTests.csproj
+          --project ./test/LeanCode.Pipe.IntegrationTests/LeanCode.Pipe.IntegrationTests.csproj
           --no-build
           -c Release
-          -e EnableFunnel=false
+        env:
+          EnableFunnel: 'false'
       - name: Integration test with Funnel
         run: >
           dotnet test
-          ./test/LeanCode.Pipe.IntegrationTests/LeanCode.Pipe.IntegrationTests.csproj
+          --project ./test/LeanCode.Pipe.IntegrationTests/LeanCode.Pipe.IntegrationTests.csproj
           --no-build
           -c Release
-          -e EnableFunnel=true
+        env:
+          EnableFunnel: 'true'
       - name: Pack NuGet packages
         env:
           BUILD_VERSION: ${{ steps.version.outputs.version }}

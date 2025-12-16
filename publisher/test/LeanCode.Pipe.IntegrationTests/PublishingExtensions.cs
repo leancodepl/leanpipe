@@ -1,5 +1,4 @@
 using System.Net.Http.Json;
-using FluentAssertions;
 using LeanCode.Contracts;
 using LeanCode.Pipe.IntegrationTests.App;
 using LeanCode.Pipe.TestClient;

@@ -1,7 +1,5 @@
 using System.Security.Claims;
 using System.Text.Json;
-using FluentAssertions;
-using Xunit;
 
 namespace LeanCode.Pipe.Tests;
 

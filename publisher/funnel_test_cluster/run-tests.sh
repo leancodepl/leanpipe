@@ -55,7 +55,7 @@ run_tests() {
     log "Running tilt ci (timeout: ${WAIT_TIMEOUT}s)..."
 
     local exit_code=0
-    
+
     # tilt ci handles: build, deploy, wait for completion, exit codes
     # --output-snapshot-on-exit saves debug info for inspection on failure
     tilt ci --timeout "${WAIT_TIMEOUT}s" --output-snapshot-on-exit snapshot.json || exit_code=$?
@@ -81,7 +81,7 @@ show_results() {
 
         if [ -n "$pod" ]; then
             local status=$(kubectl get pod -n "$ns" "$pod" -o jsonpath='{.status.phase}' 2>/dev/null)
-            local result=$(kubectl logs -n "$ns" "$pod" 2>/dev/null | grep -E "^(Passed|Failed)!" | tail -1)
+            local result=$(kubectl logs -n "$ns" "$pod" 2>/dev/null | grep -E "Test run summary: (Passed|Failed)!" | tail -1)
 
             if echo "$result" | grep -q "Passed!"; then
                 echo -e "${GREEN}✓${NC} ${ns}: ${result}"
@@ -91,7 +91,7 @@ show_results() {
 
                 # Show error details
                 echo "  Error details:"
-                kubectl logs -n "$ns" "$pod" 2>/dev/null | grep -A 5 "Error Message:" | head -10 | sed 's/^/    /'
+                kubectl logs -n "$ns" "$pod" 2>/dev/null | grep -A 5 -E "(Error Message:|failed:)" | head -10 | sed 's/^/    /'
             fi
         else
             echo -e "${RED}✗${NC} ${ns}: No test pod found"
@@ -113,7 +113,12 @@ show_results() {
 collect_logs() {
     log "Collecting test logs..."
     mkdir -p test-logs
-    
+
+    # Clear previous logs
+    > test-logs/test-results.txt
+    > test-logs/pod-status.txt
+    > test-logs/pod-describe.txt
+
     for ns in no-scaling scaled-target-service scaled-funnel multiple-services; do
         echo "=== Namespace: $ns ===" >> test-logs/test-results.txt
         pod=$(kubectl get pods -n $ns -o name 2>/dev/null | grep tests | head -1)
@@ -122,10 +127,10 @@ collect_logs() {
         fi
         echo "" >> test-logs/test-results.txt
     done
-    
+
     kubectl get pods -A >> test-logs/pod-status.txt 2>&1 || true
     kubectl describe pods -A >> test-logs/pod-describe.txt 2>&1 || true
-    
+
     log "Logs collected in test-logs/"
 }
 
@@ -144,31 +149,31 @@ case "${1:-run}" in
     run)
         check_prerequisites
         create_cluster
-        
+
         test_exit_code=0
         run_tests || test_exit_code=$?
-        
+
         show_results || true
-        
+
         if [ $test_exit_code -ne 0 ]; then
             collect_logs
         fi
-        
+
         exit $test_exit_code
         ;;
     ci)
         # CI mode: skip cluster creation (handled by CI), just run tests
         check_prerequisites
-        
+
         test_exit_code=0
         run_tests || test_exit_code=$?
-        
+
         show_results || true
-        
+
         if [ $test_exit_code -ne 0 ]; then
             collect_logs
         fi
-        
+
         exit $test_exit_code
         ;;
     results)

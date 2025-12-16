@@ -1,9 +1,7 @@
 using System.Net.Http.Json;
-using FluentAssertions;
 using LeanCode.Pipe.Funnel.TestApp1;
 using LeanCode.Pipe.TestClient;
 using Microsoft.AspNetCore.Http.Connections;
-using Xunit;
 
 namespace LeanCode.Pipe.Funnel.NoScalingTests;
 
@@ -28,36 +26,47 @@ public class NoScalingTests : IAsyncLifetime
         ),
     };
 
-    [Fact]
+    [Fact(Explicit = true)]
     public async Task Subscribing_and_receiving_notifications_works()
     {
         var topic = new Topic1 { Topic1Id = nameof(Subscribing_and_receiving_notifications_works) };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic);
+        await leanPipeClient.SubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
 
         var expectedNotification = new Notification1
         {
             Greeting = $"Hello from topic1 {topic.Topic1Id}",
         };
 
-        var notification = leanPipeClient.WaitForNextNotificationOn(topic);
+        var notification = leanPipeClient.WaitForNextNotificationOn(
+            topic,
+            ct: TestContext.Current.CancellationToken
+        );
 
-        await testApp1Client.PostAsJsonAsync("/publish", topic);
+        await testApp1Client.PostAsJsonAsync(
+            "/publish",
+            topic,
+            TestContext.Current.CancellationToken
+        );
 
         (await notification)
             .Should()
             .BeEquivalentTo(expectedNotification, opts => opts.RespectingRuntimeTypes());
 
-        var instanceBNotification = leanPipeClient.WaitForNextNotificationOn(topic);
+        var instanceBNotification = leanPipeClient.WaitForNextNotificationOn(
+            topic,
+            ct: TestContext.Current.CancellationToken
+        );
 
-        await leanPipeClient.UnsubscribeSuccessAsync(topic);
+        await leanPipeClient.UnsubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
     }
 
-    public Task InitializeAsync() => Task.CompletedTask;
+    public ValueTask InitializeAsync() => ValueTask.CompletedTask;
 
-    public async Task DisposeAsync()
+    public async ValueTask DisposeAsync()
     {
         await leanPipeClient.DisposeAsync();
         testApp1Client.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

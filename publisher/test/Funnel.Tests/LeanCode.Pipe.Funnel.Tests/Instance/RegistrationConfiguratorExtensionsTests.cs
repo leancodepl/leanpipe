@@ -1,10 +1,8 @@
-using FluentAssertions;
 using LeanCode.Pipe.Funnel.Instance;
 using MassTransit.Configuration;
 using MassTransit.SignalR.Consumers;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 
 namespace LeanCode.Pipe.Funnel.Tests.Instance;
 

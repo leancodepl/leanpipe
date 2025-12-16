@@ -1,7 +1,5 @@
-using FluentAssertions;
 using LeanCode.Pipe.IntegrationTests.App;
 using LeanCode.Pipe.TestClient;
-using Xunit;
 
 namespace LeanCode.Pipe.IntegrationTests;
 
@@ -21,7 +19,7 @@ public class SimpleTopicTests : TestApplicationFactory
     {
         var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic);
+        await leanPipeClient.SubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
         leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
 
         await httpClient.PublishToSimpleTopicAndAwaitNotificationAsync(
@@ -48,7 +46,7 @@ public class SimpleTopicTests : TestApplicationFactory
             new FarewellNotificationDTO { Farewell = "Goodbye Tester" }
         );
 
-        await leanPipeClient.UnsubscribeSuccessAsync(topic);
+        await leanPipeClient.UnsubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
 
         await httpClient.PublishToSimpleTopicAndAwaitNoNotificationsAsync(
             new()
@@ -68,7 +66,7 @@ public class SimpleTopicTests : TestApplicationFactory
         var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
         var otherTopic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic);
+        await leanPipeClient.SubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
 
         await httpClient.PublishToSimpleTopicAndAwaitNoNotificationsAsync(
             new()
@@ -82,7 +80,7 @@ public class SimpleTopicTests : TestApplicationFactory
         leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
         leanPipeClient.NotificationsOn(otherTopic).Should().BeEmpty();
 
-        await leanPipeClient.UnsubscribeSuccessAsync(topic);
+        await leanPipeClient.UnsubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
     }
 
     [Fact]
@@ -90,7 +88,7 @@ public class SimpleTopicTests : TestApplicationFactory
     {
         var topic = new SimpleTopic { TopicId = Guid.NewGuid() };
 
-        await leanPipeClient.SubscribeSuccessAsync(topic);
+        await leanPipeClient.SubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
         leanPipeClient.NotificationsOn(topic).Should().BeEmpty();
 
         await httpClient.PublishToSimpleTopicAndAwaitNotificationAsync(
@@ -105,8 +103,8 @@ public class SimpleTopicTests : TestApplicationFactory
             new GreetingNotificationDTO { Greeting = "Hello Tester" }
         );
 
-        await leanPipeClient.DisconnectAsync();
-        await leanPipeClient.SubscribeSuccessAsync(topic);
+        await leanPipeClient.DisconnectAsync(TestContext.Current.CancellationToken);
+        await leanPipeClient.SubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
 
         await httpClient.PublishToSimpleTopicAndAwaitNotificationAsync(
             new()
@@ -120,6 +118,6 @@ public class SimpleTopicTests : TestApplicationFactory
             new FarewellNotificationDTO { Farewell = "Goodbye Tester" }
         );
 
-        await leanPipeClient.UnsubscribeSuccessAsync(topic);
+        await leanPipeClient.UnsubscribeSuccessAsync(topic, TestContext.Current.CancellationToken);
     }
 }

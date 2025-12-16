@@ -1,8 +1,6 @@
-using FluentAssertions;
 using LeanCode.Contracts;
 using LeanCode.Pipe.IntegrationTests.App;
 using LeanCode.Pipe.TestClient;
-using Xunit;
 
 namespace LeanCode.Pipe.IntegrationTests;
 
@@ -20,7 +18,10 @@ public class EmptyTopicTests : TestApplicationFactory
     {
         var topic = new EmptyTopic();
 
-        var result = await leanPipeClient.SubscribeAsync(topic);
+        var result = await leanPipeClient.SubscribeAsync(
+            topic,
+            TestContext.Current.CancellationToken
+        );
         result.Should().BeEquivalentTo(new { Status = SubscriptionStatus.Invalid });
     }
 }
