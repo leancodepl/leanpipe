@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuration>
   <CodeCoverage>
+    <ModulePaths>
+      <Exclude>
+        <!-- Exclude all test assemblies -->
+        <ModulePath>.*\.Tests\.dll$</ModulePath>
+        <ModulePath>.*\.Tests\.*\.dll$</ModulePath>
+        <ModulePath>.*Tests\.dll$</ModulePath>
+        <ModulePath>.*TestsApp\.dll$</ModulePath>
+        <ModulePath>.*TestsApp\.*\.dll$</ModulePath>
+      </Exclude>
+    </ModulePaths>
     <Attributes>
       <Exclude>
         <Attribute>^System\.ObsoleteAttribute$</Attribute>
