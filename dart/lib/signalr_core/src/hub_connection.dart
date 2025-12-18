@@ -115,6 +115,7 @@ class HubConnection {
   /// Indicates the state of the {@link HubConnection} to the server.
   HubConnectionState? get state => _connectionState;
 
+  /// Stream of the state changes of the {@link HubConnection} to the server.
   Stream<HubConnectionState> get connectionStateStream =>
       _connectionStateStreamController.stream;
 
