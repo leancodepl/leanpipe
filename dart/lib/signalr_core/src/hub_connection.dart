@@ -94,7 +94,7 @@ class HubConnection {
     _invocationId = 0;
     _receivedHandshakeResponse = false;
     _connectionState = HubConnectionState.disconnected;
-    _connectionStateStreamController = StreamController();
+    _connectionStateStreamController = StreamController.broadcast();
     _connectionStarted = false;
   }
 
