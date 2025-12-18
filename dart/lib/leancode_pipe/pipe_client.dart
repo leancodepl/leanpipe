@@ -64,6 +64,10 @@ class PipeClient {
         _hubConnection.state,
       );
 
+  Stream<PipeConnectionState> get connectionStateStream =>
+      _hubConnection.connectionStateStream
+          .map(PipeConnectionStateMapper.fromHubConnectionState);
+
   Future<void> connect() async {
     if (connectionState != PipeConnectionState.disconnected) {
       _logger.warning(

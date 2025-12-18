@@ -57,6 +57,7 @@ class HubConnection {
 
   HubConnectionState? _connectionState;
   late bool _connectionStarted;
+  late StreamController<HubConnectionState> _connectionStateStreamController;
   Future<void>? _startFuture;
   Future<void>? _stopFuture;
 
@@ -93,6 +94,7 @@ class HubConnection {
     _invocationId = 0;
     _receivedHandshakeResponse = false;
     _connectionState = HubConnectionState.disconnected;
+    _connectionStateStreamController = StreamController();
     _connectionStarted = false;
   }
 
@@ -112,6 +114,14 @@ class HubConnection {
 
   /// Indicates the state of the {@link HubConnection} to the server.
   HubConnectionState? get state => _connectionState;
+
+  Stream<HubConnectionState> get connectionStateStream =>
+      _connectionStateStreamController.stream;
+
+  void updateConnectionState(HubConnectionState state) {
+    _connectionState = state;
+    _connectionStateStreamController.add(state);
+  }
 
   /// Represents the connection id of the [HubConnection] on the server. The
   /// connection id will be null when the connection is either
@@ -154,17 +164,17 @@ class HubConnection {
       ));
     }
 
-    _connectionState = HubConnectionState.connecting;
+    updateConnectionState(HubConnectionState.connecting);
     _logger!(LogLevel.debug, 'Starting HubConnection.');
 
     try {
       await _startInternal();
 
-      _connectionState = HubConnectionState.connected;
+      updateConnectionState(HubConnectionState.connected);
       _connectionStarted = true;
       _logger(LogLevel.debug, 'HubConnection connected successfully.');
     } catch (e) {
-      _connectionState = HubConnectionState.disconnected;
+      updateConnectionState(HubConnectionState.disconnected);
       _logger(
         LogLevel.debug,
         'HubConnection failed to start successfully because of error '
@@ -278,7 +288,7 @@ class HubConnection {
       return _stopFuture;
     }
 
-    _connectionState = HubConnectionState.disconnecting;
+    updateConnectionState(HubConnectionState.disconnecting);
 
     _logger!(LogLevel.debug, 'Stopping HubConnection');
 
@@ -395,7 +405,7 @@ class HubConnection {
 
   void _completeClose({Exception? exception}) {
     if (_connectionStarted) {
-      _connectionState = HubConnectionState.disconnected;
+      updateConnectionState(HubConnectionState.disconnected);
       _connectionStarted = false;
 
       try {
@@ -435,7 +445,7 @@ class HubConnection {
       return;
     }
 
-    _connectionState = HubConnectionState.reconnecting;
+    updateConnectionState(HubConnectionState.reconnecting);
 
     if (exception != null) {
       _logger!(
@@ -497,7 +507,7 @@ class HubConnection {
       try {
         await _startInternal();
 
-        _connectionState = HubConnectionState.connected;
+        updateConnectionState(HubConnectionState.connected);
         _logger(
             LogLevel.information, 'HubConnection reconnected successfully.');
 
