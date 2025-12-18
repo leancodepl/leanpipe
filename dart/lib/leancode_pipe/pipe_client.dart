@@ -562,7 +562,7 @@ class PipeClient {
 
   Future<void> dispose() async {
     await Future.wait(_registeredTopicSubscriptions.map((e) => e.close()));
-    await _hubConnection.stop();
+    await _hubConnection.dispose();
   }
 
   Future<R> _sendPipeServiceMethod<R extends Object>({

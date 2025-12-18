@@ -252,6 +252,11 @@ class HubConnection {
     }
   }
 
+  Future<void> dispose() async {
+    await _connectionStateStreamController.close();
+    await stop();
+  }
+
   /// Stops the connection.
   Future<void> stop() async {
     // Capture the start future before the connection might be restarted in an
