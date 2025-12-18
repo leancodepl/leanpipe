@@ -118,7 +118,7 @@ class HubConnection {
   Stream<HubConnectionState> get connectionStateStream =>
       _connectionStateStreamController.stream;
 
-  void updateConnectionState(HubConnectionState state) {
+  void _updateConnectionState(HubConnectionState state) {
     _connectionState = state;
     _connectionStateStreamController.add(state);
   }
@@ -164,17 +164,17 @@ class HubConnection {
       ));
     }
 
-    updateConnectionState(HubConnectionState.connecting);
+    _updateConnectionState(HubConnectionState.connecting);
     _logger!(LogLevel.debug, 'Starting HubConnection.');
 
     try {
       await _startInternal();
 
-      updateConnectionState(HubConnectionState.connected);
+      _updateConnectionState(HubConnectionState.connected);
       _connectionStarted = true;
       _logger(LogLevel.debug, 'HubConnection connected successfully.');
     } catch (e) {
-      updateConnectionState(HubConnectionState.disconnected);
+      _updateConnectionState(HubConnectionState.disconnected);
       _logger(
         LogLevel.debug,
         'HubConnection failed to start successfully because of error '
@@ -288,7 +288,7 @@ class HubConnection {
       return _stopFuture;
     }
 
-    updateConnectionState(HubConnectionState.disconnecting);
+    _updateConnectionState(HubConnectionState.disconnecting);
 
     _logger!(LogLevel.debug, 'Stopping HubConnection');
 
@@ -405,7 +405,7 @@ class HubConnection {
 
   void _completeClose({Exception? exception}) {
     if (_connectionStarted) {
-      updateConnectionState(HubConnectionState.disconnected);
+      _updateConnectionState(HubConnectionState.disconnected);
       _connectionStarted = false;
 
       try {
@@ -445,7 +445,7 @@ class HubConnection {
       return;
     }
 
-    updateConnectionState(HubConnectionState.reconnecting);
+    _updateConnectionState(HubConnectionState.reconnecting);
 
     if (exception != null) {
       _logger!(
@@ -507,7 +507,7 @@ class HubConnection {
       try {
         await _startInternal();
 
-        updateConnectionState(HubConnectionState.connected);
+        _updateConnectionState(HubConnectionState.connected);
         _logger(
             LogLevel.information, 'HubConnection reconnected successfully.');
 
