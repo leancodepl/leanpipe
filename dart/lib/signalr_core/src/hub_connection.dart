@@ -6,6 +6,7 @@ import 'package:leancode_pipe/signalr_core/src/hub_protocol.dart';
 import 'package:leancode_pipe/signalr_core/src/logger.dart';
 import 'package:leancode_pipe/signalr_core/src/retry_policy.dart';
 import 'package:leancode_pipe/signalr_core/src/utils.dart';
+import 'package:rxdart/rxdart.dart';
 
 typedef InvocationEventCallback = void Function(
     HubMessage? invocationEvent, Exception? exception);
@@ -55,9 +56,8 @@ class HubConnection {
   late Completer _handshakeCompleter;
   Exception? _stopDuringStartError;
 
-  HubConnectionState? _connectionState;
   late bool _connectionStarted;
-  late StreamController<HubConnectionState> _connectionStateStreamController;
+  late BehaviorSubject<HubConnectionState> _connectionStateSubject;
   Future<void>? _startFuture;
   Future<void>? _stopFuture;
 
@@ -93,8 +93,8 @@ class HubConnection {
     _reconnectedCallbacks = [];
     _invocationId = 0;
     _receivedHandshakeResponse = false;
-    _connectionState = HubConnectionState.disconnected;
-    _connectionStateStreamController = StreamController.broadcast();
+    _connectionStateSubject =
+        BehaviorSubject.seeded(HubConnectionState.disconnected);
     _connectionStarted = false;
   }
 
@@ -113,16 +113,11 @@ class HubConnection {
   late int keepAliveIntervalInMilliseconds;
 
   /// Indicates the state of the {@link HubConnection} to the server.
-  HubConnectionState? get state => _connectionState;
+  HubConnectionState? get state => _connectionStateSubject.value;
 
   /// Stream of the state changes of the {@link HubConnection} to the server.
   Stream<HubConnectionState> get connectionStateStream =>
-      _connectionStateStreamController.stream;
-
-  void _updateConnectionState(HubConnectionState state) {
-    _connectionState = state;
-    _connectionStateStreamController.add(state);
-  }
+      _connectionStateSubject.stream;
 
   /// Represents the connection id of the [HubConnection] on the server. The
   /// connection id will be null when the connection is either
@@ -136,8 +131,8 @@ class HubConnection {
   /// changed when the connection is in either the Disconnected or
   /// Reconnecting states.
   set baseUrl(String url) {
-    if ((_connectionState != HubConnectionState.disconnected) &&
-        (_connectionState != HubConnectionState.reconnecting)) {
+    if ((state != HubConnectionState.disconnected) &&
+        (state != HubConnectionState.reconnecting)) {
       throw Exception(
         'The HubConnection must be in the Disconnected or Reconnecting '
         'state to change the url.',
@@ -158,24 +153,24 @@ class HubConnection {
   }
 
   Future<void> _startWithStateTransitions() async {
-    if (_connectionState != HubConnectionState.disconnected) {
+    if (state != HubConnectionState.disconnected) {
       return Future.error(Exception(
         'Cannot start a HubConnection that is not in the '
         '\'Disconnected\' state.',
       ));
     }
 
-    _updateConnectionState(HubConnectionState.connecting);
+    _connectionStateSubject.add(HubConnectionState.connecting);
     _logger!(LogLevel.debug, 'Starting HubConnection.');
 
     try {
       await _startInternal();
 
-      _updateConnectionState(HubConnectionState.connected);
+      _connectionStateSubject.add(HubConnectionState.connected);
       _connectionStarted = true;
       _logger(LogLevel.debug, 'HubConnection connected successfully.');
     } catch (e) {
-      _updateConnectionState(HubConnectionState.disconnected);
+      _connectionStateSubject.add(HubConnectionState.disconnected);
       _logger(
         LogLevel.debug,
         'HubConnection failed to start successfully because of error '
@@ -253,7 +248,7 @@ class HubConnection {
   }
 
   Future<void> dispose() async {
-    await _connectionStateStreamController.close();
+    await _connectionStateSubject.close();
     await stop();
   }
 
@@ -276,7 +271,7 @@ class HubConnection {
   }
 
   Future<void>? _stopInternal({Exception? exception}) async {
-    if (_connectionState == HubConnectionState.disconnected) {
+    if (state == HubConnectionState.disconnected) {
       _logger!(
         LogLevel.debug,
         'Call to HubConnection.stop(${exception.toString()}) ignored '
@@ -285,7 +280,7 @@ class HubConnection {
       return Future.value(null);
     }
 
-    if (_connectionState == HubConnectionState.disconnecting) {
+    if (state == HubConnectionState.disconnecting) {
       _logger!(
         LogLevel.debug,
         'Call to HttpConnection.stop(${exception.toString()}) ignored '
@@ -294,7 +289,7 @@ class HubConnection {
       return _stopFuture;
     }
 
-    _updateConnectionState(HubConnectionState.disconnecting);
+    _connectionStateSubject.add(HubConnectionState.disconnecting);
 
     _logger!(LogLevel.debug, 'Stopping HubConnection');
 
@@ -375,7 +370,7 @@ class HubConnection {
     _pingServerHandle =
         Timer.periodic(Duration(milliseconds: keepAliveIntervalInMilliseconds),
             (Timer timer) async {
-      if (_connectionState == HubConnectionState.connected) {
+      if (state == HubConnectionState.connected) {
         try {
           await _sendMessage(_cachedPingMessage);
         } catch (e) {
@@ -411,7 +406,7 @@ class HubConnection {
 
   void _completeClose({Exception? exception}) {
     if (_connectionStarted) {
-      _updateConnectionState(HubConnectionState.disconnected);
+      _connectionStateSubject.add(HubConnectionState.disconnected);
       _connectionStarted = false;
 
       try {
@@ -451,7 +446,7 @@ class HubConnection {
       return;
     }
 
-    _updateConnectionState(HubConnectionState.reconnecting);
+    _connectionStateSubject.add(HubConnectionState.reconnecting);
 
     if (exception != null) {
       _logger!(
@@ -476,7 +471,7 @@ class HubConnection {
     }
 
     // Exit early if an onreconnecting callback called connection.stop().
-    if (_connectionState != HubConnectionState.reconnecting) {
+    if (state != HubConnectionState.reconnecting) {
       _logger(
         LogLevel.debug,
         'Connection left the reconnecting state in onreconnecting '
@@ -500,8 +495,7 @@ class HubConnection {
       });
       _reconnectDelayHandle = null;
 
-      if (_connectionState == null ||
-          _connectionState != HubConnectionState.reconnecting) {
+      if (state == null || state != HubConnectionState.reconnecting) {
         _logger(
           LogLevel.debug,
           'Connection left the reconnecting state during reconnect delay. '
@@ -513,7 +507,7 @@ class HubConnection {
       try {
         await _startInternal();
 
-        _updateConnectionState(HubConnectionState.connected);
+        _connectionStateSubject.add(HubConnectionState.connected);
         _logger(
             LogLevel.information, 'HubConnection reconnected successfully.');
 
@@ -534,7 +528,7 @@ class HubConnection {
         _logger(LogLevel.information,
             'Reconnect attempt failed because of error \'${e.toString()}\'.');
 
-        if (_connectionState != HubConnectionState.reconnecting) {
+        if (state != HubConnectionState.reconnecting) {
           _logger(
             LogLevel.debug,
             'Connection left the reconnecting state during reconnect '
@@ -879,7 +873,7 @@ class HubConnection {
     _logger!(
       LogLevel.debug,
       'HubConnection.connectionClosed(${exception.toString()}) called while '
-      'in state ${_connectionState.toString()}.',
+      'in state ${state.toString()}.',
     );
 
     // Triggering this.handshakeRejecter is insufficient because it could
@@ -910,12 +904,12 @@ class HubConnection {
     _cleanupTimeout();
     _cleanupPingTimer();
 
-    if (_connectionState == HubConnectionState.disconnecting) {
+    if (state == HubConnectionState.disconnecting) {
       _completeClose(exception: exception);
-    } else if ((_connectionState == HubConnectionState.connected) &&
+    } else if ((state == HubConnectionState.connected) &&
         _reconnectPolicy != null) {
       _reconnect(exception: exception);
-    } else if (_connectionState == HubConnectionState.connected) {
+    } else if (state == HubConnectionState.connected) {
       _completeClose(exception: exception);
     }
 
