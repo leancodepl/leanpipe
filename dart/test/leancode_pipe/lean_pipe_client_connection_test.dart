@@ -168,5 +168,64 @@ void main() {
         expect(isSubscriptionCanceled, true);
       },
     );
+
+    test(
+      'PipeClient allows subscribing to a topic after disconnect and reconnect',
+      () async {
+        // Prepare general config
+        prepareConnect(connection);
+        prepareTopic(topic);
+        when(() => connection.state)
+            .thenAnswer((_) => HubConnectionState.disconnected);
+
+        // Connect to catch on subscription result method
+        final onSubscriptionResultMethod = await captureOnSubscriptionResult(
+          connect: client.connect,
+          connection: connection,
+        );
+
+        // Prepare connection to simulate backend sending subscription confirmation
+        prepareSubscribeToAnswerWithData(
+          connection: connection,
+          uuid: uuid,
+          answerCallback: (subscribeResult) =>
+              onSubscriptionResultMethod([subscribeResult.toJson()]),
+        );
+
+        // First subscription
+        final subscription1 = await client.subscribe(topic);
+        verifySubscribeCalled(connection);
+        expect(subscription1, isA<PipeSubscription>());
+
+        // Simulate connected state before disconnect
+        when(() => connection.state)
+            .thenAnswer((_) => HubConnectionState.connected);
+
+        // Capture and trigger onClose
+        final onClose = await captureOnClose(
+          connect: client.connect,
+          connection: connection,
+        );
+        when(() => connection.stop()).thenAnswer((_) async {
+          await onClose(null);
+        });
+
+        // Disconnect
+        await client.disconnect();
+        verify(() => connection.stop()).called(1);
+
+        // Simulate disconnected state after disconnect
+        when(() => connection.state)
+            .thenAnswer((_) => HubConnectionState.disconnected);
+
+        // Reconnect
+        await client.connect();
+
+        // Subscribe again to the same topic - this should work
+        final subscription2 = await client.subscribe(topic);
+        verifySubscribeCalled(connection);
+        expect(subscription2, isA<PipeSubscription>());
+      },
+    );
   });
 }

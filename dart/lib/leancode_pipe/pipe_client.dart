@@ -89,6 +89,7 @@ class PipeClient {
             for (final topicSub in _registeredTopicSubscriptions)
               topicSub.close(),
           ]);
+          _registeredTopicSubscriptions.clear();
           onClose?.call(error);
         })
         ..on('subscriptionResult', _onSubscriptionResult)
@@ -120,8 +121,14 @@ class PipeClient {
     Topic<N> topic, {
     void Function()? onReconnect,
   }) async {
-    final thisTopicSubscription =
+    var thisTopicSubscription =
         _registeredTopicSubscriptions.firstWhereOrNull((e) => e.topic == topic);
+
+    // Defensive check: if subscription is closed, remove it and treat as non-existent
+    if (thisTopicSubscription != null && thisTopicSubscription.isClosed) {
+      _registeredTopicSubscriptions.remove(thisTopicSubscription);
+      thisTopicSubscription = null;
+    }
 
     if (thisTopicSubscription != null) {
       final state = thisTopicSubscription.stateSubject.value;
