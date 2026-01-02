@@ -11,15 +11,21 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddLeanPipeFunnel(
         this IServiceCollection services,
         FunnelConfiguration? config = null,
+        Action<HubOptions<LeanPipeSubscriber>>? configureLeanPipeHub = null,
         Action<JsonHubProtocolOptions>? overrideJsonHubProtocolOptions = null
     )
     {
-        services
+        var signalRBuilder = services
             .AddSignalR()
             .AddJsonProtocol(
                 overrideJsonHubProtocolOptions
                     ?? (options => options.PayloadSerializerOptions.ConfigureForCQRS())
             );
+
+        if (configureLeanPipeHub is not null)
+        {
+            signalRBuilder.AddHubOptions(configureLeanPipeHub);
+        }
 
         services.AddMemoryCache();
 
