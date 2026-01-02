@@ -1,4 +1,5 @@
 using System.Reflection;
+using LeanCode.Components;
 using LeanCode.Contracts;
 using MassTransit;
 using MassTransit.Internals;
@@ -8,17 +9,40 @@ namespace LeanCode.Pipe.Funnel.Publishing;
 
 public static class RegistrationConfiguratorExtensions
 {
-    /// <summary>
-    /// Configures a consumer for each topic in the provided assemblies that will handle subscriptions
-    /// in the LeanPipe with Funnel model.
-    /// </summary>
-    /// <param name="configurator">MassTransit bus registration configurator.</param>
-    /// <param name="serviceName">Funnelled service name.</param>
+    /// <inheritdoc cref="AddFunnelledLeanPipeConsumers(IRegistrationConfigurator,string,Type[],Type?)"/>
+    /// <param name="leanPipeBuilder">Preconfigured LeanPipe services builder containing topics exposed by the service.</param>
+    public static void AddFunnelledLeanPipeConsumers(
+        this IRegistrationConfigurator configurator,
+        string serviceName,
+        LeanPipeServicesBuilder leanPipeBuilder,
+        Type? funnelledSubscriberDefinitionOverride = null
+    )
+    {
+        configurator.AddFunnelledLeanPipeConsumers(
+            serviceName,
+            leanPipeBuilder.Topics,
+            funnelledSubscriberDefinitionOverride
+        );
+    }
+
+    /// <inheritdoc cref="AddFunnelledLeanPipeConsumers(IRegistrationConfigurator,string,Type[],Type?)"/>
+    /// <param name="topics">Catalog of topics exposed by the service.</param>
+    public static void AddFunnelledLeanPipeConsumers(
+        this IRegistrationConfigurator configurator,
+        string serviceName,
+        TypesCatalog topics,
+        Type? funnelledSubscriberDefinitionOverride = null
+    )
+    {
+        configurator.AddFunnelledLeanPipeConsumers(
+            serviceName,
+            topics.Assemblies,
+            funnelledSubscriberDefinitionOverride
+        );
+    }
+
+    /// <inheritdoc cref="AddFunnelledLeanPipeConsumers(IRegistrationConfigurator,string,Type[],Type?)"/>
     /// <param name="assembliesWithTopics">Assemblies that contain all topics exposed by the service.</param>
-    /// <param name="funnelledSubscriberDefinitionOverride">
-    /// Optional definition override for subscriber consumers.
-    /// Should inherit <see cref="FunnelledSubscriber{TTopic}"/> and be generic of the topics.
-    /// </param>
     public static void AddFunnelledLeanPipeConsumers(
         this IRegistrationConfigurator configurator,
         string serviceName,
@@ -42,6 +66,17 @@ public static class RegistrationConfiguratorExtensions
         );
     }
 
+    /// <summary>
+    /// Configures a consumer for each topic in the provided assemblies that will handle subscriptions
+    /// in the LeanPipe with Funnel model.
+    /// </summary>
+    /// <param name="configurator">MassTransit bus registration configurator.</param>
+    /// <param name="serviceName">Funnelled service name.</param>
+    /// <param name="topicTypes">All topics exposed by the service.</param>
+    /// <param name="funnelledSubscriberDefinitionOverride">
+    /// Optional definition override for subscriber consumers.
+    /// Should inherit <see cref="FunnelledSubscriber{TTopic}"/> and be generic of the topics.
+    /// </param>
     public static void AddFunnelledLeanPipeConsumers(
         this IRegistrationConfigurator configurator,
         string serviceName,

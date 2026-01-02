@@ -42,14 +42,14 @@ public static class LeanPipeServiceCollectionExtensions
 public class LeanPipeServicesBuilder
 {
     public IServiceCollection Services { get; }
+    public TypesCatalog Topics { get; private set; }
 
     private JsonSerializerOptions? options;
-    private TypesCatalog topics;
 
     public LeanPipeServicesBuilder(IServiceCollection services, TypesCatalog topics)
     {
         Services = services;
-        this.topics = topics;
+        Topics = topics;
 
         Services.AddSingleton<ITopicExtractor>(new DefaultTopicExtractor(topics, null));
     }
@@ -78,7 +78,7 @@ public class LeanPipeServicesBuilder
     /// </summary>
     public LeanPipeServicesBuilder AddTopics(TypesCatalog newTopics)
     {
-        topics = topics.Merge(newTopics);
+        Topics = Topics.Merge(newTopics);
         ReplaceDefaultEnvelopeDeserializer();
         return this;
     }
@@ -118,7 +118,7 @@ public class LeanPipeServicesBuilder
             )
             {
                 Services.RemoveAt(i);
-                Services.AddSingleton<ITopicExtractor>(new DefaultTopicExtractor(topics, options));
+                Services.AddSingleton<ITopicExtractor>(new DefaultTopicExtractor(Topics, options));
                 break;
             }
         }
