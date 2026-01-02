@@ -11,14 +11,14 @@ public static class RegistrationConfiguratorExtensions
 {
     /// <inheritdoc cref="AddFunnelledLeanPipeConsumers(IRegistrationConfigurator,string,Type[],Type?)"/>
     /// <param name="leanPipeBuilder">Preconfigured LeanPipe services builder containing topics exposed by the service.</param>
-    public static void AddFunnelledLeanPipeConsumers(
+    public static IRegistrationConfigurator AddFunnelledLeanPipeConsumers(
         this IRegistrationConfigurator configurator,
         string serviceName,
         LeanPipeServicesBuilder leanPipeBuilder,
         Type? funnelledSubscriberDefinitionOverride = null
     )
     {
-        configurator.AddFunnelledLeanPipeConsumers(
+        return configurator.AddFunnelledLeanPipeConsumers(
             serviceName,
             leanPipeBuilder.Topics,
             funnelledSubscriberDefinitionOverride
@@ -27,14 +27,14 @@ public static class RegistrationConfiguratorExtensions
 
     /// <inheritdoc cref="AddFunnelledLeanPipeConsumers(IRegistrationConfigurator,string,Type[],Type?)"/>
     /// <param name="topics">Catalog of topics exposed by the service.</param>
-    public static void AddFunnelledLeanPipeConsumers(
+    public static IRegistrationConfigurator AddFunnelledLeanPipeConsumers(
         this IRegistrationConfigurator configurator,
         string serviceName,
         TypesCatalog topics,
         Type? funnelledSubscriberDefinitionOverride = null
     )
     {
-        configurator.AddFunnelledLeanPipeConsumers(
+        return configurator.AddFunnelledLeanPipeConsumers(
             serviceName,
             topics.Assemblies,
             funnelledSubscriberDefinitionOverride
@@ -43,7 +43,7 @@ public static class RegistrationConfiguratorExtensions
 
     /// <inheritdoc cref="AddFunnelledLeanPipeConsumers(IRegistrationConfigurator,string,Type[],Type?)"/>
     /// <param name="assembliesWithTopics">Assemblies that contain all topics exposed by the service.</param>
-    public static void AddFunnelledLeanPipeConsumers(
+    public static IRegistrationConfigurator AddFunnelledLeanPipeConsumers(
         this IRegistrationConfigurator configurator,
         string serviceName,
         IEnumerable<Assembly> assembliesWithTopics,
@@ -59,7 +59,7 @@ public static class RegistrationConfiguratorExtensions
             .FindTypes(TypeClassification.Closed | TypeClassification.Concrete)
             .ToArray();
 
-        configurator.AddFunnelledLeanPipeConsumers(
+        return configurator.AddFunnelledLeanPipeConsumers(
             serviceName,
             types,
             funnelledSubscriberDefinitionOverride
@@ -77,7 +77,7 @@ public static class RegistrationConfiguratorExtensions
     /// Optional definition override for subscriber consumers.
     /// Should inherit <see cref="FunnelledSubscriber{TTopic}"/> and be generic of the topics.
     /// </param>
-    public static void AddFunnelledLeanPipeConsumers(
+    public static IRegistrationConfigurator AddFunnelledLeanPipeConsumers(
         this IRegistrationConfigurator configurator,
         string serviceName,
         Type[] topicTypes,
@@ -115,6 +115,8 @@ public static class RegistrationConfiguratorExtensions
             var consumerDefinitionType = subscriberDefinition.MakeGenericType(topicType);
             configurator.AddConsumer(consumerType, consumerDefinitionType);
         }
+
+        return configurator;
     }
 
     private static bool IsTopic(Type type)
