@@ -1,6 +1,7 @@
 using System.Text.Json;
 using LeanCode.Components;
 using LeanCode.Contracts;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -16,13 +17,15 @@ public static class LeanPipeServiceCollectionExtensions
     public static LeanPipeServicesBuilder AddLeanPipe(
         this IServiceCollection services,
         TypesCatalog topics,
-        TypesCatalog handlers
+        TypesCatalog handlers,
+        Action<JsonHubProtocolOptions>? overrideJsonHubProtocolOptions = null
     )
     {
         services
             .AddSignalR()
-            .AddJsonProtocol(options =>
-                options.PayloadSerializerOptions.PropertyNamingPolicy = null
+            .AddJsonProtocol(
+                overrideJsonHubProtocolOptions
+                    ?? (options => options.PayloadSerializerOptions.ConfigureForCQRS())
             );
 
         services.AddTransient<LeanPipeSecurity>();

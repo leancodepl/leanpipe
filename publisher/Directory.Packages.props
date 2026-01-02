@@ -13,6 +13,7 @@
     <PackageVersion Include="LeanCode.CQRS.Security" Version="$(CoreLibVersion)" />
     <PackageVersion Include="LeanCode.IntegrationTestHelpers" Version="$(CoreLibVersion)" />
     <PackageVersion Include="LeanCode.Logging.AspNetCore" Version="$(CoreLibVersion)" />
+    <PackageVersion Include="LeanCode.Serialization" Version="$(CoreLibVersion)" />
 
     <PackageVersion Include="MassTransit.RabbitMQ" Version="$(MassTransitVersion)" />
     <PackageVersion Include="MassTransit.SignalR" Version="$(MassTransitVersion)" />

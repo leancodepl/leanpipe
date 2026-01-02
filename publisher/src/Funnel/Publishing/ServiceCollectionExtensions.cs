@@ -17,7 +17,8 @@ public static class ServiceCollectionExtensions
     public static LeanPipeServicesBuilder AddFunnelledLeanPipe(
         this IServiceCollection services,
         TypesCatalog topics,
-        TypesCatalog handlers
+        TypesCatalog handlers,
+        Action<JsonHubProtocolOptions>? overrideJsonHubProtocolOptions = null
     )
     {
         services.AddTransient<LeanPipeSecurity>();
@@ -28,8 +29,8 @@ public static class ServiceCollectionExtensions
 
         services.TryAddEnumerable(ServiceDescriptor.Singleton<IHubProtocol, JsonHubProtocol>());
         services.Configure(
-            (JsonHubProtocolOptions options) =>
-                options.PayloadSerializerOptions.PropertyNamingPolicy = null
+            overrideJsonHubProtocolOptions
+                ?? (options => options.PayloadSerializerOptions.ConfigureForCQRS())
         );
 
         return new LeanPipeServicesBuilder(services, topics).AddHandlers(handlers);
