@@ -7,7 +7,7 @@ public static class ServiceCollectionExtensions
     /// <summary>
     /// Adds SignalR and other services required for the Funnel.
     /// </summary>
-    public static void AddLeanPipeFunnel(
+    public static IServiceCollection AddLeanPipeFunnel(
         this IServiceCollection services,
         FunnelConfiguration? config = null
     )
@@ -22,5 +22,7 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton(config ?? FunnelConfiguration.Default);
         services.AddTransient<ISubscriptionExecutor, FunnelSubscriptionExecutor>();
+
+        return services;
     }
 }

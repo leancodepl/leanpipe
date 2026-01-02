@@ -16,7 +16,7 @@ public static class RegistrationConfiguratorExtensions
     /// </summary>
     /// <param name="configurator">MassTransit bus registration configurator.</param>
     /// <param name="configureHubLifetimeOptions">Configures hub lifetime.</param>
-    public static void ConfigureLeanPipeFunnelConsumers(
+    public static IRegistrationConfigurator ConfigureLeanPipeFunnelConsumers(
         this IRegistrationConfigurator configurator,
         Action<IHubLifetimeManagerOptions<LeanPipeSubscriber>>? configureHubLifetimeOptions = null
     )
@@ -41,6 +41,8 @@ public static class RegistrationConfiguratorExtensions
             GroupConsumerDefinition<LeanPipeSubscriber>
         >();
         configurator.AddConsumer<GroupConsumer<LeanPipeSubscriber>>();
+
+        return configurator;
     }
 
     private static MassTransitHubLifetimeManager<LeanPipeSubscriber> GetMassTransitHubLifetimeManager(
