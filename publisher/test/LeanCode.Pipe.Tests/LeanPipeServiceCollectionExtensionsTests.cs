@@ -1,7 +1,9 @@
+using System.Text.Json;
 using LeanCode.Components;
 using LeanCode.Pipe.Tests.Additional;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LeanCode.Pipe.Tests;
 
@@ -135,5 +137,58 @@ public class LeanPipeServiceCollectionExtensionsTests
 
         var act = () => builder.AddHandlers(ExternalCatalog);
         act.Should().Throw<InvalidOperationException>();
+    }
+
+    [Fact]
+    public void Default_serializer_configuration_is_applied_when_no_override_is_provided()
+    {
+        var collection = new ServiceCollection();
+        collection.AddLeanPipe(ThisCatalog, ThisCatalog);
+
+        var provider = collection.BuildServiceProvider();
+        var hubProtocolOptions = provider
+            .GetRequiredService<IOptions<JsonHubProtocolOptions>>()
+            .Value;
+
+        hubProtocolOptions.PayloadSerializerOptions.PropertyNamingPolicy.Should().BeNull();
+    }
+
+    [Fact]
+    public void Override_replaces_default_serializer_configuration()
+    {
+        var collection = new ServiceCollection();
+        collection.AddLeanPipe(
+            ThisCatalog,
+            ThisCatalog,
+            overrideJsonHubProtocolOptions: options =>
+                options.PayloadSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        );
+
+        var provider = collection.BuildServiceProvider();
+        var hubProtocolOptions = provider
+            .GetRequiredService<IOptions<JsonHubProtocolOptions>>()
+            .Value;
+
+        hubProtocolOptions
+            .PayloadSerializerOptions.PropertyNamingPolicy.Should()
+            .Be(JsonNamingPolicy.CamelCase);
+    }
+
+    [Fact]
+    public void Hub_options_delegate_is_invoked_when_provided()
+    {
+        var collection = new ServiceCollection();
+        collection.AddLeanPipe(
+            ThisCatalog,
+            ThisCatalog,
+            configureLeanPipeHub: options => options.MaximumReceiveMessageSize = 12345
+        );
+
+        var provider = collection.BuildServiceProvider();
+        var hubOptions = provider
+            .GetRequiredService<IOptions<HubOptions<LeanPipeSubscriber>>>()
+            .Value;
+
+        hubOptions.MaximumReceiveMessageSize.Should().Be(12345);
     }
 }

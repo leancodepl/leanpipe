@@ -1,12 +1,12 @@
+using System.Text.Json;
 using LeanCode.Components;
-using LeanCode.Pipe.Funnel.Instance;
 using LeanCode.Pipe.Funnel.Publishing;
 using LeanCode.Pipe.Tests;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
-namespace LeanCode.Pipe.Funnel.Tests;
+namespace LeanCode.Pipe.Funnel.Tests.Publishing;
 
 public class ServiceCollectionExtensionsTests
 {
@@ -48,26 +48,37 @@ public class ServiceCollectionExtensionsTests
     }
 
     [Fact]
-    public void Registers_required_basic_types_when_service_is_funnel()
+    public void Default_serializer_configuration_is_applied_to_funnelled_when_no_override_is_provided()
     {
         var collection = new ServiceCollection();
-        collection.AddLeanPipeFunnel();
-        collection
-            .Should()
-            .ContainSingle(d =>
-                d.ServiceType == typeof(HubLifetimeManager<>)
-                && d.Lifetime == ServiceLifetime.Singleton
-            )
-            .And.ContainSingle(d =>
-                d.ServiceType == typeof(IMemoryCache) && d.Lifetime == ServiceLifetime.Singleton
-            )
-            .And.ContainSingle(d =>
-                d.ServiceType == typeof(FunnelConfiguration)
-                && d.Lifetime == ServiceLifetime.Singleton
-            )
-            .And.ContainSingle(d =>
-                d.ServiceType == typeof(ISubscriptionExecutor)
-                && d.Lifetime == ServiceLifetime.Transient
-            );
+        collection.AddFunnelledLeanPipe(ThisCatalog, ThisCatalog);
+
+        var provider = collection.BuildServiceProvider();
+        var hubProtocolOptions = provider
+            .GetRequiredService<IOptions<JsonHubProtocolOptions>>()
+            .Value;
+
+        hubProtocolOptions.PayloadSerializerOptions.PropertyNamingPolicy.Should().BeNull();
+    }
+
+    [Fact]
+    public void Override_replaces_default_serializer_configuration_in_funnelled()
+    {
+        var collection = new ServiceCollection();
+        collection.AddFunnelledLeanPipe(
+            ThisCatalog,
+            ThisCatalog,
+            overrideJsonHubProtocolOptions: options =>
+                options.PayloadSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        );
+
+        var provider = collection.BuildServiceProvider();
+        var hubProtocolOptions = provider
+            .GetRequiredService<IOptions<JsonHubProtocolOptions>>()
+            .Value;
+
+        hubProtocolOptions
+            .PayloadSerializerOptions.PropertyNamingPolicy.Should()
+            .Be(JsonNamingPolicy.CamelCase);
     }
 }
