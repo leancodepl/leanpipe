@@ -47,6 +47,57 @@ public class RegistrationConfiguratorExtensionsTests
     }
 
     [Fact]
+    public void Registers_consumers_using_TypesCatalog_overload()
+    {
+        var collection = new ServiceCollection();
+        var configurator = new ServiceCollectionBusConfigurator(collection);
+        configurator.AddFunnelledLeanPipeConsumers(ServiceName, ThisCatalog);
+
+        var expectedTypesForConsumers = new[] { typeof(Topic1), typeof(Topic2) };
+
+        foreach (var type in expectedTypesForConsumers)
+        {
+            configurator
+                .Should()
+                .ContainSingle(d =>
+                    d.ServiceType == typeof(FunnelledSubscriber<>).MakeGenericType(type)
+                )
+                .And.ContainSingle(d =>
+                    d.ServiceType == typeof(FunnelledSubscriberDefinition<>).MakeGenericType(type)
+                );
+        }
+    }
+
+    [Fact]
+    public void Registers_consumers_using_LeanPipeServicesBuilder_overload()
+    {
+        var collection = new ServiceCollection();
+        var leanPipeBuilder = new LeanPipeServicesBuilder(collection, ThisCatalog);
+        leanPipeBuilder.AddTopics(ExternalCatalog);
+        var configurator = new ServiceCollectionBusConfigurator(collection);
+        configurator.AddFunnelledLeanPipeConsumers(ServiceName, leanPipeBuilder);
+
+        var expectedTypesForConsumers = new[]
+        {
+            typeof(Topic1),
+            typeof(Topic2),
+            typeof(ExternalTopic),
+        };
+
+        foreach (var type in expectedTypesForConsumers)
+        {
+            configurator
+                .Should()
+                .ContainSingle(d =>
+                    d.ServiceType == typeof(FunnelledSubscriber<>).MakeGenericType(type)
+                )
+                .And.ContainSingle(d =>
+                    d.ServiceType == typeof(FunnelledSubscriberDefinition<>).MakeGenericType(type)
+                );
+        }
+    }
+
+    [Fact]
     public void Skips_registering_consumers_with_default_definition_for_incorrect_specified_topics()
     {
         var collection = new ServiceCollection();
