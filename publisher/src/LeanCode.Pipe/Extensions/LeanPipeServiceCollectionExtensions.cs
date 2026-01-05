@@ -53,14 +53,17 @@ public class LeanPipeServicesBuilder
     public IServiceCollection Services { get; }
     public TypesCatalog Topics { get; private set; }
 
-    private JsonSerializerOptions? options;
+    private JsonSerializerOptions options;
 
     public LeanPipeServicesBuilder(IServiceCollection services, TypesCatalog topics)
     {
         Services = services;
         Topics = topics;
 
-        Services.AddSingleton<ITopicExtractor>(new DefaultTopicExtractor(topics, null));
+        options = new();
+        options.ConfigureForCQRS();
+
+        Services.AddSingleton<ITopicExtractor>(new DefaultTopicExtractor(topics, options));
     }
 
     /// <summary>
