@@ -15,6 +15,11 @@ public class TopicWithAllKeys
         IProduceNotification<Notification1>,
         IProduceNotification<Notification2> { }
 
+public class TopicWithProperty : ITopic
+{
+    public string SomeValue { get; set; } = string.Empty;
+}
+
 public class Notification1 { }
 
 public class Notification2 { }
