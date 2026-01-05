@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 
-    <CoreLibVersion>10.0.2750-preview</CoreLibVersion>
+    <CoreLibVersion>10.0.2794-preview</CoreLibVersion>
     <MassTransitVersion>8.5.7</MassTransitVersion>
   </PropertyGroup>
 

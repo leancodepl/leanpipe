@@ -1,6 +1,7 @@
 using System.Text.Json;
 using LeanCode.Components;
 using LeanCode.Contracts;
+using LeanCode.Serialization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;

@@ -1,3 +1,4 @@
+using LeanCode.Serialization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
