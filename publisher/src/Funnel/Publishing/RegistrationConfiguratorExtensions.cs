@@ -11,6 +11,7 @@ public static class RegistrationConfiguratorExtensions
 {
     /// <inheritdoc cref="AddFunnelledLeanPipeConsumers(IRegistrationConfigurator,string,Type[],Type?)"/>
     /// <param name="leanPipeBuilder">Preconfigured LeanPipe services builder containing topics exposed by the service.</param>
+    /// <remarks>This overload guarantees configuration of all consumers for each topics in the builder.</remarks>
     public static IRegistrationConfigurator AddFunnelledLeanPipeConsumers(
         this IRegistrationConfigurator configurator,
         string serviceName,
