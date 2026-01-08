@@ -1,3 +1,7 @@
+## 2.0.1
+
+- Fix the issue with resubscribing to topics after reconnecting to the server
+
 ## 2.0.0
 
 - **Breaking:** Bump minimum Dart vesion to 3.6.0
