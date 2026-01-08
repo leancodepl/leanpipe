@@ -3,7 +3,7 @@ description: A Dart client for LeanCode's LeanPipe.
 homepage: https://github.com/leancodepl/leanpipe/tree/main/dart
 repository: https://github.com/leancodepl/leanpipe
 
-version: 2.0.0
+version: 2.0.1
 
 environment:
   sdk: ">=3.6.0 <4.0.0"
