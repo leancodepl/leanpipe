@@ -1,7 +1,7 @@
 import { HubConnection, HubConnectionBuilder, IHttpConnectionOptions } from "@microsoft/signalr"
 import deepEqual from "deep-equal"
 import { matches, pull } from "lodash"
-import { Observable, ReplaySubject, fromEvent, pipe, throwError } from "rxjs"
+import { Observable, ReplaySubject, fromEvent, throwError } from "rxjs"
 import { filter, first, map, share, shareReplay, switchMap, tap, timeout } from "rxjs/operators"
 import { UncapitalizeDeep, uncapitalizeDeep } from "@leancodepl/utils"
 import {
