@@ -35,7 +35,7 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "@leancodepl/utils": "7.5.0",
+    "@leancodepl/utils": ">=7.0.0",
     "@microsoft/signalr": ">=8.0.0",
     "deep-equal": "^2.0.0"
   },
