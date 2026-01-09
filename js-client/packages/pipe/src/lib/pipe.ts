@@ -3,6 +3,7 @@ import deepEqual from "deep-equal"
 import { matches, pull } from "lodash"
 import { Observable, ReplaySubject, fromEvent, throwError } from "rxjs"
 import { filter, first, map, share, shareReplay, switchMap, tap, timeout } from "rxjs/operators"
+import { UncapitalizeDeep, uncapitalizeDeep } from "@leancodepl/utils"
 import {
     NotificationEnvelope,
     OperationType,
@@ -13,12 +14,12 @@ import {
 
 /**
  * Manages real-time data stream subscriptions using LeanPipe.
- * 
+ *
  * @param url - LeanPipe publisher URL to connect to
  * @param options - Optional connection configuration
  * @example
  * ```typescript
- * const pipe = new Pipe({ 
+ * const pipe = new Pipe({
  *   url: "https://api.example.com/leanpipe",
  *   options: { accessTokenFactory: () => getToken() }
  * });
@@ -57,7 +58,7 @@ export class Pipe {
 
     /**
      * Subscribes to a data stream topic and returns an observable of notifications.
-     * 
+     *
      * @template TNotifications - Type mapping of notification types to their payload types
      * @param topicType - Type identifier for the topic
      * @param topic - Topic parameters or filters
@@ -69,7 +70,7 @@ export class Pipe {
      *   UserUpdated: { id: string; name: string };
      *   UserDeleted: { id: string };
      * }
-     * 
+     *
      * const notifications$ = pipe.topic<Notifications>("User", { userId: "123" });
      * notifications$.subscribe(([type, data]) => {
      *   console.log(`Received ${type}:`, data);
@@ -112,7 +113,7 @@ export class Pipe {
                     filter<NotificationEnvelope>(matchesTopic(topicType, topic)),
                     map(
                         ({ NotificationType, Notification }) =>
-                            [NotificationType, Notification] as NotificationsUnion<TNotifications>,
+                            [NotificationType, uncapitalizeDeep(Notification)] as NotificationsUnion<TNotifications>,
                     ),
                     share({ resetOnRefCountZero: () => finish.pipe(tap(apply)) }),
                 ) satisfies Observable<NotificationsUnion<TNotifications>>,
@@ -136,5 +137,7 @@ function matchesTopic(topicType: string, topic: unknown) {
             : t.topicType === topicType && deepEqual(t.topic, topic)
 }
 
-export type NotificationsUnion<T extends Record<string, unknown>> = Values<{ [TKey in keyof T]: [TKey, T[TKey]] }>
+export type NotificationsUnion<T extends Record<string, unknown>> = Values<{
+    [TKey in keyof T]: [TKey, UncapitalizeDeep<T[TKey]>]
+}>
 type Values<T> = T[keyof T]
