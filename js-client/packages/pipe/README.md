@@ -1,6 +1,7 @@
 # @leancodepl/pipe
 
-A TypeScript client for subscribing to real-time data streams using LeanPipe. Manages topic subscriptions with automatic reconnection and type-safe notification handling.
+A TypeScript client for subscribing to real-time data streams using LeanPipe. Manages topic subscriptions with automatic
+reconnection and type-safe notification handling.
 
 ## Installation
 
@@ -15,6 +16,7 @@ npm install @leancodepl/pipe
 Creates a new pipe instance for managing topic subscriptions.
 
 **Parameters:**
+
 - `url` (string) - LeanPipe publisher URL to connect to
 - `options` (IHttpConnectionOptions, optional) - Optional connection configuration
 
@@ -25,18 +27,22 @@ Creates a new pipe instance for managing topic subscriptions.
 Subscribes to a topic and returns an observable of notifications.
 
 **Parameters:**
+
 - `topicType` (string) - Type identifier for the topic
 - `topic` (unknown) - Topic parameters or filters
 
-**Returns:** Observable<NotificationsUnion<TNotifications>> - Observable that emits notification tuples [NotificationType, Notification]
+**Returns:** Observable<NotificationsUnion<TNotifications>> - Observable that emits notification tuples
+[NotificationType, Notification]
 
 **Throws:** `Error` - When subscription fails or times out after 3 seconds
 
 ### `NotificationsUnion<T>`
 
-Union type representing all possible notification tuples for a given notification mapping.
+Union type representing all possible notification tuples for a given notification mapping. Notification payloads are
+automatically uncapitalized.
 
 **Generic Parameters:**
+
 - `T` (Record<string, unknown>) - Record mapping notification types to their payload types
 
 ### `SubscriptionState`
@@ -44,6 +50,7 @@ Union type representing all possible notification tuples for a given notificatio
 Represents the state of a topic subscription.
 
 **Properties:**
+
 - `topicType` (string) - Type identifier for the topic
 - `topic` (unknown) - Topic parameters or filters
 - `notifications$` (Observable<unknown>) - Observable of notifications for this topic
@@ -53,6 +60,7 @@ Represents the state of a topic subscription.
 Envelope containing notification data from the server.
 
 **Properties:**
+
 - `Id` (string) - Unique notification identifier
 - `TopicType` (string) - Type identifier for the topic
 - `NotificationType` (string) - Type of notification
@@ -64,6 +72,7 @@ Envelope containing notification data from the server.
 Result of a subscription operation.
 
 **Properties:**
+
 - `SubscriptionId` (string) - Unique subscription identifier
 - `Status` (SubscriptionStatus) - Status of the subscription operation
 - `Type` (OperationType) - Type of operation performed
@@ -73,6 +82,7 @@ Result of a subscription operation.
 Status codes for subscription operations.
 
 **Values:**
+
 - `Success` (0) - Subscription successful
 - `Unauthorized` (1) - User not authorized for topic
 - `Malformed` (2) - Invalid subscription request
@@ -84,6 +94,7 @@ Status codes for subscription operations.
 Types of operations that can be performed on subscriptions.
 
 **Values:**
+
 - `Subscribe` (0) - Subscribe to a topic
 - `Unsubscribe` (1) - Unsubscribe from a topic
 
@@ -92,89 +103,91 @@ Types of operations that can be performed on subscriptions.
 ### Basic Topic Subscription
 
 ```typescript
-import { Pipe } from "@leancodepl/pipe";
+import { Pipe } from "@leancodepl/pipe"
 
-const pipe = new Pipe({ 
-  url: "https://api.example.com/leanpipe" 
-});
+const pipe = new Pipe({
+  url: "https://api.example.com/leanpipe",
+})
 
-const notifications$ = pipe.topic("User", { userId: "123" });
+const notifications$ = pipe.topic("User", { userId: "123" })
 
 notifications$.subscribe(([type, data]) => {
-  console.log(`Received ${type}:`, data);
-});
+  console.log(`Received ${type}:`, data)
+})
 ```
 
 ### Type-Safe Notifications
 
 ```typescript
-import { Pipe } from "@leancodepl/pipe";
+import { Pipe } from "@leancodepl/pipe"
 
+// Define types with PascalCase keys (matching server DTOs)
 interface UserNotifications {
-  UserUpdated: { id: string; name: string; email: string };
-  UserDeleted: { id: string };
-  UserCreated: { id: string; name: string };
+  UserUpdated: { Id: string; Name: string; Email: string }
+  UserDeleted: { Id: string }
+  UserCreated: { Id: string; Name: string }
 }
 
-const pipe = new Pipe({ url: "https://api.example.com/leanpipe" });
+const pipe = new Pipe({ url: "https://api.example.com/leanpipe" })
 
-const userNotifications$ = pipe.topic<UserNotifications>("User", { 
-  organizationId: "org-123" 
-});
+const userNotifications$ = pipe.topic<UserNotifications>("User", {
+  organizationId: "org-123",
+})
 
+// Received data has camelCase keys (automatically uncapitalized)
 userNotifications$.subscribe(([type, data]) => {
   switch (type) {
     case "UserUpdated":
-      console.log("User updated:", data.name, data.email);
-      break;
+      console.log("User updated:", data.name, data.email)
+      break
     case "UserDeleted":
-      console.log("User deleted:", data.id);
-      break;
+      console.log("User deleted:", data.id)
+      break
     case "UserCreated":
-      console.log("User created:", data.name);
-      break;
+      console.log("User created:", data.name)
+      break
   }
-});
+})
 ```
 
 ### With Authentication
 
 ```typescript
-import { Pipe } from "@leancodepl/pipe";
+import { Pipe } from "@leancodepl/pipe"
 
-const pipe = new Pipe({ 
+const pipe = new Pipe({
   url: "https://api.example.com/leanpipe",
-  options: { 
-    accessTokenFactory: () => localStorage.getItem("token") 
-  }
-});
+  options: {
+    accessTokenFactory: () => localStorage.getItem("token"),
+  },
+})
 
-const notifications$ = pipe.topic("Project", { projectId: "proj-456" });
+const notifications$ = pipe.topic("Project", { projectId: "proj-456" })
 
 notifications$.subscribe(([type, data]) => {
-  console.log(`Project ${type}:`, data);
-});
+  console.log(`Project ${type}:`, data)
+})
 ```
 
 ### Multiple Topic Subscriptions
 
 ```typescript
-import { Pipe } from "@leancodepl/pipe";
+import { Pipe } from "@leancodepl/pipe"
 
-const pipe = new Pipe({ url: "https://api.example.com/leanpipe" });
+const pipe = new Pipe({ url: "https://api.example.com/leanpipe" })
 
 // Subscribe to user notifications
-const userNotifications$ = pipe.topic("User", { userId: "123" });
+const userNotifications$ = pipe.topic("User", { userId: "123" })
 
 // Subscribe to project notifications
-const projectNotifications$ = pipe.topic("Project", { projectId: "456" });
+const projectNotifications$ = pipe.topic("Project", { projectId: "456" })
 
 // Handle both streams
 userNotifications$.subscribe(([type, data]) => {
-  console.log("User notification:", type, data);
-});
+  console.log("User notification:", type, data)
+})
 
 projectNotifications$.subscribe(([type, data]) => {
-  console.log("Project notification:", type, data);
-});
+  console.log("Project notification:", type, data)
+})
 ```
