@@ -1,6 +1,8 @@
 using System.Text.Json;
 using LeanCode.Components;
 using LeanCode.Contracts;
+using LeanCode.Serialization;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
@@ -16,14 +18,22 @@ public static class LeanPipeServiceCollectionExtensions
     public static LeanPipeServicesBuilder AddLeanPipe(
         this IServiceCollection services,
         TypesCatalog topics,
-        TypesCatalog handlers
+        TypesCatalog handlers,
+        Action<HubOptions<LeanPipeSubscriber>>? configureLeanPipeHub = null,
+        Action<JsonHubProtocolOptions>? overrideJsonHubProtocolOptions = null
     )
     {
-        services
+        var signalRBuilder = services
             .AddSignalR()
-            .AddJsonProtocol(options =>
-                options.PayloadSerializerOptions.PropertyNamingPolicy = null
+            .AddJsonProtocol(
+                overrideJsonHubProtocolOptions
+                    ?? (options => options.PayloadSerializerOptions.ConfigureForCQRS())
             );
+
+        if (configureLeanPipeHub is not null)
+        {
+            signalRBuilder.AddHubOptions(configureLeanPipeHub);
+        }
 
         services.AddTransient<LeanPipeSecurity>();
         services.AddTransient<ISubscriptionExecutor, SubscriptionExecutor>();
@@ -44,14 +54,17 @@ public class LeanPipeServicesBuilder
     public IServiceCollection Services { get; }
     public TypesCatalog Topics { get; private set; }
 
-    private JsonSerializerOptions? options;
+    private JsonSerializerOptions options;
 
     public LeanPipeServicesBuilder(IServiceCollection services, TypesCatalog topics)
     {
         Services = services;
         Topics = topics;
 
-        Services.AddSingleton<ITopicExtractor>(new DefaultTopicExtractor(topics, null));
+        options = new();
+        options.ConfigureForCQRS();
+
+        Services.AddSingleton<ITopicExtractor>(new DefaultTopicExtractor(topics, options));
     }
 
     /// <summary>

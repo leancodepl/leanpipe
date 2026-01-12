@@ -1,7 +1,10 @@
+using System.Text.Json;
 using LeanCode.Components;
+using LeanCode.Contracts;
 using LeanCode.Pipe.Tests.Additional;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace LeanCode.Pipe.Tests;
 
@@ -46,15 +49,20 @@ public class LeanPipeServiceCollectionExtensionsTests
     }
 
     [Fact]
-    public void Updates_deserializer_when_registering_additional_types()
+    public void AddTopics_allows_extracting_old_and_new_topics()
     {
         var collection = new ServiceCollection();
         collection.AddLeanPipe(ThisCatalog, ThisCatalog).AddTopics(ExternalCatalog);
 
-        var deserializer = collection.BuildServiceProvider().GetRequiredService<ITopicExtractor>();
-        var topic = deserializer.Extract(Envelope.Empty<ExternalTopic>());
+        var provider = collection.BuildServiceProvider();
+        var extractor = provider.GetRequiredService<ITopicExtractor>();
 
-        topic.Should().NotBeNull().And.BeOfType<ExternalTopic>();
+        extractor.Extract(Envelope.Empty<Topic1>()).Should().NotBeNull().And.BeOfType<Topic1>();
+        extractor
+            .Extract(Envelope.Empty<ExternalTopic>())
+            .Should()
+            .NotBeNull()
+            .And.BeOfType<ExternalTopic>();
     }
 
     [Fact]
@@ -135,5 +143,141 @@ public class LeanPipeServiceCollectionExtensionsTests
 
         var act = () => builder.AddHandlers(ExternalCatalog);
         act.Should().Throw<InvalidOperationException>();
+    }
+
+    [Fact]
+    public void Default_serializer_configuration_is_applied_to_hub_protocol_options_when_no_override_is_provided()
+    {
+        var collection = new ServiceCollection();
+        collection.AddLeanPipe(ThisCatalog, ThisCatalog);
+
+        var provider = collection.BuildServiceProvider();
+        var hubProtocolOptions = provider
+            .GetRequiredService<IOptions<JsonHubProtocolOptions>>()
+            .Value;
+
+        hubProtocolOptions.PayloadSerializerOptions.PropertyNamingPolicy.Should().BeNull();
+    }
+
+    [Fact]
+    public void Override_replaces_default_hub_protocol_options_serializer_configuration()
+    {
+        var collection = new ServiceCollection();
+        collection.AddLeanPipe(
+            ThisCatalog,
+            ThisCatalog,
+            overrideJsonHubProtocolOptions: options =>
+                options.PayloadSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        );
+
+        var provider = collection.BuildServiceProvider();
+        var hubProtocolOptions = provider
+            .GetRequiredService<IOptions<JsonHubProtocolOptions>>()
+            .Value;
+
+        hubProtocolOptions
+            .PayloadSerializerOptions.PropertyNamingPolicy.Should()
+            .Be(JsonNamingPolicy.CamelCase);
+    }
+
+    [Fact]
+    public void Hub_options_delegate_is_invoked_when_provided()
+    {
+        var collection = new ServiceCollection();
+        collection.AddLeanPipe(
+            ThisCatalog,
+            ThisCatalog,
+            configureLeanPipeHub: options => options.MaximumReceiveMessageSize = 12345
+        );
+
+        var provider = collection.BuildServiceProvider();
+        var hubOptions = provider
+            .GetRequiredService<IOptions<HubOptions<LeanPipeSubscriber>>>()
+            .Value;
+
+        hubOptions.MaximumReceiveMessageSize.Should().Be(12345);
+    }
+
+    [Fact]
+    public void Default_serializer_options_are_applied_to_envelope_deserializer()
+    {
+        var collection = new ServiceCollection();
+        collection.AddLeanPipe(TypesCatalog.Of<TopicWithProperty>(), ThisCatalog);
+
+        var provider = collection.BuildServiceProvider();
+        var extractor = provider.GetRequiredService<ITopicExtractor>();
+
+        var envelope = CreateEnvelope<TopicWithProperty>("""{"SomeValue": "test"}""");
+        (extractor.Extract(envelope) as TopicWithProperty)
+            .Should()
+            .BeEquivalentTo(new TopicWithProperty { SomeValue = "test" });
+    }
+
+    [Fact]
+    public void WithEnvelopeDeserializerOptions_overrides_default_serializer_configuration()
+    {
+        var collection = new ServiceCollection();
+        var customOptions = new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        };
+
+        collection
+            .AddLeanPipe(TypesCatalog.Of<TopicWithProperty>(), ThisCatalog)
+            .WithEnvelopeDeserializerOptions(customOptions);
+
+        var provider = collection.BuildServiceProvider();
+        var extractor = provider.GetRequiredService<ITopicExtractor>();
+
+        var envelope = CreateEnvelope<TopicWithProperty>("""{"someValue": "test"}""");
+        (extractor.Extract(envelope) as TopicWithProperty)
+            .Should()
+            .BeEquivalentTo(new TopicWithProperty { SomeValue = "test" });
+    }
+
+    [Fact]
+    public void WithEnvelopeDeserializer_replaces_default_topic_extractor()
+    {
+        var collection = new ServiceCollection();
+        var customExtractor = new CustomTopicExtractor();
+
+        collection.AddLeanPipe(ThisCatalog, ThisCatalog).WithEnvelopeDeserializer(customExtractor);
+
+        var provider = collection.BuildServiceProvider();
+        var extractor = provider.GetRequiredService<ITopicExtractor>();
+
+        extractor.Should().BeSameAs(customExtractor);
+    }
+
+    [Fact]
+    public void Builder_returns_itself_for_method_chaining()
+    {
+        var collection = new ServiceCollection();
+        var builder = collection.AddLeanPipe(ThisCatalog, ThisCatalog);
+
+        builder
+            .WithEnvelopeDeserializerOptions(new JsonSerializerOptions())
+            .Should()
+            .BeSameAs(builder);
+        builder.WithEnvelopeDeserializer(new CustomTopicExtractor()).Should().BeSameAs(builder);
+        builder.AddTopics(ExternalCatalog).Should().BeSameAs(builder);
+        builder.AddHandlers(ThisCatalog).Should().BeSameAs(builder);
+    }
+
+    private static SubscriptionEnvelope CreateEnvelope<T>(string json)
+    {
+        return new()
+        {
+            Id = Guid.NewGuid(),
+            TopicType = typeof(T).FullName!,
+            Topic = JsonDocument.Parse(json),
+        };
+    }
+
+    private sealed class CustomTopicExtractor : ITopicExtractor
+    {
+        public ITopic? Extract(SubscriptionEnvelope envelope) => null;
+
+        public bool TopicExists(string topicType) => false;
     }
 }

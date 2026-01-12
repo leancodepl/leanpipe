@@ -2,7 +2,7 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
 
-    <CoreLibVersion>10.0.2750-preview</CoreLibVersion>
+    <CoreLibVersion>10.0.2794-preview</CoreLibVersion>
     <MassTransitVersion>8.5.7</MassTransitVersion>
   </PropertyGroup>
 
@@ -13,6 +13,7 @@
     <PackageVersion Include="LeanCode.CQRS.Security" Version="$(CoreLibVersion)" />
     <PackageVersion Include="LeanCode.IntegrationTestHelpers" Version="$(CoreLibVersion)" />
     <PackageVersion Include="LeanCode.Logging.AspNetCore" Version="$(CoreLibVersion)" />
+    <PackageVersion Include="LeanCode.Serialization" Version="$(CoreLibVersion)" />
 
     <PackageVersion Include="MassTransit.RabbitMQ" Version="$(MassTransitVersion)" />
     <PackageVersion Include="MassTransit.SignalR" Version="$(MassTransitVersion)" />

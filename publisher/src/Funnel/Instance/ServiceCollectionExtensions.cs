@@ -1,3 +1,5 @@
+using LeanCode.Serialization;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace LeanCode.Pipe.Funnel.Instance;
@@ -9,14 +11,22 @@ public static class ServiceCollectionExtensions
     /// </summary>
     public static IServiceCollection AddLeanPipeFunnel(
         this IServiceCollection services,
-        FunnelConfiguration? config = null
+        FunnelConfiguration? config = null,
+        Action<HubOptions<LeanPipeSubscriber>>? configureLeanPipeHub = null,
+        Action<JsonHubProtocolOptions>? overrideJsonHubProtocolOptions = null
     )
     {
-        services
+        var signalRBuilder = services
             .AddSignalR()
-            .AddJsonProtocol(options =>
-                options.PayloadSerializerOptions.PropertyNamingPolicy = null
+            .AddJsonProtocol(
+                overrideJsonHubProtocolOptions
+                    ?? (options => options.PayloadSerializerOptions.ConfigureForCQRS())
             );
+
+        if (configureLeanPipeHub is not null)
+        {
+            signalRBuilder.AddHubOptions(configureLeanPipeHub);
+        }
 
         services.AddMemoryCache();
 
