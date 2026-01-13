@@ -64,6 +64,10 @@ class PipeClient {
         _hubConnection.state,
       );
 
+  Stream<PipeConnectionState> get connectionStateStream =>
+      _hubConnection.connectionStateStream
+          .map(PipeConnectionStateMapper.fromHubConnectionState);
+
   Future<void> connect() async {
     if (connectionState != PipeConnectionState.disconnected) {
       _logger.warning(
@@ -565,7 +569,7 @@ class PipeClient {
 
   Future<void> dispose() async {
     await Future.wait(_registeredTopicSubscriptions.map((e) => e.close()));
-    await _hubConnection.stop();
+    await _hubConnection.dispose();
   }
 
   Future<R> _sendPipeServiceMethod<R extends Object>({
