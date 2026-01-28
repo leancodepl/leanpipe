@@ -11,7 +11,13 @@
         "outputPath": "dist/pipe",
         "main": "packages/pipe/src/index.ts",
         "tsConfig": "packages/pipe/tsconfig.lib.json",
-        "assets": [],
+        "assets": [
+          {
+            "glob": "packages/pipe/README.md",
+            "input": ".",
+            "output": "."
+          }
+        ],
         "project": "packages/pipe/package.json",
         "compiler": "swc",
         "format": ["cjs", "esm"]
