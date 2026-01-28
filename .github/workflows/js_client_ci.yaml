@@ -3,6 +3,10 @@ name: JS Client Build & Test
 on:
   pull_request:
 
+defaults:
+  run:
+    working-directory: js-client
+
 jobs:
   ci:
     name: Build & Test
