@@ -1,4 +1,4 @@
-name: Release
+name: JS Client Release
 
 on: workflow_dispatch
 
@@ -31,6 +31,8 @@ jobs:
         run: npm install -g npm@latest
       - name: Install
         run: npm ci
+      - name: Verify Integrity
+        run: npm audit signatures --omit=dev
       - name: Test
         run: npx nx run-many -t test
       - name: Test Build

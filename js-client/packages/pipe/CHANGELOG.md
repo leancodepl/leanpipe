@@ -5,7 +5,10 @@ All notable changes to this project will be documented in this file. See
 
 # [2.0.0](https://github.com/leancodepl/leanpipe/compare/js-client-v1.0.2...js-client-v2.0.0) (2026-01-28)
 
-**Note:** Version bump only for package @leancodepl/pipe
+### Features
+
+-   uncapitalize pipe responses
+    ([0faf7c3](https://github.com/leancodepl/leanpipe/commit/0faf7c3b9f3e46bb54e0baed3fe801500b591be0))
 
 # Change Log
 
