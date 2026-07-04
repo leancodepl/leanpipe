@@ -33,7 +33,7 @@
     "eslint-config-prettier": "10.1.8",
     "jest": "30.3.0",
     "jest-environment-jsdom": "30.0.5",
-    "lerna": "8.2.4",
+    "lerna": "9.0.7",
     "nx": "23.0.1",
     "prettier": "^3.9.4",
     "rollup": "^4.62.2",
