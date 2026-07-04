@@ -35,5 +35,6 @@
   },
   "workspaceLayout": {
     "libsDir": "libs"
-  }
+  },
+  "useLegacyCache": true
 }
