@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "private": true,
   "dependencies": {
-    "@microsoft/signalr": "8.0.7",
+    "@microsoft/signalr": "10.0.0",
     "deep-equal": "2.2.3",
     "lodash": "4.18.1",
     "rxjs": "7.8.2",
