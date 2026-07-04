@@ -8,7 +8,7 @@ const { exclude: _, ...swcJestConfig } = JSON.parse(readFileSync(`${__dirname}/.
 // disable .swcrc look-up by SWC core because we're passing in swcJestConfig ourselves.
 // If we do not disable this, SWC Core will read .swcrc and won't transform our test files due to "exclude"
 if (swcJestConfig.swcrc === undefined) {
-    swcJestConfig.swcrc = false
+  swcJestConfig.swcrc = false
 }
 
 // Uncomment if using global setup/teardown files being transformed via swc
@@ -17,12 +17,16 @@ if (swcJestConfig.swcrc === undefined) {
 // swcJestConfig.module.noInterop = false;
 
 export default {
-    displayName: "@leancodepl/pipe",
-    preset: "../../jest.preset.js",
-    transform: {
-        "^.+\\.[tj]s$": ["@swc/jest", swcJestConfig],
-    },
-    moduleFileExtensions: ["ts", "js", "html"],
-    testEnvironment: "node",
-    coverageDirectory: "./coverage/pipe",
+  displayName: "@leancodepl/pipe",
+  preset: "../../jest.preset.js",
+  transform: {
+    "^.+\\.[tj]s$": ["@swc/jest", swcJestConfig],
+  },
+  // `@leancodepl/*` packages (e.g. @leancodepl/utils, @leancodepl/api-date) ship
+  // as ESM. Jest runs CommonJS, so they must be transformed by @swc/jest (which
+  // emits CJS) instead of being ignored like the rest of node_modules.
+  transformIgnorePatterns: ["node_modules/(?!(@leancodepl)/)"],
+  moduleFileExtensions: ["ts", "js", "html"],
+  testEnvironment: "node",
+  coverageDirectory: "./coverage/pipe",
 }
