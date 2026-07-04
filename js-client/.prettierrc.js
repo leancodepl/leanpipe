@@ -1,3 +1,1 @@
-const config = require("@leancodepl/prettier-config")
-
-module.exports = config
+module.exports = require("@leancodepl/prettier-config")
