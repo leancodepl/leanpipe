@@ -31,8 +31,8 @@
     "@types/node": "24.13.2",
     "eslint": "^9.39.4",
     "eslint-config-prettier": "10.1.8",
-    "jest": "30.3.0",
-    "jest-environment-jsdom": "30.0.5",
+    "jest": "30.4.2",
+    "jest-environment-jsdom": "30.4.1",
     "lerna": "9.0.7",
     "nx": "23.0.1",
     "prettier": "^3.9.4",
@@ -42,7 +42,7 @@
     "typescript": "5.9.3",
     "typescript-eslint": "8.62.1",
     "verdaccio": "6.7.4",
-    "jest-util": "30.0.5"
+    "jest-util": "30.4.1"
   },
   "workspaces": [
     "packages/*"
