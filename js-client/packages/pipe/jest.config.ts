@@ -25,6 +25,7 @@ module.exports = {
   // `@leancodepl/*` packages (e.g. @leancodepl/utils, @leancodepl/api-date) ship
   // as ESM. Jest runs CommonJS, so they must be transformed by @swc/jest (which
   // emits CJS) instead of being ignored like the rest of node_modules.
+  // TODO: workaround only; remove once jest runs these as native ESM (or the packages ship CJS).
   transformIgnorePatterns: ["node_modules/(?!(@leancodepl)/)"],
   moduleFileExtensions: ["ts", "js", "html"],
   testEnvironment: "node",
