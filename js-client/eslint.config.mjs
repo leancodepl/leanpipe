@@ -30,14 +30,20 @@ const config = [
     },
   },
   {
+    // This block is what makes `@nx/dependency-checks` run on package.json (it is
+    // listed in pipe's lintFilePatterns). Without a `**/*.json` block, ESLint flat
+    // config matches no configuration for package.json and silently skips it
+    // ("File ignored because no matching configuration was supplied"), so
+    // dependency-checks would stop enforcing declared vs. used deps.
     files: ["**/*.json"],
     languageOptions: {
       parser: jsoncParser,
     },
     rules: {
       // The shared @leancodepl base config enables type-aware TS rules globally
-      // (no `files` scope); they cannot run under the JSON parser, so turn them
-      // off for JSON files. dependency-checks is the only rule we lint JSON with.
+      // (no `files` scope), so they also try to run on JSON files under the JSON
+      // parser and crash. Turn the offending one off here; dependency-checks is
+      // the only rule we actually want to lint JSON with.
       "@typescript-eslint/naming-convention": "off",
       "@nx/dependency-checks": "error",
     },
