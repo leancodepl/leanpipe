@@ -33,16 +33,16 @@
     "eslint-config-prettier": "10.1.8",
     "jest": "30.4.2",
     "jest-environment-jsdom": "30.4.1",
+    "jest-util": "30.4.1",
     "lerna": "9.0.7",
     "nx": "23.1.0",
     "prettier": "^3.9.5",
     "rollup": "^4.62.2",
     "ts-jest": "^29.4.11",
     "ts-node": "10.9.2",
-    "typescript": "5.9.3",
+    "typescript": "6.0.3",
     "typescript-eslint": "8.64.0",
-    "verdaccio": "6.7.4",
-    "jest-util": "30.4.1"
+    "verdaccio": "6.7.4"
   },
   "workspaces": [
     "packages/*"

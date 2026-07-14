@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@leancodepl/pipe": ["packages/pipe/src/index.ts"]
-    }
+    },
+    "ignoreDeprecations": "6.0"
   }
 }
