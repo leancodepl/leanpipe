@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/pipe/src",
   "projectType": "library",
+  "tags": [""],
   "targets": {
     "build": {
       "executor": "@nx/rollup:rollup",
@@ -41,6 +42,5 @@
         "jestConfig": "packages/pipe/jest.config.ts"
       }
     }
-  },
-  "tags": [""]
+  }
 }
