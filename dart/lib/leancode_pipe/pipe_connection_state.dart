@@ -13,5 +13,5 @@ enum PipeConnectionState {
   disconnecting,
 
   /// The pipe connection is reconnecting.
-  reconnecting
+  reconnecting,
 }

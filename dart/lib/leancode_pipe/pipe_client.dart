@@ -15,10 +15,27 @@ import 'package:meta/meta.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
+/// A callback that handles pipe-related actions.
 typedef OnPipeAction<T> = void Function(T value);
+
+/// A function that provides authentication tokens for the pipe connection.
 typedef PipeTokenFactory = Future<String> Function();
 
+/// Client for the pipe service that manages real-time subscriptions.
+///
+/// PipeClient handles:
+/// - Connecting to the pipe service using SignalR
+/// - Managing topic subscriptions
+/// - Automatic reconnection and subscription recovery
+/// - Authentication via tokens
 class PipeClient {
+  /// Creates a new pipe client connected to the specified URL.
+  ///
+  /// [pipeUrl] - The URL of the pipe service endpoint
+  /// [tokenFactory] - Function that provides authentication tokens
+  /// [onReconnected] - Called when connection is re-established
+  /// [onReconnecting] - Called when attempting to reconnect
+  /// [onClose] - Called when connection is closed
   factory PipeClient({
     required String pipeUrl,
     required PipeTokenFactory tokenFactory,
@@ -36,6 +53,7 @@ class PipeClient {
         onClose: onClose,
       );
 
+  /// Creates a pipe client with a mock hub connection for testing.
   @visibleForTesting
   PipeClient.fromMock({
     required HubConnection hubConnection,
@@ -52,18 +70,27 @@ class PipeClient {
   static const _topicSubscriptionReconnectsCount = 3;
   static const _signalRRequestTimeoutDuration = Duration(seconds: 30);
 
+  /// Called when connection is re-established.
   final void Function()? onReconnected;
+
+  /// Called when attempting to reconnect.
   final OnPipeAction<Exception?>? onReconnecting;
+
+  /// Called when connection is closed.
   final OnPipeAction<Exception?>? onClose;
 
   static final _logger = Logger('PipeClient');
   final _registeredTopicSubscriptions = <TopicSubscription>[];
 
+  /// Current state of the pipe connection.
   PipeConnectionState get connectionState =>
       PipeConnectionStateMapper.fromHubConnectionState(
         _hubConnection.state,
       );
 
+  /// Connects to the pipe service.
+  ///
+  /// Throws [PipeConnectionException] if connection fails.
   Future<void> connect() async {
     if (connectionState != PipeConnectionState.disconnected) {
       _logger.warning(
@@ -101,6 +128,7 @@ class PipeClient {
     }
   }
 
+  /// Disconnects from the pipe service.
   Future<void> disconnect() async {
     if (connectionState == PipeConnectionState.disconnected) {
       _logger.fine(
@@ -117,6 +145,18 @@ class PipeClient {
     }
   }
 
+  /// Subscribes to notifications from the specified topic.
+  ///
+  /// [topic] - The topic to subscribe to
+  /// [onReconnect] - Optional callback when subscription reconnects
+  ///
+  /// Returns a [PipeSubscription] that can be used to receive notifications
+  /// and unsubscribe.
+  ///
+  /// Throws:
+  /// - [PipeConnectionException] if connection fails
+  /// - [PipeServerException] if server returns an error
+  /// - [PipeUnauthorizedException] if not authorized
   Future<PipeSubscription<N>> subscribe<N extends Object>(
     Topic<N> topic, {
     void Function()? onReconnect,
@@ -563,6 +603,9 @@ class PipeClient {
     }
   }
 
+  /// Releases all resources used by this client.
+  ///
+  /// Closes all subscriptions and disconnects from the server.
   Future<void> dispose() async {
     await Future.wait(_registeredTopicSubscriptions.map((e) => e.close()));
     await _hubConnection.stop();
