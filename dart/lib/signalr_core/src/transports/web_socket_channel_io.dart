@@ -8,8 +8,6 @@ import 'package:http/io_client.dart';
 import 'package:web_socket_channel/io.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-/// Marks which platform implementation of [connect] got selected by the
-/// conditional import in `web_socket_transport.dart`.
 const webSocketChannelImplementation = 'io';
 
 Future<WebSocketChannel> connect(

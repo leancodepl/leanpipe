@@ -68,10 +68,6 @@ jobs:
       - name: Download pub dependencies
         run: dart pub get --no-example
 
-      # `dart test -p chrome` defaults to dart2js, which resolves the WebSocket
-      # transport differently than dart2wasm does. Both web compilers have to be
-      # exercised, otherwise a `flutter build web --wasm` regression goes
-      # unnoticed.
       - name: Check the WebSocket transport on dart2js
         run: dart test -p chrome test/signalr_core/web_socket_channel_platform_test.dart
 

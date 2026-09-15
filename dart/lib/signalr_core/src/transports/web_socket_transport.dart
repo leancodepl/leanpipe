@@ -6,9 +6,6 @@ import 'package:leancode_pipe/signalr_core/src/transport.dart';
 import 'package:leancode_pipe/signalr_core/src/utils.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-// `dart.library.js_interop` covers both web compilers. `dart.library.html`
-// must not be used here: it is false under dart2wasm, which would silently
-// select the unsupported stub for `flutter build web --wasm` builds.
 import 'web_socket_channel_api.dart'
     if (dart.library.js_interop) 'web_socket_channel_web.dart'
     if (dart.library.io) 'web_socket_channel_io.dart' as platform;
