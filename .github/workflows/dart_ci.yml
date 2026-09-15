@@ -46,3 +46,34 @@ jobs:
       - name: Dry run pub publish
         # We don't want it to fail the CI, it's just to see how would `pub publish` behave.
         run: dart pub publish --dry-run || true
+
+  web-platform:
+    name: Web platform selection
+
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: dart
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Dart
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: "3.6.0"
+
+      - name: Download pub dependencies
+        run: dart pub get --no-example
+
+      # `dart test -p chrome` defaults to dart2js, which resolves the WebSocket
+      # transport differently than dart2wasm does. Both web compilers have to be
+      # exercised, otherwise a `flutter build web --wasm` regression goes
+      # unnoticed.
+      - name: Check the WebSocket transport on dart2js
+        run: dart test -p chrome test/signalr_core/web_socket_channel_platform_test.dart
+
+      - name: Check the WebSocket transport on dart2wasm
+        run: dart test -p chrome --compiler dart2wasm test/signalr_core/web_socket_channel_platform_test.dart

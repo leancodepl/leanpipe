@@ -1,3 +1,7 @@
+## 2.0.2
+
+- Fix the WebSocket transport not being available in `dart2wasm` builds, e.g. `flutter build web --wasm`
+
 ## 2.0.1
 
 - Fix the issue with resubscribing to topics after reconnecting to the server (#81)
